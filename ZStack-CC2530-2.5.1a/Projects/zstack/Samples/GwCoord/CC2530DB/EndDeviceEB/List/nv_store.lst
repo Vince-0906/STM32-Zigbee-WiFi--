@@ -1,0 +1,468 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  11:06:16 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\Source\nv_store.c                       #
+#    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\..\..\..\Tools\CC2530DB\f8w #
+#                          Endev.cfg (-DCPU32MHZ -DROOT=__near_func           #
+#                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6         #
+#                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\GwCoord\CC2530DB\..\..\. #
+#                          .\Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO        #
+#                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR       #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\GwCoord\Source\nv_store. #
+#                          c -D NWK_AUTO_POLL -D ZTOOL_P1 -D MT_TASK -D       #
+#                          MT_SYS_FUNC -D MT_ZDO_FUNC -D LCD_SUPPORTED=DEBUG  #
+#                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
+#                          amples\GwCoord\CC2530DB\EndDeviceEB\List\ -lA      #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\List\              #
+#                          --diag_suppress Pe001,Pa010 -o                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\Obj\ -e            #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
+#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
+#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
+#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
+#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\mac\high_level\ -I                         #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
+#                          low_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\P #
+#                          rojects\zstack\Samples\GwCoord\CC2530DB\..\..\..\. #
+#                          .\..\Components\mac\low_level\srf04\single_chip\   #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\..\..\..\..\..\Components\m #
+#                          t\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\osal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\GwCoord\CC2530DB\..\..\..\.. #
+#                          \..\Components\services\saddr\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\serv #
+#                          ices\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\ #
+#                          Components\stack\af\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\..\ #
+#                          ..\..\..\Components\stack\nwk\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\stac #
+#                          k\sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Comp #
+#                          onents\stack\sec\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\ #
+#                          Projects\zstack\Samples\GwCoord\CC2530DB\..\..\..\ #
+#                          ..\..\Components\stack\sys\ -I                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\stac #
+#                          k\zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs #
+#                          tack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\zmac\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\ #
+#                          Components\zmac\f8w\ -Ohz --require_prototypes     #
+#    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\List\nv_store.lst  #
+#    Object file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\Obj\nv_store.r51   #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\GwCoord\Source\nv_store.c
+      1          /*
+                  ^
+Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
+          only issued once)
+      2           * NV 持久化薄封装（CC2530.md §6）。
+      3           * - osal_nv_item_init + osal_nv_read/osal_nv_write。
+      4           * - 只允许固定 id 集：0xF001 panid / 0xF002 channel / 0xF003 节点表（预留）。
+      5           */
+      6          
+      7          #include "nv_store.h"
+      8          #include "comdef.h"
+      9          #include "OSAL_Nv.h"
+     10          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     11          int8 nv_load_u16(uint16 id, uint16 *val)
+   \                     nv_load_u16:
+     12          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 0
+   \   000005   EA           MOV     A,R2
+   \   000006   FE           MOV     R6,A
+   \   000007   EB           MOV     A,R3
+   \   000008   FF           MOV     R7,A
+   \   000009   8C..         MOV     ?V0 + 0,R4
+   \   00000B   8D..         MOV     ?V0 + 1,R5
+     13              uint8 st;
+     14              if (val == 0) return (int8)RC_ERR_PARAM;
+   \   00000D   EC           MOV     A,R4
+   \   00000E   45..         ORL     A,?V0 + 1
+   \   000010   7004         JNZ     ??nv_load_u16_0
+   \                     ??nv_load_u16_1:
+   \   000012   79FF         MOV     R1,#-0x1
+   \   000014   8039         SJMP    ??nv_load_u16_2
+     15              st = osal_nv_item_init(id, sizeof(uint16), val);
+   \                     ??nv_load_u16_0:
+   \   000016                ; Setup parameters for call to function osal_nv_item_init
+   \   000016   78..         MOV     R0,#?V0 + 0
+   \   000018   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00001B   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_0:
+   \   00001E   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000021   E9           MOV     A,R1
+   \   000022   F8           MOV     R0,A
+     16              if (st == SUCCESS || st == NV_ITEM_UNINIT) {
+   \   000023   6005         JZ      ??nv_load_u16_3
+   \   000025   7409         MOV     A,#0x9
+   \   000027   68           XRL     A,R0
+   \   000028   70E8         JNZ     ??nv_load_u16_1
+     17                  if (osal_nv_read(id, 0, sizeof(uint16), val) == SUCCESS) return 0;
+   \                     ??nv_load_u16_3:
+   \   00002A                ; Setup parameters for call to function osal_nv_read
+   \   00002A   78..         MOV     R0,#?V0 + 0
+   \   00002C   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00002F   75..02       MOV     ?V0 + 0,#0x2
+   \   000032   75..00       MOV     ?V0 + 1,#0x0
+   \   000035   78..         MOV     R0,#?V0 + 0
+   \   000037   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00003A   7C00         MOV     R4,#0x0
+   \   00003C   7D00         MOV     R5,#0x0
+   \   00003E   EE           MOV     A,R6
+   \   00003F   FA           MOV     R2,A
+   \   000040   EF           MOV     A,R7
+   \   000041   FB           MOV     R3,A
+   \   000042   12....       LCALL   ??osal_nv_read?relay
+   \   000045   7404         MOV     A,#0x4
+   \   000047   12....       LCALL   ?DEALLOC_XSTACK8
+   \   00004A   E9           MOV     A,R1
+   \   00004B   70C5         JNZ     ??nv_load_u16_1
+   \   00004D   7900         MOV     R1,#0x0
+     18              }
+   \                     ??nv_load_u16_2:
+   \   00004F   80..         SJMP    ??Subroutine3_0
+     19              return -1;
+     20          }
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine1:
+   \   000000   7C02         MOV     R4,#0x2
+   \   000002                REQUIRE ??Subroutine2_0
+   \   000002                ; // Fall through to label ??Subroutine2_0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ??Subroutine2_0:
+   \   000000   7D00         MOV     R5,#0x0
+   \   000002   12....       LCALL   ??osal_nv_item_init?relay
+   \   000005   7402         MOV     A,#0x2
+   \   000007   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ??Subroutine3_0:
+   \   000000   7F02         MOV     R7,#0x2
+   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
+     21          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000003                REQUIRE ??Subroutine3_0
+   \   000003                ; // Fall through to label ??Subroutine3_0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     22          int8 nv_save_u16(uint16 id, uint16 val)
+   \                     nv_save_u16:
+     23          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 2
+   \   000005   74FE         MOV     A,#-0x2
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+   \   00000A   85..82       MOV     DPL,?XSP + 0
+   \   00000D   85..83       MOV     DPH,?XSP + 1
+   \   000010   EC           MOV     A,R4
+   \   000011   F0           MOVX    @DPTR,A
+   \   000012   A3           INC     DPTR
+   \   000013   ED           MOV     A,R5
+   \   000014   F0           MOVX    @DPTR,A
+   \   000015   EA           MOV     A,R2
+   \   000016   FE           MOV     R6,A
+   \   000017   EB           MOV     A,R3
+   \   000018   FF           MOV     R7,A
+     24              uint8 st;
+     25              st = osal_nv_item_init(id, sizeof(uint16), &val);
+   \   000019                ; Setup parameters for call to function osal_nv_item_init
+   \   000019   85..82       MOV     DPL,?XSP + 0
+   \   00001C   85..83       MOV     DPH,?XSP + 1
+   \   00001F   8582..       MOV     ?V0 + 0,DPL
+   \   000022   8583..       MOV     ?V0 + 1,DPH
+   \   000025   78..         MOV     R0,#?V0 + 0
+   \   000027   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00002A   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_1:
+   \   00002D   12....       LCALL   ?DEALLOC_XSTACK8
+     26              (void)st;
+     27              return (osal_nv_write(id, 0, sizeof(uint16), &val) == SUCCESS) ? 0 : -1;
+   \   000030                ; Setup parameters for call to function osal_nv_write
+   \   000030   78..         MOV     R0,#?V0 + 0
+   \   000032   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000035   75..02       MOV     ?V0 + 0,#0x2
+   \   000038   75..00       MOV     ?V0 + 1,#0x0
+   \   00003B   78..         MOV     R0,#?V0 + 0
+   \   00003D   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000040   7C00         MOV     R4,#0x0
+   \   000042   7D00         MOV     R5,#0x0
+   \   000044   EE           MOV     A,R6
+   \   000045   FA           MOV     R2,A
+   \   000046   EF           MOV     A,R7
+   \   000047   FB           MOV     R3,A
+   \   000048   12....       LCALL   ??osal_nv_write?relay
+   \   00004B   7404         MOV     A,#0x4
+   \   00004D   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000050   E9           MOV     A,R1
+   \   000051   7004         JNZ     ??nv_save_u16_0
+   \   000053   7900         MOV     R1,#0x0
+   \   000055   8002         SJMP    ??nv_save_u16_1
+   \                     ??nv_save_u16_0:
+   \   000057   79FF         MOV     R1,#-0x1
+   \                     ??nv_save_u16_1:
+   \   000059   7402         MOV     A,#0x2
+   \   00005B   80..         SJMP    ?Subroutine0
+     28          }
+     29          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     30          int8 nv_load_u8(uint16 id, uint8 *val)
+   \                     nv_load_u8:
+     31          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 0
+   \   000005   EA           MOV     A,R2
+   \   000006   FE           MOV     R6,A
+   \   000007   EB           MOV     A,R3
+   \   000008   FF           MOV     R7,A
+   \   000009   8C..         MOV     ?V0 + 0,R4
+   \   00000B   8D..         MOV     ?V0 + 1,R5
+     32              uint8 st;
+     33              if (val == 0) return (int8)RC_ERR_PARAM;
+   \   00000D   EC           MOV     A,R4
+   \   00000E   45..         ORL     A,?V0 + 1
+   \   000010   7004         JNZ     ??nv_load_u8_0
+   \                     ??nv_load_u8_1:
+   \   000012   79FF         MOV     R1,#-0x1
+   \   000014   803B         SJMP    ??nv_load_u8_2
+     34              st = osal_nv_item_init(id, sizeof(uint8), val);
+   \                     ??nv_load_u8_0:
+   \   000016                ; Setup parameters for call to function osal_nv_item_init
+   \   000016   78..         MOV     R0,#?V0 + 0
+   \   000018   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00001B   7C01         MOV     R4,#0x1
+   \   00001D   12....       LCALL   ??Subroutine2_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_2:
+   \   000020   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000023   E9           MOV     A,R1
+   \   000024   F8           MOV     R0,A
+     35              if (st == SUCCESS || st == NV_ITEM_UNINIT) {
+   \   000025   6005         JZ      ??nv_load_u8_3
+   \   000027   7409         MOV     A,#0x9
+   \   000029   68           XRL     A,R0
+   \   00002A   70E6         JNZ     ??nv_load_u8_1
+     36                  if (osal_nv_read(id, 0, sizeof(uint8), val) == SUCCESS) return 0;
+   \                     ??nv_load_u8_3:
+   \   00002C                ; Setup parameters for call to function osal_nv_read
+   \   00002C   78..         MOV     R0,#?V0 + 0
+   \   00002E   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000031   75..01       MOV     ?V0 + 0,#0x1
+   \   000034   75..00       MOV     ?V0 + 1,#0x0
+   \   000037   78..         MOV     R0,#?V0 + 0
+   \   000039   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00003C   7C00         MOV     R4,#0x0
+   \   00003E   7D00         MOV     R5,#0x0
+   \   000040   EE           MOV     A,R6
+   \   000041   FA           MOV     R2,A
+   \   000042   EF           MOV     A,R7
+   \   000043   FB           MOV     R3,A
+   \   000044   12....       LCALL   ??osal_nv_read?relay
+   \   000047   7404         MOV     A,#0x4
+   \   000049   12....       LCALL   ?DEALLOC_XSTACK8
+   \   00004C   E9           MOV     A,R1
+   \   00004D   70C3         JNZ     ??nv_load_u8_1
+   \   00004F   7900         MOV     R1,#0x0
+     37              }
+   \                     ??nv_load_u8_2:
+   \   000051   02....       LJMP    ??Subroutine3_0 & 0xFFFF
+     38              return -1;
+     39          }
+     40          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     41          int8 nv_save_u8(uint16 id, uint8 val)
+   \                     nv_save_u8:
+     42          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 1
+   \   000005   74FF         MOV     A,#-0x1
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+   \   00000A   E9           MOV     A,R1
+   \   00000B   85..82       MOV     DPL,?XSP + 0
+   \   00000E   85..83       MOV     DPH,?XSP + 1
+   \   000011   F0           MOVX    @DPTR,A
+   \   000012   EA           MOV     A,R2
+   \   000013   FE           MOV     R6,A
+   \   000014   EB           MOV     A,R3
+   \   000015   FF           MOV     R7,A
+     43              uint8 st;
+     44              st = osal_nv_item_init(id, sizeof(uint8), &val);
+   \   000016                ; Setup parameters for call to function osal_nv_item_init
+   \   000016   8582..       MOV     ?V0 + 0,DPL
+   \   000019   8583..       MOV     ?V0 + 1,DPH
+   \   00001C   78..         MOV     R0,#?V0 + 0
+   \   00001E   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000021   7C01         MOV     R4,#0x1
+   \   000023   12....       LCALL   ??Subroutine2_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_3:
+   \   000026   12....       LCALL   ?DEALLOC_XSTACK8
+     45              (void)st;
+     46              return (osal_nv_write(id, 0, sizeof(uint8), &val) == SUCCESS) ? 0 : -1;
+   \   000029                ; Setup parameters for call to function osal_nv_write
+   \   000029   78..         MOV     R0,#?V0 + 0
+   \   00002B   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00002E   75..01       MOV     ?V0 + 0,#0x1
+   \   000031   75..00       MOV     ?V0 + 1,#0x0
+   \   000034   78..         MOV     R0,#?V0 + 0
+   \   000036   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000039   7C00         MOV     R4,#0x0
+   \   00003B   7D00         MOV     R5,#0x0
+   \   00003D   EE           MOV     A,R6
+   \   00003E   FA           MOV     R2,A
+   \   00003F   EF           MOV     A,R7
+   \   000040   FB           MOV     R3,A
+   \   000041   12....       LCALL   ??osal_nv_write?relay
+   \   000044   7404         MOV     A,#0x4
+   \   000046   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000049   E9           MOV     A,R1
+   \   00004A   7004         JNZ     ??nv_save_u8_0
+   \   00004C   7900         MOV     R1,#0x0
+   \   00004E   8002         SJMP    ??nv_save_u8_1
+   \                     ??nv_save_u8_0:
+   \   000050   79FF         MOV     R1,#-0x1
+   \                     ??nv_save_u8_1:
+   \   000052   7401         MOV     A,#0x1
+   \   000054   02....       LJMP    ?Subroutine0 & 0xFFFF
+     47          }
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??nv_load_u16?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    nv_load_u16
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??nv_save_u16?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    nv_save_u16
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??nv_load_u8?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    nv_load_u8
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??nv_save_u8?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    nv_save_u8
+
+   Maximum stack usage in bytes:
+
+     Function               ISTACK PSTACK XSTACK
+     --------               ------ ------ ------
+     nv_load_u16                0      0     14
+       -> osal_nv_item_init     0      0     24
+       -> osal_nv_read          0      0     28
+     nv_load_u8                 0      0     14
+       -> osal_nv_item_init     0      0     24
+       -> osal_nv_read          0      0     28
+     nv_save_u16                0      0     16
+       -> osal_nv_item_init     0      0     28
+       -> osal_nv_write         0      0     32
+     nv_save_u8                 1      0     15
+       -> osal_nv_item_init     0      0     26
+       -> osal_nv_write         0      0     30
+
+
+   Segment part sizes:
+
+     Function/Label      Bytes
+     --------------      -----
+     nv_load_u16           81
+     ?Subroutine1           2
+     ??Subroutine2_0        8
+     ??Subroutine3_0        5
+     ?Subroutine0           3
+     nv_save_u16           93
+     nv_load_u8            84
+     nv_save_u8            87
+     ??nv_load_u16?relay    6
+     ??nv_save_u16?relay    6
+     ??nv_load_u8?relay     6
+     ??nv_save_u8?relay     6
+
+ 
+ 363 bytes in segment BANKED_CODE
+  24 bytes in segment BANK_RELAYS
+ 
+ 387 bytes of CODE memory
+
+Errors: none
+Warnings: 1

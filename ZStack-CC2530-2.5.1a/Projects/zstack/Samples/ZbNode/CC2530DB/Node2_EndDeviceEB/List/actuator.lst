@@ -1,0 +1,560 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  11:20:07 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\Source\actuator.c                        #
+#    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\Tools\CC2530DB\f8wE #
+#                          ndev.cfg (-DCPU32MHZ -DROOT=__near_func            #
+#                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6         #
+#                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\.. #
+#                          \Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO         #
+#                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR       #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\Source\actuator.c #
+#                           -D NWK_AUTO_POLL -D NODE_ROLE=2 -D                #
+#                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\Node2_EndDev #
+#                          iceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Proje #
+#                          cts\zstack\Samples\ZbNode\CC2530DB\Node2_EndDevice #
+#                          EB\List\ --diag_suppress Pe001,Pa010 -o            #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\ -e       #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\ -I                          #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\hal\target\CC2530EB\ -I                      #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\mac\high_level\ -I                           #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\l #
+#                          ow_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\mac\low_level\srf04\single_chip\ -I  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mt\   #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\os #
+#                          al\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C #
+#                          omponents\services\saddr\ -I                       #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\servi #
+#                          ces\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\stack\af\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a #
+#                          \Projects\zstack\Samples\ZbNode\CC2530DB\..\..\..\ #
+#                          ..\..\Components\stack\nwk\ -I                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs #
+#                          tack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compon #
+#                          ents\stack\sec\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\stack\sys\ -I                        #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zst #
+#                          ack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compone #
+#                          nts\zmac\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects #
+#                          \zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\zmac\f8w\ -Ohz --require_prototypes        #
+#    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\List\actuator #
+#                          .lst                                               #
+#    Object file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\actuator. #
+#                          r51                                                #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\actuator.c
+      1          /*
+                  ^
+Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
+          only issued once)
+      2           * 执行器：LED + Buzzer（E18-MS1，board_e18ms1.h）。
+      3           * CC2530 I/O 寄存器位访问采用 P1_x / P1DIR 风格（IAR SFR bit 宏）。
+      4           */
+      5          
+      6          #include "actuator.h"
+      7          #include "board_e18ms1.h"
+      8          #include "ioCC2530.h"
+
+   \                                 In  segment SFR_AN, at 0x80
+   \   union <unnamed> volatile __sfr _A_P0
+   \                     _A_P0:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0x90
+   \   union <unnamed> volatile __sfr _A_P1
+   \                     _A_P1:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xa0
+   \   union <unnamed> volatile __sfr _A_P2
+   \                     _A_P2:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xf3
+   \   unsigned char volatile __sfr P0SEL
+   \                     P0SEL:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xf4
+   \   unsigned char volatile __sfr P1SEL
+   \                     P1SEL:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xf5
+   \   unsigned char volatile __sfr P2SEL
+   \                     P2SEL:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xfd
+   \   unsigned char volatile __sfr P0DIR
+   \                     P0DIR:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xfe
+   \   unsigned char volatile __sfr P1DIR
+   \                     P1DIR:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xff
+   \   unsigned char volatile __sfr P2DIR
+   \                     P2DIR:
+   \   000000                DS 1
+      9          
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     10          static uint8 s_led = 0;
+   \                     s_led:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     11          static uint8 s_buz = 0;
+   \                     s_buz:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+     12          
+     13          #define SETBIT(reg, b)   ((reg) |=  (1 << (b)))
+     14          #define CLRBIT(reg, b)   ((reg) &= ~(1 << (b)))
+     15          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     16          static void pin_output(uint8 port, uint8 pin)
+   \                     pin_output:
+     17          {
+   \   000000   C0..         PUSH    ?V0 + 0
+   \   000002   C0..         PUSH    ?V0 + 1
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     18              if (port == 0) { P0SEL &= (uint8)~(1 << pin); P0DIR |= (uint8)(1 << pin); }
+   \   000004   E9           MOV     A,R1
+   \   000005   7017         JNZ     ??pin_output_0
+   \   000007   75..01       MOV     ?V0 + 0,#0x1
+   \   00000A   75..00       MOV     ?V0 + 1,#0x0
+   \   00000D   EA           MOV     A,R2
+   \   00000E   78..         MOV     R0,#?V0 + 0
+   \   000010   12....       LCALL   ?S_SHL
+   \   000013   A8..         MOV     R0,?V0 + 0
+   \   000015   E8           MOV     A,R0
+   \   000016   F4           CPL     A
+   \   000017   52F3         ANL     0xf3,A
+   \   000019   E8           MOV     A,R0
+   \   00001A   42FD         ORL     0xfd,A
+   \   00001C   8036         SJMP    ??pin_output_1
+     19              else if (port == 1) { P1SEL &= (uint8)~(1 << pin); P1DIR |= (uint8)(1 << pin); }
+   \                     ??pin_output_0:
+   \   00001E   7401         MOV     A,#0x1
+   \   000020   69           XRL     A,R1
+   \   000021   7017         JNZ     ??pin_output_2
+   \   000023   75..01       MOV     ?V0 + 0,#0x1
+   \   000026   75..00       MOV     ?V0 + 1,#0x0
+   \   000029   EA           MOV     A,R2
+   \   00002A   78..         MOV     R0,#?V0 + 0
+   \   00002C   12....       LCALL   ?S_SHL
+   \   00002F   A8..         MOV     R0,?V0 + 0
+   \   000031   E8           MOV     A,R0
+   \   000032   F4           CPL     A
+   \   000033   52F4         ANL     0xf4,A
+   \   000035   E8           MOV     A,R0
+   \   000036   42FE         ORL     0xfe,A
+   \   000038   801A         SJMP    ??pin_output_1
+     20              else if (port == 2) { P2SEL &= (uint8)~(1 << pin); P2DIR |= (uint8)(1 << pin); }
+   \                     ??pin_output_2:
+   \   00003A   7402         MOV     A,#0x2
+   \   00003C   69           XRL     A,R1
+   \   00003D   7015         JNZ     ??pin_output_1
+   \   00003F   75..01       MOV     ?V0 + 0,#0x1
+   \   000042   75..00       MOV     ?V0 + 1,#0x0
+   \   000045   EA           MOV     A,R2
+   \   000046   78..         MOV     R0,#?V0 + 0
+   \   000048   12....       LCALL   ?S_SHL
+   \   00004B   A8..         MOV     R0,?V0 + 0
+   \   00004D   E8           MOV     A,R0
+   \   00004E   F4           CPL     A
+   \   00004F   52F5         ANL     0xf5,A
+   \   000051   E8           MOV     A,R0
+   \   000052   42FF         ORL     0xff,A
+     21          }
+   \                     ??pin_output_1:
+   \   000054                REQUIRE ?Subroutine1
+   \   000054                REQUIRE P0SEL
+   \   000054                REQUIRE P0DIR
+   \   000054                REQUIRE P1SEL
+   \   000054                REQUIRE P1DIR
+   \   000054                REQUIRE P2SEL
+   \   000054                REQUIRE P2DIR
+   \   000054                ; // Fall through to label ?Subroutine1
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine1:
+   \   000000   D0..         POP     ?V0 + 1
+   \   000002   D0..         POP     ?V0 + 0
+   \   000004   02....       LJMP    ?BRET
+     22          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     23          static void pin_write(uint8 port, uint8 pin, uint8 v)
+   \                     pin_write:
+     24          {
+   \   000000   C0..         PUSH    ?V0 + 0
+   \   000002   C0..         PUSH    ?V0 + 1
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     25              uint8 m = (uint8)(1 << pin);
+   \   000004   75..01       MOV     ?V0 + 0,#0x1
+   \   000007   75..00       MOV     ?V0 + 1,#0x0
+   \   00000A   EA           MOV     A,R2
+   \   00000B   78..         MOV     R0,#?V0 + 0
+   \   00000D   12....       LCALL   ?S_SHL
+   \   000010   A8..         MOV     R0,?V0 + 0
+     26              if (port == 0) { if (v) P0 |= m; else P0 &= (uint8)~m; }
+   \   000012   E9           MOV     A,R1
+   \   000013   700E         JNZ     ??pin_write_0
+   \   000015   EB           MOV     A,R3
+   \   000016   6005         JZ      ??pin_write_1
+   \   000018   E8           MOV     A,R0
+   \   000019   4280         ORL     0x80,A
+   \   00001B   802A         SJMP    ??pin_write_2
+   \                     ??pin_write_1:
+   \   00001D   E8           MOV     A,R0
+   \   00001E   F4           CPL     A
+   \   00001F   5280         ANL     0x80,A
+   \   000021   8024         SJMP    ??pin_write_2
+     27              else if (port == 1) { if (v) P1 |= m; else P1 &= (uint8)~m; }
+   \                     ??pin_write_0:
+   \   000023   7401         MOV     A,#0x1
+   \   000025   69           XRL     A,R1
+   \   000026   700E         JNZ     ??pin_write_3
+   \   000028   EB           MOV     A,R3
+   \   000029   6005         JZ      ??pin_write_4
+   \   00002B   E8           MOV     A,R0
+   \   00002C   4290         ORL     0x90,A
+   \   00002E   8017         SJMP    ??pin_write_2
+   \                     ??pin_write_4:
+   \   000030   E8           MOV     A,R0
+   \   000031   F4           CPL     A
+   \   000032   5290         ANL     0x90,A
+   \   000034   8011         SJMP    ??pin_write_2
+     28              else if (port == 2) { if (v) P2 |= m; else P2 &= (uint8)~m; }
+   \                     ??pin_write_3:
+   \   000036   7402         MOV     A,#0x2
+   \   000038   69           XRL     A,R1
+   \   000039   700C         JNZ     ??pin_write_2
+   \   00003B   EB           MOV     A,R3
+   \   00003C   6005         JZ      ??pin_write_5
+   \   00003E   E8           MOV     A,R0
+   \   00003F   42A0         ORL     0xa0,A
+   \   000041   8004         SJMP    ??pin_write_2
+   \                     ??pin_write_5:
+   \   000043   E8           MOV     A,R0
+   \   000044   F4           CPL     A
+   \   000045   52A0         ANL     0xa0,A
+     29          }
+   \                     ??pin_write_2:
+   \   000047   80..         SJMP    ?Subroutine1
+   \   000049                REQUIRE _A_P0
+   \   000049                REQUIRE _A_P1
+   \   000049                REQUIRE _A_P2
+     30          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     31          void actuator_init(void)
+   \                     actuator_init:
+     32          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     33              pin_output(NODE_LED_PORT, NODE_LED_PIN);
+   \   000004                ; Setup parameters for call to function pin_output
+   \   000004   7A00         MOV     R2,#0x0
+   \   000006   7901         MOV     R1,#0x1
+   \   000008   12....       LCALL   ??pin_output?relay
+     34              pin_output(NODE_BUZZER_PORT, NODE_BUZZER_PIN);
+   \   00000B                ; Setup parameters for call to function pin_output
+   \   00000B   7A07         MOV     R2,#0x7
+   \   00000D   7901         MOV     R1,#0x1
+   \   00000F   12....       LCALL   ??pin_output?relay
+     35              actuator_led_set(0);
+   \   000012                ; Setup parameters for call to function actuator_led_set
+   \   000012   7900         MOV     R1,#0x0
+   \   000014   12....       LCALL   ??actuator_led_set?relay
+     36              actuator_buzzer_set(0);
+   \   000017                ; Setup parameters for call to function actuator_buzzer_set
+   \   000017   7900         MOV     R1,#0x0
+   \   000019   12....       LCALL   ??actuator_buzzer_set?relay
+     37          }
+   \   00001C   80..         SJMP    ??Subroutine3_0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ??Subroutine3_0:
+   \   000000   D083         POP     DPH
+   \   000002   D082         POP     DPL
+   \   000004   02....       LJMP    ?BRET
+     38          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     39          void actuator_led_set(uint8 onoff)
+   \                     actuator_led_set:
+     40          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   E9           MOV     A,R1
+     41              uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+   \   000006   6004         JZ      ??actuator_led_set_0
+   \   000008   7F01         MOV     R7,#0x1
+   \   00000A   8002         SJMP    ??actuator_led_set_1
+   \                     ??actuator_led_set_0:
+   \   00000C   7F00         MOV     R7,#0x0
+     42              pin_write(NODE_LED_PORT, NODE_LED_PIN, level);
+   \                     ??actuator_led_set_1:
+   \   00000E                ; Setup parameters for call to function pin_write
+   \   00000E   EF           MOV     A,R7
+   \   00000F   FB           MOV     R3,A
+   \   000010   7A00         MOV     R2,#0x0
+   \   000012   7901         MOV     R1,#0x1
+   \   000014   12....       LCALL   ??pin_write?relay
+     43              s_led = onoff ? 1 : 0;
+   \   000017   EF           MOV     A,R7
+   \   000018   90....       MOV     DPTR,#s_led
+   \   00001B                REQUIRE ?Subroutine2
+   \   00001B                ; // Fall through to label ?Subroutine2
+     44          }
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine2:
+   \   000000   F0           MOVX    @DPTR,A
+   \   000001   7F01         MOV     R7,#0x1
+   \   000003   02....       LJMP    ?BANKED_LEAVE_XDATA
+     45          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     46          void actuator_buzzer_set(uint8 onoff)
+   \                     actuator_buzzer_set:
+     47          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   E9           MOV     A,R1
+     48              uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+   \   000006   6004         JZ      ??actuator_buzzer_set_0
+   \   000008   7F01         MOV     R7,#0x1
+   \   00000A   8002         SJMP    ??actuator_buzzer_set_1
+   \                     ??actuator_buzzer_set_0:
+   \   00000C   7F00         MOV     R7,#0x0
+     49              pin_write(NODE_BUZZER_PORT, NODE_BUZZER_PIN, level);
+   \                     ??actuator_buzzer_set_1:
+   \   00000E                ; Setup parameters for call to function pin_write
+   \   00000E   EF           MOV     A,R7
+   \   00000F   FB           MOV     R3,A
+   \   000010   7A07         MOV     R2,#0x7
+   \   000012   7901         MOV     R1,#0x1
+   \   000014   12....       LCALL   ??pin_write?relay
+     50              s_buz = onoff ? 1 : 0;
+   \   000017   EF           MOV     A,R7
+   \   000018   90....       MOV     DPTR,#s_buz
+   \   00001B   80..         SJMP    ?Subroutine2
+     51          }
+     52          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     53          uint8 actuator_led_state(void)    { return s_led; }
+   \                     actuator_led_state:
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+   \   000004   90....       MOV     DPTR,#s_led
+   \   000007                REQUIRE ?Subroutine0
+   \   000007                ; // Fall through to label ?Subroutine0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   E0           MOVX    A,@DPTR
+   \   000001   F9           MOV     R1,A
+   \   000002                REQUIRE ??Subroutine3_0
+   \   000002                ; // Fall through to label ??Subroutine3_0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     54          uint8 actuator_buzzer_state(void) { return s_buz; }
+   \                     actuator_buzzer_state:
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+   \   000004   90....       MOV     DPTR,#s_buz
+   \   000007   80..         SJMP    ?Subroutine0
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??pin_output?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    pin_output
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??pin_write?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    pin_write
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??actuator_init?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    actuator_init
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??actuator_led_set?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    actuator_led_set
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??actuator_buzzer_set?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    actuator_buzzer_set
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??actuator_led_state?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    actuator_led_state
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??actuator_buzzer_state?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    actuator_buzzer_state
+
+   Maximum stack usage in bytes:
+
+     Function                 ISTACK PSTACK XSTACK
+     --------                 ------ ------ ------
+     actuator_buzzer_set          0      0      9
+       -> pin_write               0      0     18
+     actuator_buzzer_state        2      0      0
+     actuator_init                2      0      0
+       -> pin_output              4      0      0
+       -> pin_output              4      0      0
+       -> actuator_led_set        4      0      0
+       -> actuator_buzzer_set     4      0      0
+     actuator_led_set             0      0      9
+       -> pin_write               0      0     18
+     actuator_led_state           2      0      0
+     pin_output                   2      0      0
+     pin_write                    2      0      9
+
+
+   Segment part sizes:
+
+     Function/Label                Bytes
+     --------------                -----
+     _A_P0                            1
+     _A_P1                            1
+     _A_P2                            1
+     P0SEL                            1
+     P1SEL                            1
+     P2SEL                            1
+     P0DIR                            1
+     P1DIR                            1
+     P2DIR                            1
+     s_led                            1
+     s_buz                            1
+     pin_output                      84
+     ?Subroutine1                     7
+     pin_write                       73
+     actuator_init                   30
+     ??Subroutine3_0                  7
+     actuator_led_set                27
+     ?Subroutine2                     6
+     actuator_buzzer_set             29
+     actuator_led_state               7
+     ?Subroutine0                     2
+     actuator_buzzer_state            9
+     ??pin_output?relay               6
+     ??pin_write?relay                6
+     ??actuator_init?relay            6
+     ??actuator_led_set?relay         6
+     ??actuator_buzzer_set?relay      6
+     ??actuator_led_state?relay       6
+     ??actuator_buzzer_state?relay    6
+
+ 
+ 281 bytes in segment BANKED_CODE
+  42 bytes in segment BANK_RELAYS
+   9 bytes in segment SFR_AN
+   2 bytes in segment XDATA_Z
+ 
+ 323 bytes of CODE  memory
+   0 bytes of DATA  memory (+ 9 bytes shared)
+   2 bytes of XDATA memory
+
+Errors: none
+Warnings: 1

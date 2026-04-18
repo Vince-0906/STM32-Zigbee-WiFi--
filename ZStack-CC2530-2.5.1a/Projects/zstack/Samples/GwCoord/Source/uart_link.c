@@ -21,7 +21,7 @@
 #endif
 
 /* 环形缓冲：容纳 ≥ 2 帧 + 少量抖动 */
-#define UL_RX_RING_SZ       256u
+#define UL_RX_RING_SZ       128u
 static uint8 XDATA_QUAL   s_rx_ring[UL_RX_RING_SZ];
 static volatile uint16    s_rx_head;
 static volatile uint16    s_rx_tail;
@@ -71,8 +71,8 @@ void uart_link_init(uint8 owner_task_id)
     cfg.baudRate             = GWCOORD_UART_BAUD;
     cfg.flowControl          = FALSE;
     cfg.flowControlThreshold = 0;
-    cfg.rx.maxBufSize        = 128;
-    cfg.tx.maxBufSize        = 128;
+    cfg.rx.maxBufSize        = 96;
+    cfg.tx.maxBufSize        = 96;
     cfg.idleTimeout          = 6;
     cfg.intEnable            = TRUE;
     cfg.callBackFunc         = uart_rx_cb;

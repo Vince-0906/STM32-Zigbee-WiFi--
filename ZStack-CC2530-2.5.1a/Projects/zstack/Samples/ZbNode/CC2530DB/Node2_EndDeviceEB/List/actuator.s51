@@ -1,0 +1,880 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  11:20:07 /
+// Copyright 2004-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Core               =  plain                                             /
+//    Code model         =  banked                                            /
+//    Data model         =  large                                             /
+//    Calling convention =  xdata reentrant                                   /
+//    Constant location  =  data_rom                                          /
+//    Dptr setup         =  1,16                                              /
+//    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\Source\actuator.c                      /
+//    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S /
+//                          amples\ZbNode\CC2530DB\..\..\..\Tools\CC2530DB\f8 /
+//                          wEndev.cfg (-DCPU32MHZ -DROOT=__near_func         /
+//                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6        /
+//                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\ /
+//                          ..\Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO      /
+//                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR      /
+//                          -DDEFAULT_CHANLIST=0x00000800                     /
+//                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                      /
+//                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_M /
+//                          ASK=0x007F -DBEACON_REQUEST_DELAY=100             /
+//                          -DBEACON_REQ_DELAY_MASK=0x00FF                    /
+//                          -DLINK_STATUS_JITTER_MASK=0x007F                  /
+//                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_P /
+//                          OLLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7           /
+//                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3   /
+//                          -DNWK_MAX_DATA_RETRIES=2                          /
+//                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9        /
+//                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40          /
+//                          -DNWK_MAX_BINDING_ENTRIES=4                       /
+//                          -DMAX_BINDING_CLUSTER_IDS=4                       /
+//                          "-DDEFAULT_KEY={0x01, 0x03, 0x05, 0x07, 0x09,     /
+//                          0x0B, 0x0D, 0x0F, 0x00, 0x02, 0x04, 0x06, 0x08,   /
+//                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
+//                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
+//                          __code" -DGENERIC=__generic                       /
+//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
+//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
+//                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\Source\actuator /
+//                          .c -D NWK_AUTO_POLL -D NODE_ROLE=2 -D             /
+//                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\P /
+//                          rojects\zstack\Samples\ZbNode\CC2530DB\Node2_EndD /
+//                          eviceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr /
+//                          ojects\zstack\Samples\ZbNode\CC2530DB\Node2_EndDe /
+//                          viceEB\List\ --diag_suppress Pe001,Pa010 -o       /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\ -e     /
+//                          --no_code_motion --debug --core=plain             /
+//                          --dptr=16,1 --data_model=large                    /
+//                          --code_model=banked --calling_convention=xdata_re /
+//                          entrant --place_constants=data_rom                /
+//                          --nr_virtual_regs 16 -I                           /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\ -I                           /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\Source\ -I                 /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I   /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\hal /
+//                          \include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project /
+//                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C /
+//                          omponents\hal\target\CC2530EB\ -I                 /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\mac /
+//                          \include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project /
+//                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C /
+//                          omponents\mac\high_level\ -I                      /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\mac /
+//                          \low_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a /
+//                          \Projects\zstack\Samples\ZbNode\CC2530DB\..\..\.. /
+//                          \..\..\Components\mac\low_level\srf04\single_chip /
+//                          \ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack /
+//                          \Samples\ZbNode\CC2530DB\..\..\..\..\..\Component /
+//                          s\mt\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs /
+//                          tack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo /
+//                          nents\osal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\ /
+//                          ..\..\..\Components\services\saddr\ -I            /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\ser /
+//                          vices\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Proj /
+//                          ects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\. /
+//                          .\Components\stack\af\ -I                         /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\sta /
+//                          ck\nwk\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ /
+//                          zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com /
+//                          ponents\stack\sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\ /
+//                          ..\..\..\Components\stack\sec\ -I                 /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\sta /
+//                          ck\sys\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ /
+//                          zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com /
+//                          ponents\stack\zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 /
+//                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\. /
+//                          .\..\..\Components\zmac\ -I                       /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\zma /
+//                          c\f8w\ -Ohz --require_prototypes                  /
+//    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node2_EndDeviceEB\List\actuat /
+//                          or.s51                                            /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME actuator
+
+        RTMODEL "__SystemLibrary", "CLib"
+        RTMODEL "__calling_convention", "xdata_reentrant"
+        RTMODEL "__code_model", "banked"
+        RTMODEL "__core", "plain"
+        RTMODEL "__data_model", "large"
+        RTMODEL "__dptr_size", "16"
+        RTMODEL "__extended_stack", "disabled"
+        RTMODEL "__location_for_constants", "data"
+        RTMODEL "__number_of_dptrs", "1"
+        RTMODEL "__rt_version", "1"
+
+        RSEG DOVERLAY:DATA:NOROOT(0)
+        RSEG IOVERLAY:IDATA:NOROOT(0)
+        RSEG ISTACK:IDATA:NOROOT(0)
+        RSEG PSTACK:XDATA:NOROOT(0)
+        RSEG XSTACK:XDATA:NOROOT(0)
+
+        EXTERN ?BANKED_ENTER_XDATA
+        EXTERN ?BANKED_LEAVE_XDATA
+        EXTERN ?BDISPATCH
+        EXTERN ?BRET
+        EXTERN ?S_SHL
+        EXTERN ?V0
+        EXTERN __INIT_XDATA_Z
+
+        PUBLIC ??actuator_buzzer_set?relay
+        FUNCTION ??actuator_buzzer_set?relay,0203H
+        PUBLIC ??actuator_buzzer_state?relay
+        FUNCTION ??actuator_buzzer_state?relay,0203H
+        PUBLIC ??actuator_init?relay
+        FUNCTION ??actuator_init?relay,0203H
+        PUBLIC ??actuator_led_set?relay
+        FUNCTION ??actuator_led_set?relay,0203H
+        PUBLIC ??actuator_led_state?relay
+        FUNCTION ??actuator_led_state?relay,0203H
+        FUNCTION ??pin_output?relay,0203H
+        FUNCTION ??pin_write?relay,0203H
+        PUBWEAK P0DIR
+        PUBWEAK P0SEL
+        PUBWEAK P1DIR
+        PUBWEAK P1SEL
+        PUBWEAK P2DIR
+        PUBWEAK P2SEL
+        PUBWEAK _A_P0
+        PUBWEAK _A_P1
+        PUBWEAK _A_P2
+        PUBLIC actuator_buzzer_set
+        FUNCTION actuator_buzzer_set,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC actuator_buzzer_state
+        FUNCTION actuator_buzzer_state,0203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC actuator_init
+        FUNCTION actuator_init,021203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        PUBLIC actuator_led_set
+        FUNCTION actuator_led_set,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC actuator_led_state
+        FUNCTION actuator_led_state,0203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        FUNCTION pin_output,0203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        FUNCTION pin_write,0203H
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME ISTACK, 2, STACK
+        
+        CFI Names cfiNames0
+        CFI StackFrame CFA_SP SP IDATA
+        CFI StackFrame CFA_PSP16 PSP16 XDATA
+        CFI StackFrame CFA_XSP16 XSP16 XDATA
+        CFI StaticOverlayFrame CFA_IOVERLAY IOVERLAY
+        CFI StaticOverlayFrame CFA_DOVERLAY DOVERLAY
+        CFI Resource `PSW.CY`:1, `B.BR0`:1, `B.BR1`:1, `B.BR2`:1, `B.BR3`:1
+        CFI Resource `B.BR4`:1, `B.BR5`:1, `B.BR6`:1, `B.BR7`:1, `VB.BR8`:1
+        CFI Resource `VB.BR9`:1, `VB.BR10`:1, `VB.BR11`:1, `VB.BR12`:1
+        CFI Resource `VB.BR13`:1, `VB.BR14`:1, `VB.BR15`:1, VB:8, B:8, A:8
+        CFI Resource PSW:8, DPL0:8, DPH0:8, R0:8, R1:8, R2:8, R3:8, R4:8, R5:8
+        CFI Resource R6:8, R7:8, V0:8, V1:8, V2:8, V3:8, V4:8, V5:8, V6:8, V7:8
+        CFI Resource V8:8, V9:8, V10:8, V11:8, V12:8, V13:8, V14:8, V15:8, SP:8
+        CFI Resource PSPH:8, PSPL:8, PSP16:16, XSPH:8, XSPL:8, XSP16:16
+        CFI VirtualResource ?RET:24
+        CFI Resource ?BRET_EXT:8
+        CFI VirtualResource ?RET_HIGH:8, ?RET_LOW:8
+        CFI ResourceParts PSP16 PSPH, PSPL
+        CFI ResourceParts XSP16 XSPH, XSPL
+        CFI ResourceParts ?RET ?BRET_EXT, ?RET_HIGH, ?RET_LOW
+        CFI EndNames cfiNames0
+        
+        CFI Common cfiCommon0 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-3
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B Undefined
+        CFI A Undefined
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 Undefined
+        CFI R1 Undefined
+        CFI R2 Undefined
+        CFI R3 Undefined
+        CFI R4 Undefined
+        CFI R5 Undefined
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI V8 SameValue
+        CFI V9 SameValue
+        CFI V10 SameValue
+        CFI V11 SameValue
+        CFI V12 SameValue
+        CFI V13 SameValue
+        CFI V14 SameValue
+        CFI V15 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?BRET_EXT Frame(CFA_SP, 3)
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon0
+        
+actuator_buzzer_set SYMBOL "actuator_buzzer_set"
+??actuator_buzzer_set?relay SYMBOL "?relay", actuator_buzzer_set
+actuator_buzzer_state SYMBOL "actuator_buzzer_state"
+??actuator_buzzer_state?relay SYMBOL "?relay", actuator_buzzer_state
+actuator_init       SYMBOL "actuator_init"
+??actuator_init?relay SYMBOL "?relay", actuator_init
+actuator_led_set    SYMBOL "actuator_led_set"
+??actuator_led_set?relay SYMBOL "?relay", actuator_led_set
+actuator_led_state  SYMBOL "actuator_led_state"
+??actuator_led_state?relay SYMBOL "?relay", actuator_led_state
+
+// D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\actuator.c
+//    1 /*
+//    2  * 执行器：LED + Buzzer（E18-MS1，board_e18ms1.h）。
+//    3  * CC2530 I/O 寄存器位访问采用 P1_x / P1DIR 风格（IAR SFR bit 宏）。
+//    4  */
+//    5 
+//    6 #include "actuator.h"
+//    7 #include "board_e18ms1.h"
+//    8 #include "ioCC2530.h"
+
+        ASEGN SFR_AN:DATA:NOROOT,080H
+// union <unnamed> volatile __sfr _A_P0
+_A_P0:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,090H
+// union <unnamed> volatile __sfr _A_P1
+_A_P1:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0a0H
+// union <unnamed> volatile __sfr _A_P2
+_A_P2:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0f3H
+// unsigned char volatile __sfr P0SEL
+P0SEL:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0f4H
+// unsigned char volatile __sfr P1SEL
+P1SEL:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0f5H
+// unsigned char volatile __sfr P2SEL
+P2SEL:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0fdH
+// unsigned char volatile __sfr P0DIR
+P0DIR:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0feH
+// unsigned char volatile __sfr P1DIR
+P1DIR:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0ffH
+// unsigned char volatile __sfr P2DIR
+P2DIR:
+        DATA8
+        DS 1
+//    9 
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+        DATA8
+//   10 static uint8 s_led = 0;
+s_led:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+        DATA8
+//   11 static uint8 s_buz = 0;
+s_buz:
+        DS 1
+        REQUIRE __INIT_XDATA_Z
+//   12 
+//   13 #define SETBIT(reg, b)   ((reg) |=  (1 << (b)))
+//   14 #define CLRBIT(reg, b)   ((reg) &= ~(1 << (b)))
+//   15 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   16 static void pin_output(uint8 port, uint8 pin)
+pin_output:
+        CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function pin_output
+        CODE
+//   17 {
+        PUSH    ?V0 + 0
+        CFI V0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    ?V0 + 1
+        CFI V1 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+//   18     if (port == 0) { P0SEL &= (uint8)~(1 << pin); P0DIR |= (uint8)(1 << pin); }
+        MOV     A,R1
+        JNZ     ??pin_output_0
+        MOV     ?V0 + 0,#0x1
+        MOV     ?V0 + 1,#0x0
+        MOV     A,R2
+        MOV     R0,#?V0 + 0
+        LCALL   ?S_SHL
+        MOV     R0,?V0 + 0
+        MOV     A,R0
+        CPL     A
+        ANL     0xf3,A
+        MOV     A,R0
+        ORL     0xfd,A
+        SJMP    ??pin_output_1
+//   19     else if (port == 1) { P1SEL &= (uint8)~(1 << pin); P1DIR |= (uint8)(1 << pin); }
+??pin_output_0:
+        MOV     A,#0x1
+        XRL     A,R1
+        JNZ     ??pin_output_2
+        MOV     ?V0 + 0,#0x1
+        MOV     ?V0 + 1,#0x0
+        MOV     A,R2
+        MOV     R0,#?V0 + 0
+        LCALL   ?S_SHL
+        MOV     R0,?V0 + 0
+        MOV     A,R0
+        CPL     A
+        ANL     0xf4,A
+        MOV     A,R0
+        ORL     0xfe,A
+        SJMP    ??pin_output_1
+//   20     else if (port == 2) { P2SEL &= (uint8)~(1 << pin); P2DIR |= (uint8)(1 << pin); }
+??pin_output_2:
+        MOV     A,#0x2
+        XRL     A,R1
+        JNZ     ??pin_output_1
+        MOV     ?V0 + 0,#0x1
+        MOV     ?V0 + 1,#0x0
+        MOV     A,R2
+        MOV     R0,#?V0 + 0
+        LCALL   ?S_SHL
+        MOV     R0,?V0 + 0
+        MOV     A,R0
+        CPL     A
+        ANL     0xf5,A
+        MOV     A,R0
+        ORL     0xff,A
+        CFI EndBlock cfiBlock0
+//   21 }
+??pin_output_1:
+        REQUIRE ?Subroutine1
+        REQUIRE P0SEL
+        REQUIRE P0DIR
+        REQUIRE P1SEL
+        REQUIRE P1DIR
+        REQUIRE P2SEL
+        REQUIRE P2DIR
+        ; // Fall through to label ?Subroutine1
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine1:
+        CFI Block cfiBlock1 Using cfiCommon0
+        CFI NoFunction
+        CFI CFA_SP SP+-5
+        CFI V0 Frame(CFA_SP, 4)
+        CFI V1 Frame(CFA_SP, 5)
+        POP     ?V0 + 1
+        CFI CFA_SP SP+-4
+        CFI V1 SameValue
+        POP     ?V0 + 0
+        CFI CFA_SP SP+-3
+        CFI V0 SameValue
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock1
+//   22 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   23 static void pin_write(uint8 port, uint8 pin, uint8 v)
+pin_write:
+        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Function pin_write
+        CODE
+//   24 {
+        PUSH    ?V0 + 0
+        CFI V0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    ?V0 + 1
+        CFI V1 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+//   25     uint8 m = (uint8)(1 << pin);
+        MOV     ?V0 + 0,#0x1
+        MOV     ?V0 + 1,#0x0
+        MOV     A,R2
+        MOV     R0,#?V0 + 0
+        LCALL   ?S_SHL
+        MOV     R0,?V0 + 0
+//   26     if (port == 0) { if (v) P0 |= m; else P0 &= (uint8)~m; }
+        MOV     A,R1
+        JNZ     ??pin_write_0
+        MOV     A,R3
+        JZ      ??pin_write_1
+        MOV     A,R0
+        ORL     0x80,A
+        SJMP    ??pin_write_2
+??pin_write_1:
+        MOV     A,R0
+        CPL     A
+        ANL     0x80,A
+        SJMP    ??pin_write_2
+//   27     else if (port == 1) { if (v) P1 |= m; else P1 &= (uint8)~m; }
+??pin_write_0:
+        MOV     A,#0x1
+        XRL     A,R1
+        JNZ     ??pin_write_3
+        MOV     A,R3
+        JZ      ??pin_write_4
+        MOV     A,R0
+        ORL     0x90,A
+        SJMP    ??pin_write_2
+??pin_write_4:
+        MOV     A,R0
+        CPL     A
+        ANL     0x90,A
+        SJMP    ??pin_write_2
+//   28     else if (port == 2) { if (v) P2 |= m; else P2 &= (uint8)~m; }
+??pin_write_3:
+        MOV     A,#0x2
+        XRL     A,R1
+        JNZ     ??pin_write_2
+        MOV     A,R3
+        JZ      ??pin_write_5
+        MOV     A,R0
+        ORL     0xa0,A
+        SJMP    ??pin_write_2
+??pin_write_5:
+        MOV     A,R0
+        CPL     A
+        ANL     0xa0,A
+//   29 }
+??pin_write_2:
+        SJMP    ?Subroutine1
+        CFI EndBlock cfiBlock2
+        REQUIRE _A_P0
+        REQUIRE _A_P1
+        REQUIRE _A_P2
+//   30 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   31 void actuator_init(void)
+actuator_init:
+        CFI Block cfiBlock3 Using cfiCommon0
+        CFI Function actuator_init
+        CODE
+//   32 {
+        FUNCALL actuator_init, pin_output
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL actuator_init, pin_output
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL actuator_init, actuator_led_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL actuator_init, actuator_buzzer_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+//   33     pin_output(NODE_LED_PORT, NODE_LED_PIN);
+        ; Setup parameters for call to function pin_output
+        MOV     R2,#0x0
+        MOV     R1,#0x1
+        LCALL   ??pin_output?relay
+//   34     pin_output(NODE_BUZZER_PORT, NODE_BUZZER_PIN);
+        ; Setup parameters for call to function pin_output
+        MOV     R2,#0x7
+        MOV     R1,#0x1
+        LCALL   ??pin_output?relay
+//   35     actuator_led_set(0);
+        ; Setup parameters for call to function actuator_led_set
+        MOV     R1,#0x0
+        LCALL   ??actuator_led_set?relay
+//   36     actuator_buzzer_set(0);
+        ; Setup parameters for call to function actuator_buzzer_set
+        MOV     R1,#0x0
+        LCALL   ??actuator_buzzer_set?relay
+//   37 }
+        SJMP    ??Subroutine3_0
+        CFI EndBlock cfiBlock3
+//   38 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   39 void actuator_led_set(uint8 onoff)
+actuator_led_set:
+        CFI Block cfiBlock4 Using cfiCommon0
+        CFI Function actuator_led_set
+        CODE
+//   40 {
+        FUNCALL actuator_led_set, pin_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+        MOV     A,R1
+//   41     uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+        JZ      ??actuator_led_set_0
+        MOV     R7,#0x1
+        SJMP    ??actuator_led_set_1
+??actuator_led_set_0:
+        MOV     R7,#0x0
+//   42     pin_write(NODE_LED_PORT, NODE_LED_PIN, level);
+??actuator_led_set_1:
+        ; Setup parameters for call to function pin_write
+        MOV     A,R7
+        MOV     R3,A
+        MOV     R2,#0x0
+        MOV     R1,#0x1
+        LCALL   ??pin_write?relay
+//   43     s_led = onoff ? 1 : 0;
+        MOV     A,R7
+        MOV     DPTR,#s_led
+        CFI EndBlock cfiBlock4
+        REQUIRE ?Subroutine2
+        ; // Fall through to label ?Subroutine2
+//   44 }
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine2:
+        CFI Block cfiBlock5 Using cfiCommon0
+        CFI NoFunction
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        MOVX    @DPTR,A
+        MOV     R7,#0x1
+        LJMP    ?BANKED_LEAVE_XDATA
+        CFI EndBlock cfiBlock5
+//   45 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   46 void actuator_buzzer_set(uint8 onoff)
+actuator_buzzer_set:
+        CFI Block cfiBlock6 Using cfiCommon0
+        CFI Function actuator_buzzer_set
+        CODE
+//   47 {
+        FUNCALL actuator_buzzer_set, pin_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+        MOV     A,R1
+//   48     uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+        JZ      ??actuator_buzzer_set_0
+        MOV     R7,#0x1
+        SJMP    ??actuator_buzzer_set_1
+??actuator_buzzer_set_0:
+        MOV     R7,#0x0
+//   49     pin_write(NODE_BUZZER_PORT, NODE_BUZZER_PIN, level);
+??actuator_buzzer_set_1:
+        ; Setup parameters for call to function pin_write
+        MOV     A,R7
+        MOV     R3,A
+        MOV     R2,#0x7
+        MOV     R1,#0x1
+        LCALL   ??pin_write?relay
+//   50     s_buz = onoff ? 1 : 0;
+        MOV     A,R7
+        MOV     DPTR,#s_buz
+        SJMP    ?Subroutine2
+        CFI EndBlock cfiBlock6
+//   51 }
+//   52 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   53 uint8 actuator_led_state(void)    { return s_led; }
+actuator_led_state:
+        CFI Block cfiBlock7 Using cfiCommon0
+        CFI Function actuator_led_state
+        CODE
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+        MOV     DPTR,#s_led
+        CFI EndBlock cfiBlock7
+        REQUIRE ?Subroutine0
+        ; // Fall through to label ?Subroutine0
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine0:
+        CFI Block cfiBlock8 Using cfiCommon0
+        CFI NoFunction
+        CFI CFA_SP SP+-5
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        MOVX    A,@DPTR
+        MOV     R1,A
+        CFI EndBlock cfiBlock8
+        REQUIRE ??Subroutine3_0
+        ; // Fall through to label ??Subroutine3_0
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+??Subroutine3_0:
+        CFI Block cfiBlock9 Using cfiCommon0
+        CFI NoFunction
+        CFI CFA_SP SP+-5
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        POP     DPH
+        CFI CFA_SP SP+-4
+        CFI DPH0 SameValue
+        POP     DPL
+        CFI CFA_SP SP+-3
+        CFI DPL0 SameValue
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock9
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   54 uint8 actuator_buzzer_state(void) { return s_buz; }
+actuator_buzzer_state:
+        CFI Block cfiBlock10 Using cfiCommon0
+        CFI Function actuator_buzzer_state
+        CODE
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+        MOV     DPTR,#s_buz
+        SJMP    ?Subroutine0
+        CFI EndBlock cfiBlock10
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??pin_output?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    pin_output
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??pin_write?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    pin_write
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??actuator_init?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    actuator_init
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??actuator_led_set?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    actuator_led_set
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??actuator_buzzer_set?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    actuator_buzzer_set
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??actuator_led_state?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    actuator_led_state
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??actuator_buzzer_state?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    actuator_buzzer_state
+
+        END
+// 
+// 281 bytes in segment BANKED_CODE
+//  42 bytes in segment BANK_RELAYS
+//   9 bytes in segment SFR_AN
+//   2 bytes in segment XDATA_Z
+// 
+// 323 bytes of CODE  memory
+//   0 bytes of DATA  memory (+ 9 bytes shared)
+//   2 bytes of XDATA memory
+//
+//Errors: none
+//Warnings: 1

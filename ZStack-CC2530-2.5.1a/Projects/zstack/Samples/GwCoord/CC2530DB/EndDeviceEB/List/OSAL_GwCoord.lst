@@ -1,0 +1,305 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  11:04:34 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\Source\OSAL_GwCoord.c                   #
+#    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\..\..\..\Tools\CC2530DB\f8w #
+#                          Endev.cfg (-DCPU32MHZ -DROOT=__near_func           #
+#                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6         #
+#                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\GwCoord\CC2530DB\..\..\. #
+#                          .\Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO        #
+#                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR       #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\GwCoord\Source\OSAL_GwCo #
+#                          ord.c -D NWK_AUTO_POLL -D ZTOOL_P1 -D MT_TASK -D   #
+#                          MT_SYS_FUNC -D MT_ZDO_FUNC -D LCD_SUPPORTED=DEBUG  #
+#                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
+#                          amples\GwCoord\CC2530DB\EndDeviceEB\List\ -lA      #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\List\              #
+#                          --diag_suppress Pe001,Pa010 -o                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\Obj\ -e            #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
+#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
+#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
+#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
+#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\mac\high_level\ -I                         #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
+#                          low_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\P #
+#                          rojects\zstack\Samples\GwCoord\CC2530DB\..\..\..\. #
+#                          .\..\Components\mac\low_level\srf04\single_chip\   #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\..\..\..\..\..\Components\m #
+#                          t\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\osal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\GwCoord\CC2530DB\..\..\..\.. #
+#                          \..\Components\services\saddr\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\serv #
+#                          ices\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\ #
+#                          Components\stack\af\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\..\ #
+#                          ..\..\..\Components\stack\nwk\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\stac #
+#                          k\sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Comp #
+#                          onents\stack\sec\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\ #
+#                          Projects\zstack\Samples\GwCoord\CC2530DB\..\..\..\ #
+#                          ..\..\Components\stack\sys\ -I                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\stac #
+#                          k\zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs #
+#                          tack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\zmac\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\ #
+#                          Components\zmac\f8w\ -Ohz --require_prototypes     #
+#    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\List\OSAL_GwCoord. #
+#                          lst                                                #
+#    Object file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\EndDeviceEB\Obj\OSAL_GwCoord.r #
+#                          51                                                 #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\GwCoord\Source\OSAL_GwCoord.c
+      1          /*
+                  ^
+Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
+          only issued once)
+      2           * OSAL 任务注册（模板复制自 OSAL_SampleApp.c）。
+      3           * 规范书：CC2530.md §5.6 事件号 0x0001/0x0002/0x0004 由 GwCoord 占用。
+      4           */
+      5          
+      6          #include "ZComDef.h"
+      7          #include "hal_drivers.h"
+      8          #include "OSAL.h"
+      9          #include "OSAL_Tasks.h"
+     10          
+     11          #if defined ( MT_TASK )
+     12            #include "MT.h"
+     13            #include "MT_TASK.h"
+     14          #endif
+     15          
+     16          #include "nwk.h"
+     17          #include "APS.h"
+     18          #include "ZDApp.h"
+     19          #if defined ( ZIGBEE_FREQ_AGILITY ) || defined ( ZIGBEE_PANID_CONFLICT )
+     20            #include "ZDNwkMgr.h"
+     21          #endif
+     22          #if defined ( ZIGBEE_FRAGMENTATION )
+     23            #include "aps_frag.h"
+     24          #endif
+     25          
+     26          #include "gw_coord.h"
+     27          
+
+   \                                 In  segment XDATA_ROM_C, align 1
+     28          const pTaskEventHandlerFn tasksArr[] = {
+   \                     tasksArr:
+   \   000000   ....         DW ??macEventLoop?relay
+   \   000002   ....         DW ??nwk_event_loop?relay
+   \   000004   ....         DW ??Hal_ProcessEvent?relay
+   \   000006   ....         DW ??MT_ProcessEvent?relay
+   \   000008   ....         DW ??APS_event_loop?relay
+   \   00000A   ....         DW ??APSF_ProcessEvent?relay
+   \   00000C   ....         DW ??ZDApp_event_loop?relay
+   \   00000E   ....         DW ??GwCoord_ProcessEvent?relay
+     29            macEventLoop,
+     30            nwk_event_loop,
+     31            Hal_ProcessEvent,
+     32          #if defined( MT_TASK )
+     33            MT_ProcessEvent,
+     34          #endif
+     35            APS_event_loop,
+     36          #if defined ( ZIGBEE_FRAGMENTATION )
+     37            APSF_ProcessEvent,
+     38          #endif
+     39            ZDApp_event_loop,
+     40          #if defined ( ZIGBEE_FREQ_AGILITY ) || defined ( ZIGBEE_PANID_CONFLICT )
+     41            ZDNwkMgr_event_loop,
+     42          #endif
+     43            GwCoord_ProcessEvent
+     44          };
+     45          
+
+   \                                 In  segment XDATA_ROM_C, align 1
+     46          const uint8 tasksCnt = sizeof( tasksArr ) / sizeof( tasksArr[0] );
+   \                     tasksCnt:
+   \   000000   08           DB 8
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     47          uint16 *tasksEvents;
+   \                     tasksEvents:
+   \   000000                DS 2
+   \   000002                REQUIRE __INIT_XDATA_Z
+     48          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     49          void osalInitTasks( void )
+   \                     osalInitTasks:
+     50          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     51            uint8 taskID = 0;
+     52          
+     53            tasksEvents = (uint16 *)osal_mem_alloc( sizeof( uint16 ) * tasksCnt);
+   \   000004                ; Setup parameters for call to function osal_mem_alloc
+   \   000004   7A10         MOV     R2,#0x10
+   \   000006   7B00         MOV     R3,#0x0
+   \   000008   12....       LCALL   ??osal_mem_alloc?relay
+   \   00000B   90....       MOV     DPTR,#tasksEvents
+   \   00000E   EA           MOV     A,R2
+   \   00000F   F0           MOVX    @DPTR,A
+   \   000010   A3           INC     DPTR
+   \   000011   EB           MOV     A,R3
+   \   000012   F0           MOVX    @DPTR,A
+     54            osal_memset( tasksEvents, 0, (sizeof( uint16 ) * tasksCnt));
+   \   000013                ; Setup parameters for call to function osal_memset
+   \   000013   7C10         MOV     R4,#0x10
+   \   000015   7D00         MOV     R5,#0x0
+   \   000017   7900         MOV     R1,#0x0
+   \   000019   12....       LCALL   ??osal_memset?relay
+     55          
+     56            macTaskInit( taskID++ );
+   \   00001C                ; Setup parameters for call to function macTaskInit
+   \   00001C   7900         MOV     R1,#0x0
+   \   00001E   12....       LCALL   ??macTaskInit?relay
+     57            nwk_init( taskID++ );
+   \   000021                ; Setup parameters for call to function nwk_init
+   \   000021   7901         MOV     R1,#0x1
+   \   000023   12....       LCALL   ??nwk_init?relay
+     58            Hal_Init( taskID++ );
+   \   000026                ; Setup parameters for call to function Hal_Init
+   \   000026   7902         MOV     R1,#0x2
+   \   000028   12....       LCALL   ??Hal_Init?relay
+     59          #if defined( MT_TASK )
+     60            MT_TaskInit( taskID++ );
+   \   00002B                ; Setup parameters for call to function MT_TaskInit
+   \   00002B   7903         MOV     R1,#0x3
+   \   00002D   12....       LCALL   ??MT_TaskInit?relay
+     61          #endif
+     62            APS_Init( taskID++ );
+   \   000030                ; Setup parameters for call to function APS_Init
+   \   000030   7904         MOV     R1,#0x4
+   \   000032   12....       LCALL   ??APS_Init?relay
+     63          #if defined ( ZIGBEE_FRAGMENTATION )
+     64            APSF_Init( taskID++ );
+   \   000035                ; Setup parameters for call to function APSF_Init
+   \   000035   7905         MOV     R1,#0x5
+   \   000037   12....       LCALL   ??APSF_Init?relay
+     65          #endif
+     66            ZDApp_Init( taskID++ );
+   \   00003A                ; Setup parameters for call to function ZDApp_Init
+   \   00003A   7906         MOV     R1,#0x6
+   \   00003C   12....       LCALL   ??ZDApp_Init?relay
+     67          #if defined ( ZIGBEE_FREQ_AGILITY ) || defined ( ZIGBEE_PANID_CONFLICT )
+     68            ZDNwkMgr_Init( taskID++ );
+     69          #endif
+     70            GwCoord_Init( taskID );
+   \   00003F                ; Setup parameters for call to function GwCoord_Init
+   \   00003F   7907         MOV     R1,#0x7
+   \   000041   12....       LCALL   ??GwCoord_Init?relay
+     71          }
+   \   000044   D083         POP     DPH
+   \   000046   D082         POP     DPL
+   \   000048   02....       LJMP    ?BRET
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??osalInitTasks?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    osalInitTasks
+
+   Maximum stack usage in bytes:
+
+     Function            ISTACK PSTACK XSTACK
+     --------            ------ ------ ------
+     osalInitTasks           2      0      0
+       -> osal_mem_alloc     4      0      0
+       -> osal_memset        4      0      0
+       -> macTaskInit        4      0      0
+       -> nwk_init           4      0      0
+       -> Hal_Init           4      0      0
+       -> MT_TaskInit        4      0      0
+       -> APS_Init           4      0      0
+       -> APSF_Init          4      0      0
+       -> ZDApp_Init         4      0      0
+       -> GwCoord_Init       4      0      0
+
+
+   Segment part sizes:
+
+     Function/Label        Bytes
+     --------------        -----
+     tasksArr                16
+     tasksCnt                 1
+     tasksEvents              2
+     osalInitTasks           75
+     ??osalInitTasks?relay    6
+
+ 
+ 75 bytes in segment BANKED_CODE
+  6 bytes in segment BANK_RELAYS
+ 17 bytes in segment XDATA_ROM_C
+  2 bytes in segment XDATA_Z
+ 
+ 81 bytes of CODE  memory
+ 17 bytes of CONST memory
+  2 bytes of XDATA memory
+
+Errors: none
+Warnings: 1

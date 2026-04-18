@@ -278,6 +278,7 @@
           <state>HOLD_AUTO_START</state>
           <state>LCD_SUPPORTED</state>
           <state>HAL_UART=FALSE</state>
+          <state>HAL_LCD=FALSE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -2118,7 +2119,7 @@
     </settings>
   </configuration>
   <configuration>
-    <name>RouterEB</name>
+    <name>Node1_EndDeviceEB</name>
     <toolchain>
       <name>8051</name>
     </toolchain>
@@ -2241,15 +2242,15 @@
         </option>
         <option>
           <name>ExePath</name>
-          <state>RouterEB\Exe</state>
+          <state>Node1_EndDeviceEB\Exe</state>
         </option>
         <option>
           <name>ObjPath</name>
-          <state>RouterEB\Obj</state>
+          <state>Node1_EndDeviceEB\Obj</state>
         </option>
         <option>
           <name>ListPath</name>
-          <state>RouterEB\List</state>
+          <state>Node1_EndDeviceEB\List</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -2389,11 +2390,10 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state>ZTOOL_P1</state>
-          <state>MT_TASK</state>
-          <state>MT_SYS_FUNC</state>
-          <state>MT_ZDO_FUNC</state>
-          <state>LCD_SUPPORTED=DEBUG</state>
+          <state>NWK_AUTO_POLL</state>
+          <state>NODE_ROLE=1</state>
+          <state>HAL_UART=FALSE</state>
+          <state>HAL_LCD=FALSE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -2554,7 +2554,7 @@
         </option>
         <option>
           <name>Compiler Extra Options Edit</name>
-          <state>-f $PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wRouter.cfg</state>
+          <state>-f $PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wEndev.cfg</state>
           <state>-f $PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wConfig.cfg</state>
         </option>
         <option>
@@ -3126,7 +3126,7 @@
         </option>
         <option>
           <name>Linker Extra Options Edit</name>
-          <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\Router-Pro.lib</state>
+          <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\EndDevice-Pro.lib</state>
           <state>-C $PROJ_DIR$\..\..\..\Libraries\TI2530DB\bin\Security.lib</state>
           <state>-C $PROJ_DIR$\..\..\..\Libraries\TIMAC\bin\TIMAC-CC2530.lib</state>
         </option>
@@ -3176,7 +3176,7 @@
     </settings>
   </configuration>
   <configuration>
-    <name>EndDeviceEB</name>
+    <name>Node2_EndDeviceEB</name>
     <toolchain>
       <name>8051</name>
     </toolchain>
@@ -3299,15 +3299,15 @@
         </option>
         <option>
           <name>ExePath</name>
-          <state>EndDeviceEB\Exe</state>
+          <state>Node2_EndDeviceEB\Exe</state>
         </option>
         <option>
           <name>ObjPath</name>
-          <state>EndDeviceEB\Obj</state>
+          <state>Node2_EndDeviceEB\Obj</state>
         </option>
         <option>
           <name>ListPath</name>
-          <state>EndDeviceEB\List</state>
+          <state>Node2_EndDeviceEB\List</state>
         </option>
         <option>
           <name>GOutputBinary</name>
@@ -3448,11 +3448,9 @@
         <option>
           <name>CCDefines</name>
           <state>NWK_AUTO_POLL</state>
-          <state>ZTOOL_P1</state>
-          <state>MT_TASK</state>
-          <state>MT_SYS_FUNC</state>
-          <state>MT_ZDO_FUNC</state>
-          <state>LCD_SUPPORTED=DEBUG</state>
+          <state>NODE_ROLE=2</state>
+          <state>HAL_UART=FALSE</state>
+          <state>HAL_LCD=FALSE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -4831,5 +4829,3 @@
     </file>
   </group>
 </project>
-
-

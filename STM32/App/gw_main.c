@@ -21,9 +21,17 @@
 #include <stdio.h>
 
 static thresholds_t s_th;
+static uint32_t s_last_pc_rx_ms = 0;
+static uint32_t s_zb_join_window_start_ms = 0;
+static uint32_t s_zb_join_retry_ms = 0;
+static uint8_t s_zb_join_window_active = 0;
 
 static void on_zb_frame(const frame_t *f) { router_on_zb_frame(f); }
-static void on_wifi_line(const char *line, uint16_t n) { router_on_json_line(line, n); }
+static void on_wifi_line(const char *line, uint16_t n)
+{
+    s_last_pc_rx_ms = ms_now();
+    router_on_json_line(line, n);
+}
 
 static void iwdg_init(void)
 {
@@ -48,10 +56,34 @@ static void send_hello(void)
 
 /* 冷启动 / ZB 链路恢复 后自动开放入网窗 60s，让节点首次上电能加入。
  * Program.txt 未要求 PC 主动下发 allow_join，必须网关自己保证开机可用。 */
-static void open_join_window(void)
+static void open_join_window(const char *reason)
 {
-    uint8_t sec = 60;
-    (void)zb_link_send(CMD_ZB_ALLOW_JOIN, &sec, 1);
+    uint8_t sec = ZB_ALLOW_JOIN_SEC;
+
+    LOGI("zb", "tx ALLOW_JOIN sec=%u src=%s", sec, reason);
+    if (zb_link_send(CMD_ZB_ALLOW_JOIN, &sec, 1) != 0) {
+        LOGW("zb", "tx ALLOW_JOIN failed src=%s", reason);
+    }
+}
+
+static void request_node_snapshot(const char *reason)
+{
+    LOGI("zb", "tx LIST_NODES src=%s", reason);
+    if (zb_link_send(CMD_ZB_LIST_NODES, 0, 0) != 0) {
+        LOGW("zb", "tx LIST_NODES failed src=%s", reason);
+    }
+}
+
+static void start_join_window(uint32_t now_ms, const char *reason)
+{
+    s_zb_join_window_active = 1u;
+    s_zb_join_window_start_ms = now_ms;
+    s_zb_join_retry_ms = now_ms;
+
+    LOGI("zb", "bringup window start src=%s dur=%lu retry=%lu",
+         reason, (unsigned long)ZB_BRINGUP_WINDOW_MS, (unsigned long)ZB_BRINGUP_RETRY_MS);
+    open_join_window(reason);
+    request_node_snapshot(reason);
 }
 
 void gw_main_init(void)
@@ -69,6 +101,10 @@ void gw_main_init(void)
     }
     router_init();
     automation_init(&s_th);
+    s_last_pc_rx_ms = 0;
+    s_zb_join_window_start_ms = 0;
+    s_zb_join_retry_ms = 0;
+    s_zb_join_window_active = 0;
 
     zb_link_init(on_zb_frame);
     wifi_link_init(on_wifi_line);
@@ -89,6 +125,7 @@ void gw_main_run(void)
     for (;;) {
         uint32_t now = ms_now();
         uint8_t wifi_up, zb_alive;
+        uint8_t node_count;
 
         zb_link_poll(now);
         wifi_link_poll(now);
@@ -103,7 +140,27 @@ void gw_main_run(void)
 
         /* 沿触发：每次 CC2530 (再)就绪后开一次入网窗 60s */
         zb_alive = zb_link_alive();
-        if (zb_alive && !zb_was_alive) open_join_window();
+        if (zb_alive && !zb_was_alive) {
+            start_join_window(now, "alive-edge");
+        } else if (!zb_alive && zb_was_alive) {
+            LOGW("zb", "coord link lost, stop bringup window");
+            s_zb_join_window_active = 0u;
+        }
+
+        node_count = router_node_count();
+        if (s_zb_join_window_active) {
+            if (node_count != 0u) {
+                LOGI("zb", "bringup window stop reason=node-detected count=%u", node_count);
+                s_zb_join_window_active = 0u;
+            } else if ((now - s_zb_join_window_start_ms) >= ZB_BRINGUP_WINDOW_MS) {
+                LOGW("zb", "bringup window timeout");
+                s_zb_join_window_active = 0u;
+            } else if ((now - s_zb_join_retry_ms) >= ZB_BRINGUP_RETRY_MS) {
+                s_zb_join_retry_ms = now;
+                open_join_window("bringup-retry");
+                request_node_snapshot("bringup-retry");
+            }
+        }
         zb_was_alive = zb_alive;
 
         /* 更新 OLED 模型 */
@@ -113,9 +170,17 @@ void gw_main_run(void)
             memset(&om, 0, sizeof(om));
             om.zb_ok = zb_link_alive();
             om.wifi_ok = wifi_link_is_up();
-            om.pc_ok = 0;
-            if (n1) { om.n1_online = n1->online; om.n1_temp_x100 = n1->temp_x100; om.n1_hum_x100 = n1->hum_x100; }
-            if (n2) { om.n2_online = n2->online; om.n2_lux = n2->lux; }
+            om.pc_ok = (wifi_up && s_last_pc_rx_ms != 0 &&
+                        (now - s_last_pc_rx_ms) <= TCP_DEAD_MS) ? 1u : 0u;
+            if (n1) {
+                om.n1_online = (n1->online && (now - n1->last_update_ms) <= NODE1_STALE_MS) ? 1u : 0u;
+                om.n1_temp_x100 = n1->temp_x100;
+                om.n1_hum_x100 = n1->hum_x100;
+            }
+            if (n2) {
+                om.n2_online = (n2->online && (now - n2->last_update_ms) <= NODE2_STALE_MS) ? 1u : 0u;
+                om.n2_lux = n2->lux;
+            }
             strncpy(om.alm, automation_alarm_text(), sizeof(om.alm) - 1);
             oled_view_update(&om);
             oled_view_tick(now);

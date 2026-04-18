@@ -1331,11 +1331,8 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state>ZTOOL_P1</state>
-          <state>MT_TASK</state>
-          <state>MT_SYS_FUNC</state>
-          <state>MT_ZDO_FUNC</state>
-          <state>LCD_SUPPORTED=DEBUG</state>
+          <state>HAL_UART=TRUE</state>
+          <state>HAL_LCD=FALSE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -4267,6 +4264,24 @@
       <name>$PROJ_DIR$\..\Source\cmd_map.h</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Source\soft_i2c.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\soft_i2c.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\gw_oled_view.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\gw_oled_view.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Source\zb_net.c</name>
     </file>
     <file>
@@ -4837,5 +4852,3 @@
     </file>
   </group>
 </project>
-
-

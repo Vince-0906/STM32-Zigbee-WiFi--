@@ -174,6 +174,7 @@ __I uint8_t AHBPrescTable[16] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9}
   */
 
 static void SetSysClock(void);
+static void EarlyMuteBuzzer(void);
 
 #ifdef SYSCLK_FREQ_HSE
   static void SetSysClockToHSE(void);
@@ -209,6 +210,18 @@ static void SetSysClock(void);
   * @param  None
   * @retval None
   */
+static void EarlyMuteBuzzer(void)
+{
+  /* PA15 通过低有效驱动级控制本地蜂鸣器；外接 5V 上电时若继续保持 JTAG 默认态，
+     容易在应用初始化前误鸣。这里在 SystemInit() 最早阶段先释放 PA15 并拉高。 */
+  RCC->APB2ENR |= (RCC_APB2ENR_AFIOEN | RCC_APB2ENR_IOPAEN);
+  AFIO->MAPR = (AFIO->MAPR & (uint32_t)~AFIO_MAPR_SWJ_CFG) |
+               AFIO_MAPR_SWJ_CFG_JTAGDISABLE;
+  GPIOA->BSRR = GPIO_BSRR_BS15;
+  GPIOA->CRH &= (uint32_t)~(GPIO_CRH_MODE15 | GPIO_CRH_CNF15);
+  GPIOA->CRH |= GPIO_CRH_MODE15_1;  /* 2 MHz 推挽输出 */
+}
+
 void SystemInit (void)
 {
   /* Reset the RCC clock configuration to the default reset state(for debug purpose) */
@@ -250,6 +263,8 @@ void SystemInit (void)
   /* Disable all interrupts and clear pending bits  */
   RCC->CIR = 0x009F0000;
 #endif /* STM32F10X_CL */
+
+  EarlyMuteBuzzer();
     
 #if defined (STM32F10X_HD) || (defined STM32F10X_XL) || (defined STM32F10X_HD_VL)
   #ifdef DATA_IN_ExtSRAM

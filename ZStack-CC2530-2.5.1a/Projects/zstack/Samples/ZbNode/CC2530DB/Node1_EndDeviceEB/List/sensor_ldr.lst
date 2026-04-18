@@ -1,0 +1,281 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  11:20:38 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\Source\sensor_ldr.c                      #
+#    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\Tools\CC2530DB\f8wE #
+#                          ndev.cfg (-DCPU32MHZ -DROOT=__near_func            #
+#                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6         #
+#                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\.. #
+#                          \Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO         #
+#                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR       #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\Source\sensor_ldr #
+#                          .c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D              #
+#                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDev #
+#                          iceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Proje #
+#                          cts\zstack\Samples\ZbNode\CC2530DB\Node1_EndDevice #
+#                          EB\List\ --diag_suppress Pe001,Pa010 -o            #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e       #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\ -I                          #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\hal\target\CC2530EB\ -I                      #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\mac\high_level\ -I                           #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\l #
+#                          ow_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\mac\low_level\srf04\single_chip\ -I  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mt\   #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\os #
+#                          al\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C #
+#                          omponents\services\saddr\ -I                       #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\servi #
+#                          ces\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\stack\af\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a #
+#                          \Projects\zstack\Samples\ZbNode\CC2530DB\..\..\..\ #
+#                          ..\..\Components\stack\nwk\ -I                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs #
+#                          tack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compon #
+#                          ents\stack\sec\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\stack\sys\ -I                        #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zst #
+#                          ack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compone #
+#                          nts\zmac\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects #
+#                          \zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\zmac\f8w\ -Ohz --require_prototypes        #
+#    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\sensor_l #
+#                          dr.lst                                             #
+#    Object file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\sensor_ld #
+#                          r.r51                                              #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\sensor_ldr.c
+      1          /*
+                  ^
+Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
+          only issued once)
+      2           * 光敏 ADC 采样（AIN7 = P0.7，E18-MS1 板内部分压节点）。
+      3           * 返回值 uint16 lux 估算：ADC code → 3.3V 参考下的近似换算，非精确。
+      4           */
+      5          
+      6          #include "sensor_ldr.h"
+      7          #include "board_e18ms1.h"
+      8          #include "ioCC2530.h"
+
+   \                                 In  segment SFR_AN, at 0xf2
+   \   unsigned char volatile __sfr APCFG
+   \                     APCFG:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xf3
+   \   unsigned char volatile __sfr P0SEL
+   \                     P0SEL:
+   \   000000                DS 1
+
+   \                                 In  segment SFR_AN, at 0xfd
+   \   unsigned char volatile __sfr P0DIR
+   \                     P0DIR:
+   \   000000                DS 1
+      9          #include "hal_adc.h"
+     10          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     11          void ldr_init(void)
+   \                     ldr_init:
+     12          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     13              /* P0.7 设为外设模式（ADC 由 ADCCON 配置通道即可占管） */
+     14              P0SEL |= (uint8)(1 << NODE_LDR_ADC_CH);
+   \   000000   43F380       ORL     0xf3,#0x80
+     15              P0DIR &= (uint8)~(1 << NODE_LDR_ADC_CH);
+   \   000003   53FD7F       ANL     0xfd,#0x7f
+     16              APCFG |= (uint8)(1 << NODE_LDR_ADC_CH);
+   \   000006   43F280       ORL     0xf2,#0x80
+     17          }
+   \   000009   02....       LJMP    ?BRET
+   \   00000C                REQUIRE P0SEL
+   \   00000C                REQUIRE P0DIR
+   \   00000C                REQUIRE APCFG
+     18          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     19          uint16 ldr_read_lux(void)
+   \                     ldr_read_lux:
+     20          {
+   \   000000   74F0         MOV     A,#-0x10
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 16
+   \   000005                ; Auto size: 0
+     21              uint16 code;
+     22              uint32 lux;
+     23          
+     24              /* HalAdcRead(ch=HAL_ADC_CHN_AIN7, resolution=HAL_ADC_RESOLUTION_12) 返回 int16（有符号） */
+     25              code = (uint16)HalAdcRead(HAL_ADC_CHN_AIN7, HAL_ADC_RESOLUTION_12);
+     26          
+     27              /* 线性近似：code 0 ≈ 0 lux（全遮光）；code 2047 ≈ 2000 lux（满量程） */
+     28              lux = ((uint32)code * 2000u) / 2047u;
+   \   000005                ; Setup parameters for call to function HalAdcRead
+   \   000005   7A03         MOV     R2,#0x3
+   \   000007   7907         MOV     R1,#0x7
+   \   000009   12....       LCALL   ??HalAdcRead?relay
+   \   00000C   8A..         MOV     ?V0 + 0,R2
+   \   00000E   8B..         MOV     ?V0 + 1,R3
+   \   000010   E4           CLR     A
+   \   000011   F5..         MOV     ?V0 + 2,A
+   \   000013   F5..         MOV     ?V0 + 3,A
+   \   000015   90....       MOV     DPTR,#__Constant_7d0
+   \   000018   78..         MOV     R0,#?V0 + 4
+   \   00001A   12....       LCALL   ?L_MOV_X
+   \   00001D   78..         MOV     R0,#?V0 + 0
+   \   00001F   79..         MOV     R1,#?V0 + 4
+   \   000021   12....       LCALL   ?L_MUL
+   \   000024   90....       MOV     DPTR,#__Constant_7ff
+   \   000027   78..         MOV     R0,#?V0 + 4
+   \   000029   12....       LCALL   ?L_MOV_X
+   \   00002C   78..         MOV     R0,#?V0 + 0
+   \   00002E   79..         MOV     R1,#?V0 + 4
+   \   000030   12....       LCALL   ?UL_DIV_MOD
+     29              if (lux > 65535u) lux = 65535u;
+   \   000033   90....       MOV     DPTR,#__Constant_10000
+   \   000036   78..         MOV     R0,#?V0 + 0
+   \   000038   12....       LCALL   ?UL_GE_X
+   \   00003B   5008         JNC     ??ldr_read_lux_0
+   \   00003D   90....       MOV     DPTR,#__Constant_ffff
+   \   000040   78..         MOV     R0,#?V0 + 0
+   \   000042   12....       LCALL   ?L_MOV_X
+     30              return (uint16)lux;
+   \                     ??ldr_read_lux_0:
+   \   000045   AA..         MOV     R2,?V0 + 0
+   \   000047   AB..         MOV     R3,?V0 + 1
+   \   000049   7F08         MOV     R7,#0x8
+   \   00004B   02....       LJMP    ?BANKED_LEAVE_XDATA
+     31          }
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     __Constant_7d0:
+   \   000000   D0070000     DD 2000
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     __Constant_7ff:
+   \   000000   FF070000     DD 2047
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     __Constant_10000:
+   \   000000   00000100     DD 65536
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     __Constant_ffff:
+   \   000000   FFFF0000     DD 65535
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??ldr_init?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    ldr_init
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??ldr_read_lux?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    ldr_read_lux
+
+   Maximum stack usage in bytes:
+
+     Function        ISTACK PSTACK XSTACK
+     --------        ------ ------ ------
+     ldr_init            0      0      0
+     ldr_read_lux        0      0     16
+       -> HalAdcRead     0      0     32
+
+
+   Segment part sizes:
+
+     Function/Label       Bytes
+     --------------       -----
+     APCFG                   1
+     P0SEL                   1
+     P0DIR                   1
+     ldr_init               12
+     ldr_read_lux           78
+     __Constant_7d0          4
+     __Constant_7ff          4
+     __Constant_10000        4
+     __Constant_ffff         4
+     ??ldr_init?relay        6
+     ??ldr_read_lux?relay    6
+
+ 
+ 90 bytes in segment BANKED_CODE
+ 12 bytes in segment BANK_RELAYS
+  3 bytes in segment SFR_AN
+ 16 bytes in segment XDATA_ROM_C
+ 
+ 102 bytes of CODE  memory
+   0 bytes of CONST memory (+ 16 bytes shared)
+   0 bytes of DATA  memory (+  3 bytes shared)
+
+Errors: none
+Warnings: 1

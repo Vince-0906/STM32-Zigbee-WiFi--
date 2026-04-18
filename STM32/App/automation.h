@@ -10,6 +10,7 @@ extern "C" {
 
 void automation_init(const thresholds_t *th);
 void automation_reload(const thresholds_t *th);
+void automation_manual_override(uint16_t nodeid, uint8_t ep, uint32_t now_ms);
 void automation_on_sample(uint16_t nodeid, const node_state_t *ns);
 void automation_on_offline(uint16_t nodeid);
 void automation_tick(uint32_t now_ms);

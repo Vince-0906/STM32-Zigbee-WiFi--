@@ -5,6 +5,7 @@
  */
 
 #include "nv_store.h"
+#include "comdef.h"
 #include "OSAL_Nv.h"
 
 int8 nv_load_u16(uint16 id, uint16 *val)

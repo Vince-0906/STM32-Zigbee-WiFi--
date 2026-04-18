@@ -28,6 +28,12 @@
 #define CMD_ZB_REPORT       0x20u
 #define CMD_ZB_CMD          0x21u
 #define CMD_ZB_ERR          0x7Fu
+#define ZB_DEV_UNKNOWN      0x00u
+#define ZB_DEV_ROUTER       0x01u
+#define ZB_DEV_ENDDEV       0x02u
+#define ZB_ROLE_UNKNOWN     0x00u
+#define ZB_ROLE_TEMP_HUM    0x01u
+#define ZB_ROLE_LUX         0x02u
 
 /* ---------- dtype §4.5.3 ---------- */
 #define DTYPE_BOOL          0x01u
@@ -59,13 +65,19 @@
 
 /* ---------- Zigbee 网络 §7.3 ---------- */
 #define ZB_CHANNEL_DEFAULT  15u
-#define ZB_NODE_MAX         16u
+#define ZB_NODE_MAX         8u
+#define ZB_NODE_OFFLINE_SEC 180u
 
 /* ---------- 定时参数 §7.2 ---------- */
 #define PC_PING_MS          5000u
 #define TCP_DEAD_MS         30000u
 #define ZB_HEARTBEAT_MS     10000u       /* STM32→CC ZB_PING 周期 */
 #define ZB_HEARTBEAT_FAILS  3u
+#define ZB_ALLOW_JOIN_SEC   60u
+#define ZB_BRINGUP_RETRY_MS 5000u
+#define ZB_BRINGUP_WINDOW_MS 70000u
+#define NODE1_STALE_MS      6000u
+#define NODE2_STALE_MS      1500u
 #define OLED_REFRESH_MS     500u
 #define IWDG_TIMEOUT_MS     2000u
 #define JSON_LINE_MAX       512u

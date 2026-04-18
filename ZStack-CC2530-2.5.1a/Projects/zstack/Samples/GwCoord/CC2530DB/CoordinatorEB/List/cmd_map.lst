@@ -1,0 +1,499 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  15:20:55 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\Source\cmd_map.c                        #
+#    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\..\..\..\Tools\CC2530DB\f8w #
+#                          Coord.cfg (-DCPU32MHZ -DROOT=__near_func           #
+#                          -DMAC_CFG_APP_PENDING_QUEUE=TRUE                   #
+#                          -DMAC_CFG_TX_DATA_MAX=5 -DMAC_CFG_TX_MAX=8         #
+#                          -DMAC_CFG_RX_MAX=5 -DZDO_COORDINATOR -DRTR_NWK)    #
+#                          -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\..\..\..\Tools\CC2530DB\f8w #
+#                          Config.cfg (-DZIGBEEPRO -DSECURE=0                 #
+#                          -DZG_SECURE_DYNAMIC=0 -DREFLECTOR                  #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\GwCoord\Source\cmd_map.c #
+#                           -D HAL_UART=TRUE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a #
+#                          \Projects\zstack\Samples\GwCoord\CC2530DB\Coordina #
+#                          torEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Proje #
+#                          cts\zstack\Samples\GwCoord\CC2530DB\CoordinatorEB\ #
+#                          List\ --diag_suppress Pe001,Pa010 -o               #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\CoordinatorEB\Obj\ -e          #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
+#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
+#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
+#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
+#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\mac\high_level\ -I                         #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
+#                          low_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\P #
+#                          rojects\zstack\Samples\GwCoord\CC2530DB\..\..\..\. #
+#                          .\..\Components\mac\low_level\srf04\single_chip\   #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\GwCoord\CC2530DB\..\..\..\..\..\Components\m #
+#                          t\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\osal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\GwCoord\CC2530DB\..\..\..\.. #
+#                          \..\Components\services\saddr\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\serv #
+#                          ices\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\ #
+#                          Components\stack\af\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\..\ #
+#                          ..\..\..\Components\stack\nwk\ -I                  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\stac #
+#                          k\sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Comp #
+#                          onents\stack\sec\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\ #
+#                          Projects\zstack\Samples\GwCoord\CC2530DB\..\..\..\ #
+#                          ..\..\Components\stack\sys\ -I                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\stac #
+#                          k\zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs #
+#                          tack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\zmac\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\ #
+#                          Components\zmac\f8w\ -Ohz --require_prototypes     #
+#    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\CoordinatorEB\List\cmd_map.lst #
+#    Object file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\CoordinatorEB\Obj\cmd_map.r51  #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\GwCoord\Source\cmd_map.c
+      1          /*
+                  ^
+Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
+          only issued once)
+      2           * Dispatch inbound UART commands from STM32 to coordinator services.
+      3           */
+      4          
+      5          #include "cmd_map.h"
+      6          #include "gw_coord.h"
+      7          #include "zb_net.h"
+      8          
+      9          static void do_ping(const frame_t *f)
+     10          {
+     11              (void)f;
+     12              (void)GwCoord_SendFrame(CMD_ZB_PING, 0, 0);
+     13          }
+     14          
+     15          static void do_allow_join(const frame_t *f)
+     16          {
+     17              if (f->plen < 1u) {
+     18                  GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_ALLOW_JOIN);
+     19                  return;
+     20              }
+     21              zb_net_allow_join(f->payload[0]);
+     22          }
+     23          
+     24          static void do_list_nodes(const frame_t *f)
+     25          {
+     26              uint8 i;
+     27              uint8 cnt;
+     28              const zb_node_t *n;
+     29          
+     30              (void)f;
+     31              cnt = zb_net_count();
+     32              for (i = 0; i < cnt; ++i) {
+     33                  n = zb_net_at(i);
+     34                  if (n != 0) {
+     35                      GwCoord_SendNodeInfo(n);
+     36                  }
+     37              }
+     38              if (cnt == 0u) {
+     39                  GwCoord_SendNetStatus();
+     40              }
+     41          }
+     42          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     43          static void do_cmd(const frame_t *f)
+   \                     do_cmd:
+     44          {
+   \   000000   74F1         MOV     A,#-0xf
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 15
+   \   000005                ; Auto size: 0
+   \   000005   EA           MOV     A,R2
+   \   000006   F8           MOV     R0,A
+   \   000007   EB           MOV     A,R3
+   \   000008   F9           MOV     R1,A
+     45              uint16 nodeid;
+     46              uint8 ep;
+     47              uint16 cluster;
+     48              uint8 dtype;
+     49              uint8 vlen;
+     50              const uint8 *val;
+     51          
+     52              if (f->plen < 7u) {
+   \   000009   8882         MOV     DPL,R0
+   \   00000B   8983         MOV     DPH,R1
+   \   00000D   A3           INC     DPTR
+   \   00000E   E0           MOVX    A,@DPTR
+   \   00000F   C3           CLR     C
+   \   000010   9407         SUBB    A,#0x7
+   \   000012   5007         JNC     ??do_cmd_0
+     53                  GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
+   \                     ??do_cmd_1:
+   \   000014                ; Setup parameters for call to function GwCoord_SendErr
+   \   000014   7A21         MOV     R2,#0x21
+   \   000016   7920         MOV     R1,#0x20
+   \   000018   02....       LJMP    ??do_cmd_2 & 0xFFFF
+     54                  return;
+     55              }
+     56          
+     57              nodeid  = (uint16)f->payload[0] | ((uint16)f->payload[1] << 8);
+   \                     ??do_cmd_0:
+   \   00001B   8882         MOV     DPL,R0
+   \   00001D   8983         MOV     DPH,R1
+   \   00001F   A3           INC     DPTR
+   \   000020   A3           INC     DPTR
+   \   000021   E0           MOVX    A,@DPTR
+   \   000022   FC           MOV     R4,A
+   \   000023   8882         MOV     DPL,R0
+   \   000025   8983         MOV     DPH,R1
+   \   000027   A3           INC     DPTR
+   \   000028   A3           INC     DPTR
+   \   000029   A3           INC     DPTR
+   \   00002A   E0           MOVX    A,@DPTR
+   \   00002B   FB           MOV     R3,A
+   \   00002C   EC           MOV     A,R4
+   \   00002D   FA           MOV     R2,A
+     58              ep      = f->payload[2];
+   \   00002E   8882         MOV     DPL,R0
+   \   000030   8983         MOV     DPH,R1
+   \   000032   A3           INC     DPTR
+   \   000033   A3           INC     DPTR
+   \   000034   A3           INC     DPTR
+   \   000035   A3           INC     DPTR
+   \   000036   E0           MOVX    A,@DPTR
+   \   000037   F5..         MOV     ?V0 + 2,A
+     59              cluster = (uint16)f->payload[3] | ((uint16)f->payload[4] << 8);
+     60              dtype   = f->payload[5];
+   \   000039   8882         MOV     DPL,R0
+   \   00003B   8983         MOV     DPH,R1
+   \   00003D   A3           INC     DPTR
+   \   00003E   A3           INC     DPTR
+   \   00003F   A3           INC     DPTR
+   \   000040   A3           INC     DPTR
+   \   000041   A3           INC     DPTR
+   \   000042   A3           INC     DPTR
+   \   000043   A3           INC     DPTR
+   \   000044   E0           MOVX    A,@DPTR
+   \   000045   F5..         MOV     ?V0 + 3,A
+     61              vlen    = f->payload[6];
+   \   000047   8882         MOV     DPL,R0
+   \   000049   8983         MOV     DPH,R1
+   \   00004B   A3           INC     DPTR
+   \   00004C   A3           INC     DPTR
+   \   00004D   A3           INC     DPTR
+   \   00004E   A3           INC     DPTR
+   \   00004F   A3           INC     DPTR
+   \   000050   A3           INC     DPTR
+   \   000051   A3           INC     DPTR
+   \   000052   A3           INC     DPTR
+   \   000053   E0           MOVX    A,@DPTR
+   \   000054   F5..         MOV     ?V0 + 6,A
+     62              val     = &f->payload[7];
+   \   000056   E8           MOV     A,R0
+   \   000057   2409         ADD     A,#0x9
+   \   000059   FC           MOV     R4,A
+   \   00005A   E9           MOV     A,R1
+   \   00005B   3400         ADDC    A,#0x0
+   \   00005D   FD           MOV     R5,A
+     63              if ((uint16)(7u + vlen) > f->plen) {
+   \   00005E   8882         MOV     DPL,R0
+   \   000060   8983         MOV     DPH,R1
+   \   000062   A3           INC     DPTR
+   \   000063   E0           MOVX    A,@DPTR
+   \   000064   F5..         MOV     ?V0 + 4,A
+   \   000066   85....       MOV     ?V0 + 0,?V0 + 6
+   \   000069   E5..         MOV     A,?V0 + 0
+   \   00006B   2407         ADD     A,#0x7
+   \   00006D   FE           MOV     R6,A
+   \   00006E   E4           CLR     A
+   \   00006F   3400         ADDC    A,#0x0
+   \   000071   FF           MOV     R7,A
+   \   000072   E5..         MOV     A,?V0 + 4
+   \   000074   9E           SUBB    A,R6
+   \   000075   E4           CLR     A
+   \   000076   9F           SUBB    A,R7
+   \   000077   409B         JC      ??do_cmd_1
+     64                  GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
+     65                  return;
+     66              }
+     67          
+     68              if (cluster == ZCL_CLU_ONOFF && dtype == DTYPE_BOOL && vlen == 1u) {
+   \   000079   8882         MOV     DPL,R0
+   \   00007B   8983         MOV     DPH,R1
+   \   00007D   A3           INC     DPTR
+   \   00007E   A3           INC     DPTR
+   \   00007F   A3           INC     DPTR
+   \   000080   A3           INC     DPTR
+   \   000081   A3           INC     DPTR
+   \   000082   E0           MOVX    A,@DPTR
+   \   000083   FE           MOV     R6,A
+   \   000084   8882         MOV     DPL,R0
+   \   000086   8983         MOV     DPH,R1
+   \   000088   A3           INC     DPTR
+   \   000089   A3           INC     DPTR
+   \   00008A   A3           INC     DPTR
+   \   00008B   A3           INC     DPTR
+   \   00008C   A3           INC     DPTR
+   \   00008D   A3           INC     DPTR
+   \   00008E   E0           MOVX    A,@DPTR
+   \   00008F   F9           MOV     R1,A
+   \   000090   EE           MOV     A,R6
+   \   000091   F8           MOV     R0,A
+   \   000092   7406         MOV     A,#0x6
+   \   000094   68           XRL     A,R0
+   \   000095   7001         JNZ     ??do_cmd_3
+   \   000097   E9           MOV     A,R1
+   \                     ??do_cmd_3:
+   \   000098   7020         JNZ     ??do_cmd_4
+   \   00009A   7401         MOV     A,#0x1
+   \   00009C   65..         XRL     A,?V0 + 3
+   \   00009E   701A         JNZ     ??do_cmd_4
+   \   0000A0   7401         MOV     A,#0x1
+   \   0000A2   65..         XRL     A,?V0 + 6
+   \   0000A4   7014         JNZ     ??do_cmd_4
+     69                  if (zb_net_send_onoff(nodeid, ep, val[0]) != 0) {
+   \   0000A6                ; Setup parameters for call to function zb_net_send_onoff
+   \   0000A6   8C82         MOV     DPL,R4
+   \   0000A8   8D83         MOV     DPH,R5
+   \   0000AA   E0           MOVX    A,@DPTR
+   \   0000AB   FC           MOV     R4,A
+   \   0000AC   A9..         MOV     R1,?V0 + 2
+   \   0000AE   12....       LCALL   ??zb_net_send_onoff?relay
+   \   0000B1   E9           MOV     A,R1
+   \   0000B2   600D         JZ      ??do_cmd_5
+     70                      GwCoord_SendErr(ERRC_SEND_FAIL, CMD_ZB_CMD);
+   \   0000B4                ; Setup parameters for call to function GwCoord_SendErr
+   \   0000B4   7A21         MOV     R2,#0x21
+   \   0000B6   7910         MOV     R1,#0x10
+   \   0000B8   8004         SJMP    ??do_cmd_2
+     71                  }
+     72              } else {
+     73                  GwCoord_SendErr(ERRC_UNKNOWN, CMD_ZB_CMD);
+   \                     ??do_cmd_4:
+   \   0000BA                ; Setup parameters for call to function GwCoord_SendErr
+   \   0000BA   7A21         MOV     R2,#0x21
+   \   0000BC   797F         MOV     R1,#0x7f
+   \                     ??do_cmd_2:
+   \   0000BE   12....       LCALL   ??GwCoord_SendErr?relay
+   \                     ??do_cmd_5:
+   \   0000C1   7F07         MOV     R7,#0x7
+   \   0000C3   02....       LJMP    ?BANKED_LEAVE_XDATA
+     74              }
+     75          }
+     76          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     77          void cmd_map_dispatch(const frame_t *f)
+   \                     cmd_map_dispatch:
+     78          {
+   \   000000   74F6         MOV     A,#-0xa
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 10
+   \   000005                ; Auto size: 0
+     79              switch (f->cmd) {
+   \   000005   8A82         MOV     DPL,R2
+   \   000007   8B83         MOV     DPH,R3
+   \   000009   E0           MOVX    A,@DPTR
+   \   00000A   14           DEC     A
+   \   00000B   600D         JZ      ??cmd_map_dispatch_0
+   \   00000D   24F1         ADD     A,#-0xf
+   \   00000F   6016         JZ      ??cmd_map_dispatch_1
+   \   000011   14           DEC     A
+   \   000012   602A         JZ      ??cmd_map_dispatch_2
+   \   000014   24F0         ADD     A,#-0x10
+   \   000016   6049         JZ      ??cmd_map_dispatch_3
+   \   000018   804C         SJMP    ??cmd_map_dispatch_4
+     80              case CMD_ZB_PING:
+     81                  do_ping(f);
+   \                     ??cmd_map_dispatch_0:
+   \   00001A                ; Setup parameters for call to function GwCoord_SendFrame
+   \   00001A   7C00         MOV     R4,#0x0
+   \   00001C   7A00         MOV     R2,#0x0
+   \   00001E   7B00         MOV     R3,#0x0
+   \   000020   7901         MOV     R1,#0x1
+   \   000022   12....       LCALL   ??GwCoord_SendFrame?relay
+     82                  break;
+   \   000025   8046         SJMP    ??cmd_map_dispatch_5
+     83              case CMD_ZB_ALLOW_JOIN:
+     84                  do_allow_join(f);
+   \                     ??cmd_map_dispatch_1:
+   \   000027   A3           INC     DPTR
+   \   000028   E0           MOVX    A,@DPTR
+   \   000029   7006         JNZ     ??cmd_map_dispatch_6
+   \   00002B                ; Setup parameters for call to function GwCoord_SendErr
+   \   00002B   7A10         MOV     R2,#0x10
+   \   00002D   7920         MOV     R1,#0x20
+   \   00002F   8039         SJMP    ??cmd_map_dispatch_7
+   \                     ??cmd_map_dispatch_6:
+   \   000031                ; Setup parameters for call to function zb_net_allow_join
+   \   000031   8A82         MOV     DPL,R2
+   \   000033   8B83         MOV     DPH,R3
+   \   000035   A3           INC     DPTR
+   \   000036   A3           INC     DPTR
+   \   000037   E0           MOVX    A,@DPTR
+   \   000038   F9           MOV     R1,A
+   \   000039   12....       LCALL   ??zb_net_allow_join?relay
+   \   00003C   802F         SJMP    ??cmd_map_dispatch_5
+     85                  break;
+     86              case CMD_ZB_LIST_NODES:
+     87                  do_list_nodes(f);
+   \                     ??cmd_map_dispatch_2:
+   \   00003E                ; Setup parameters for call to function zb_net_count
+   \   00003E   12....       LCALL   ??zb_net_count?relay
+   \   000041   E9           MOV     A,R1
+   \   000042   FF           MOV     R7,A
+   \   000043   7E00         MOV     R6,#0x0
+   \   000045   800D         SJMP    ??cmd_map_dispatch_8
+   \                     ??cmd_map_dispatch_9:
+   \   000047                ; Setup parameters for call to function zb_net_at
+   \   000047   EE           MOV     A,R6
+   \   000048   F9           MOV     R1,A
+   \   000049   12....       LCALL   ??zb_net_at?relay
+   \   00004C   EA           MOV     A,R2
+   \   00004D   4B           ORL     A,R3
+   \   00004E   6003         JZ      ??cmd_map_dispatch_10
+   \   000050                ; Setup parameters for call to function GwCoord_SendNodeInfo
+   \   000050   12....       LCALL   ??GwCoord_SendNodeInfo?relay
+   \                     ??cmd_map_dispatch_10:
+   \   000053   0E           INC     R6
+   \                     ??cmd_map_dispatch_8:
+   \   000054   EE           MOV     A,R6
+   \   000055   C3           CLR     C
+   \   000056   9F           SUBB    A,R7
+   \   000057   40EE         JC      ??cmd_map_dispatch_9
+   \   000059   EF           MOV     A,R7
+   \   00005A   7011         JNZ     ??cmd_map_dispatch_5
+   \   00005C                ; Setup parameters for call to function GwCoord_SendNetStatus
+   \   00005C   12....       LCALL   ??GwCoord_SendNetStatus?relay
+   \   00005F   800C         SJMP    ??cmd_map_dispatch_5
+     88                  break;
+     89              case CMD_ZB_CMD:
+     90                  do_cmd(f);
+   \                     ??cmd_map_dispatch_3:
+   \   000061                ; Setup parameters for call to function do_cmd
+   \   000061   12....       LCALL   ??do_cmd?relay
+     91                  break;
+   \   000064   8007         SJMP    ??cmd_map_dispatch_5
+     92              default:
+     93                  GwCoord_SendErr(ERRC_UNKNOWN, f->cmd);
+   \                     ??cmd_map_dispatch_4:
+   \   000066                ; Setup parameters for call to function GwCoord_SendErr
+   \   000066   E0           MOVX    A,@DPTR
+   \   000067   FA           MOV     R2,A
+   \   000068   797F         MOV     R1,#0x7f
+   \                     ??cmd_map_dispatch_7:
+   \   00006A   12....       LCALL   ??GwCoord_SendErr?relay
+     94                  break;
+     95              }
+     96          }
+   \                     ??cmd_map_dispatch_5:
+   \   00006D   7F02         MOV     R7,#0x2
+   \   00006F   02....       LJMP    ?BANKED_LEAVE_XDATA
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??do_cmd?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    do_cmd
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??cmd_map_dispatch?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    cmd_map_dispatch
+
+   Maximum stack usage in bytes:
+
+     Function                   ISTACK PSTACK XSTACK
+     --------                   ------ ------ ------
+     cmd_map_dispatch               0      0     10
+       -> GwCoord_SendFrame         0      0     20
+       -> GwCoord_SendErr           0      0     20
+       -> zb_net_allow_join         0      0     20
+       -> zb_net_count              0      0     20
+       -> zb_net_at                 0      0     20
+       -> GwCoord_SendNodeInfo      0      0     20
+       -> GwCoord_SendNetStatus     0      0     20
+       -> do_cmd                    0      0     20
+       -> GwCoord_SendErr           0      0     20
+     do_cmd                         0      0     25
+       -> GwCoord_SendErr           0      0     30
+       -> zb_net_send_onoff         0      0     30
+       -> GwCoord_SendErr           0      0     30
+       -> GwCoord_SendErr           0      0     30
+
+
+   Segment part sizes:
+
+     Function/Label           Bytes
+     --------------           -----
+     do_cmd                    198
+     cmd_map_dispatch          114
+     ??do_cmd?relay              6
+     ??cmd_map_dispatch?relay    6
+
+ 
+ 312 bytes in segment BANKED_CODE
+  12 bytes in segment BANK_RELAYS
+ 
+ 324 bytes of CODE memory
+
+Errors: none
+Warnings: 1

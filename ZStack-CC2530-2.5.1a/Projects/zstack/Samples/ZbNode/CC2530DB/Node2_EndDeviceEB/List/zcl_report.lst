@@ -1,0 +1,581 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  11:20:10 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\Source\zcl_report.c                      #
+#    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\Tools\CC2530DB\f8wE #
+#                          ndev.cfg (-DCPU32MHZ -DROOT=__near_func            #
+#                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6         #
+#                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\.. #
+#                          \Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO         #
+#                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR       #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\Source\zcl_report #
+#                          .c -D NWK_AUTO_POLL -D NODE_ROLE=2 -D              #
+#                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\Node2_EndDev #
+#                          iceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Proje #
+#                          cts\zstack\Samples\ZbNode\CC2530DB\Node2_EndDevice #
+#                          EB\List\ --diag_suppress Pe001,Pa010 -o            #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\ -e       #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\ -I                          #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\hal\target\CC2530EB\ -I                      #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\mac\high_level\ -I                           #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\l #
+#                          ow_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\mac\low_level\srf04\single_chip\ -I  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mt\   #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\os #
+#                          al\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C #
+#                          omponents\services\saddr\ -I                       #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\servi #
+#                          ces\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\stack\af\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a #
+#                          \Projects\zstack\Samples\ZbNode\CC2530DB\..\..\..\ #
+#                          ..\..\Components\stack\nwk\ -I                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs #
+#                          tack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compon #
+#                          ents\stack\sec\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\stack\sys\ -I                        #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zst #
+#                          ack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compone #
+#                          nts\zmac\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects #
+#                          \zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\zmac\f8w\ -Ohz --require_prototypes        #
+#    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\List\zcl_repo #
+#                          rt.lst                                             #
+#    Object file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\zcl_repor #
+#                          t.r51                                              #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\zcl_report.c
+      1          /*
+                  ^
+Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
+          only issued once)
+      2           * 构造最小 ZCL 帧并走 AF_DataRequest：
+      3           *   Report Attributes (cmd=0x0A) / Default Response (cmd=0x0B)。
+      4           * 不依赖 ZStack ZCL 库以减少初始化负担（规范书 §2.3 风险条目选择）。
+      5           */
+      6          
+      7          #include "zcl_report.h"
+      8          #include "AF.h"
+      9          #include "ZComDef.h"
+     10          #include "OSAL.h"
+     11          
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     12          static uint8 s_zcl_seq = 0;
+   \                     s_zcl_seq:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+     13          
+     14          static uint8 dtype_to_vlen(uint8 dtype)
+     15          {
+     16              switch (dtype) {
+     17              case 0x01: case 0x02: case 0x03: return 1;   /* bool/u8/i8 */
+     18              case 0x10: case 0x11:            return 2;   /* i16/u16 */
+     19              case 0x12: case 0x20:            return 4;   /* i32/u32 */
+     20              default:                         return 0;
+     21              }
+     22          }
+     23          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     24          int8 zcl_report_send(uint8 src_ep, uint16 cluster, uint16 attrId,
+   \                     zcl_report_send:
+     25                               uint8 dtype, const void *val, uint8 vlen)
+     26          {
+   \   000000   74ED         MOV     A,#-0x13
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 19
+   \   000005                ; Auto size: 28
+   \   000005   74E4         MOV     A,#-0x1c
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+   \   00000A   89..         MOV     ?V0 + 2,R1
+   \   00000C   8A..         MOV     ?V0 + 6,R2
+   \   00000E   8B..         MOV     ?V0 + 7,R3
+   \   000010   EC           MOV     A,R4
+   \   000011   FE           MOV     R6,A
+   \   000012   ED           MOV     A,R5
+   \   000013   FF           MOV     R7,A
+   \   000014   742F         MOV     A,#0x2f
+   \   000016   12....       LCALL   ?XSTACK_DISP0_8
+   \   000019   E0           MOVX    A,@DPTR
+   \   00001A   F5..         MOV     ?V0 + 4,A
+   \   00001C   7430         MOV     A,#0x30
+   \   00001E   12....       LCALL   ?XSTACK_DISP0_8
+   \   000021   E0           MOVX    A,@DPTR
+   \   000022   F5..         MOV     ?V0 + 0,A
+   \   000024   A3           INC     DPTR
+   \   000025   E0           MOVX    A,@DPTR
+   \   000026   F5..         MOV     ?V0 + 1,A
+   \   000028   7432         MOV     A,#0x32
+   \   00002A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00002D   E0           MOVX    A,@DPTR
+   \   00002E   F5..         MOV     ?V0 + 3,A
+     27              afAddrType_t dst;
+     28              endPointDesc_t *ep_desc;
+     29              uint8 buf[16];                    /* 3 头 + 2 attrId + 1 dtype + ≤4 val = 10B */
+     30              uint8 *p;
+     31              uint8 expect_vlen;
+     32              uint8 rc;
+     33          
+     34              expect_vlen = dtype_to_vlen(dtype);
+   \   000030   E5..         MOV     A,?V0 + 4
+   \   000032   14           DEC     A
+   \   000033   601C         JZ      ??zcl_report_send_0
+   \   000035   14           DEC     A
+   \   000036   6019         JZ      ??zcl_report_send_0
+   \   000038   14           DEC     A
+   \   000039   6016         JZ      ??zcl_report_send_0
+   \   00003B   24F3         ADD     A,#-0xd
+   \   00003D   600E         JZ      ??zcl_report_send_1
+   \   00003F   14           DEC     A
+   \   000040   600B         JZ      ??zcl_report_send_1
+   \   000042   14           DEC     A
+   \   000043   6004         JZ      ??zcl_report_send_2
+   \   000045   24F2         ADD     A,#-0xe
+   \   000047   700E         JNZ     ??zcl_report_send_3
+   \                     ??zcl_report_send_2:
+   \   000049   7404         MOV     A,#0x4
+   \   00004B   8006         SJMP    ??zcl_report_send_4
+   \                     ??zcl_report_send_1:
+   \   00004D   7402         MOV     A,#0x2
+   \   00004F   8002         SJMP    ??zcl_report_send_4
+   \                     ??zcl_report_send_0:
+   \   000051   7401         MOV     A,#0x1
+   \                     ??zcl_report_send_4:
+   \   000053   65..         XRL     A,?V0 + 3
+   \   000055   6005         JZ      ??zcl_report_send_5
+     35              if (expect_vlen == 0 || vlen != expect_vlen) return -1;
+   \                     ??zcl_report_send_3:
+   \   000057   79FF         MOV     R1,#-0x1
+   \   000059   02....       LJMP    ??zcl_report_send_6 & 0xFFFF
+     36              if (val == 0) return -1;
+   \                     ??zcl_report_send_5:
+   \   00005C   E5..         MOV     A,?V0 + 0
+   \   00005E   45..         ORL     A,?V0 + 1
+   \   000060   60F5         JZ      ??zcl_report_send_3
+     37          
+     38              osal_memset(&dst, 0, sizeof(dst));
+   \   000062                ; Setup parameters for call to function osal_memset
+   \   000062   7C0C         MOV     R4,#0xc
+   \   000064   7D00         MOV     R5,#0x0
+   \   000066   7900         MOV     R1,#0x0
+   \   000068   7410         MOV     A,#0x10
+   \   00006A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00006D   AA82         MOV     R2,DPL
+   \   00006F   AB83         MOV     R3,DPH
+   \   000071   12....       LCALL   ??osal_memset?relay
+     39              dst.addrMode = (afAddrMode_t)AddrBroadcast;   /* 先用广播到 Coord（0xFFFC = routers+coord） */
+   \   000074   7418         MOV     A,#0x18
+   \   000076   12....       LCALL   ?XSTACK_DISP0_8
+   \   000079   740F         MOV     A,#0xf
+   \   00007B   F0           MOVX    @DPTR,A
+     40              dst.addr.shortAddr = 0x0000;                  /* Coord 短地址 = 0 */
+   \   00007C   04           INC     A
+   \   00007D   12....       LCALL   ?XSTACK_DISP0_8
+   \   000080   E4           CLR     A
+   \   000081   F0           MOVX    @DPTR,A
+   \   000082   A3           INC     DPTR
+   \   000083   F0           MOVX    @DPTR,A
+     41              dst.addrMode = (afAddrMode_t)Addr16Bit;
+   \   000084   7418         MOV     A,#0x18
+   \   000086   12....       LCALL   ?XSTACK_DISP0_8
+   \   000089   7402         MOV     A,#0x2
+   \   00008B   F0           MOVX    @DPTR,A
+     42              dst.endPoint = 0x01;                           /* Coord EP1 */
+   \   00008C   7419         MOV     A,#0x19
+   \   00008E   12....       LCALL   ?XSTACK_DISP0_8
+   \   000091   7401         MOV     A,#0x1
+   \   000093   F0           MOVX    @DPTR,A
+     43          
+     44              p = buf;
+     45              *p++ = 0x18;                                   /* FC: cluster-spec | dir:server->client | disable default resp */
+   \   000094   85..82       MOV     DPL,?XSP + 0
+   \   000097   85..83       MOV     DPH,?XSP + 1
+   \   00009A   7418         MOV     A,#0x18
+   \   00009C   F0           MOVX    @DPTR,A
+     46              *p++ = ++s_zcl_seq;
+   \   00009D   90....       MOV     DPTR,#s_zcl_seq
+   \   0000A0   E0           MOVX    A,@DPTR
+   \   0000A1   04           INC     A
+   \   0000A2   F0           MOVX    @DPTR,A
+   \   0000A3   C0E0         PUSH    A
+   \   0000A5   7401         MOV     A,#0x1
+   \   0000A7   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000AA   D0E0         POP     A
+   \   0000AC   F0           MOVX    @DPTR,A
+     47              *p++ = 0x0A;                                   /* Report Attributes */
+   \   0000AD   7402         MOV     A,#0x2
+   \   0000AF   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000B2   740A         MOV     A,#0xa
+   \   0000B4   F0           MOVX    @DPTR,A
+     48              *p++ = (uint8)(attrId & 0xFF);
+   \   0000B5   7403         MOV     A,#0x3
+   \   0000B7   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000BA   EE           MOV     A,R6
+   \   0000BB   F0           MOVX    @DPTR,A
+     49              *p++ = (uint8)(attrId >> 8);
+   \   0000BC   7404         MOV     A,#0x4
+   \   0000BE   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000C1   EF           MOV     A,R7
+   \   0000C2   F0           MOVX    @DPTR,A
+     50              *p++ = dtype;
+   \   0000C3   7405         MOV     A,#0x5
+   \   0000C5   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000C8   E5..         MOV     A,?V0 + 4
+   \   0000CA   F0           MOVX    @DPTR,A
+     51              osal_memcpy(p, val, vlen); p += vlen;
+   \   0000CB                ; Setup parameters for call to function osal_memcpy
+   \   0000CB   85....       MOV     ?V0 + 8,?V0 + 0
+   \   0000CE   85....       MOV     ?V0 + 9,?V0 + 1
+   \   0000D1   75..00       MOV     ?V0 + 10,#0x0
+   \   0000D4   78..         MOV     R0,#?V0 + 8
+   \   0000D6   12....       LCALL   ?PUSH_XSTACK_I_THREE
+   \   0000D9   85....       MOV     ?V0 + 0,?V0 + 3
+   \   0000DC   AC..         MOV     R4,?V0 + 0
+   \   0000DE   7D00         MOV     R5,#0x0
+   \   0000E0   7409         MOV     A,#0x9
+   \   0000E2   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000E5   AA82         MOV     R2,DPL
+   \   0000E7   AB83         MOV     R3,DPH
+   \   0000E9   12....       LCALL   ??osal_memcpy?relay
+   \   0000EC   7403         MOV     A,#0x3
+   \   0000EE   12....       LCALL   ?DEALLOC_XSTACK8
+     52          
+     53              ep_desc = afFindEndPointDesc(src_ep);
+   \   0000F1                ; Setup parameters for call to function afFindEndPointDesc
+   \   0000F1   A9..         MOV     R1,?V0 + 2
+   \   0000F3   12....       LCALL   ?Subroutine0 & 0xFFFF
+     54              if (ep_desc == 0) return -2;
+   \                     ??CrossCallReturnLabel_0:
+   \   0000F6   7004         JNZ     ??zcl_report_send_7
+   \   0000F8   79FE         MOV     R1,#-0x2
+   \   0000FA   8060         SJMP    ??zcl_report_send_6
+     55          
+     56              rc = AF_DataRequest(&dst, ep_desc, cluster,
+     57                                  (uint8)(p - buf), buf, &s_zcl_seq,
+     58                                  AF_DISCV_ROUTE, AF_DEFAULT_RADIUS);
+     59              return (rc == afStatus_SUCCESS) ? 0 : -3;
+   \                     ??zcl_report_send_7:
+   \   0000FC                ; Setup parameters for call to function AF_DataRequest
+   \   0000FC   75..1E       MOV     ?V0 + 0,#0x1e
+   \   0000FF   78..         MOV     R0,#?V0 + 0
+   \   000101   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   000104   75....       MOV     ?V0 + 0,#s_zcl_seq & 0xff
+   \   000107   75....       MOV     ?V0 + 1,#(s_zcl_seq >> 8) & 0xff
+   \   00010A   78..         MOV     R0,#?V0 + 0
+   \   00010C   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00010F   7403         MOV     A,#0x3
+   \   000111   12....       LCALL   ?XSTACK_DISP0_8
+   \   000114   8582..       MOV     ?V0 + 0,DPL
+   \   000117   8583..       MOV     ?V0 + 1,DPH
+   \   00011A   78..         MOV     R0,#?V0 + 0
+   \   00011C   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00011F   7405         MOV     A,#0x5
+   \   000121   12....       LCALL   ?XSTACK_DISP0_8
+   \   000124   A882         MOV     R0,DPL
+   \   000126   85....       MOV     ?V0 + 0,?V0 + 3
+   \   000129   E582         MOV     A,DPL
+   \   00012B   25..         ADD     A,?V0 + 0
+   \   00012D   2406         ADD     A,#0x6
+   \   00012F   C3           CLR     C
+   \   000130   98           SUBB    A,R0
+   \   000131   F5..         MOV     ?V0 + 0,A
+   \   000133   75..00       MOV     ?V0 + 1,#0x0
+   \   000136   78..         MOV     R0,#?V0 + 0
+   \   000138   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00013B   78..         MOV     R0,#?V0 + 6
+   \   00013D   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000140   7920         MOV     R1,#0x20
+   \   000142   7419         MOV     A,#0x19
+   \   000144   12....       LCALL   ?XSTACK_DISP0_8
+   \   000147   AA82         MOV     R2,DPL
+   \   000149   AB83         MOV     R3,DPH
+   \   00014B   12....       LCALL   ??AF_DataRequest?relay
+   \   00014E   7409         MOV     A,#0x9
+   \   000150   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000153   E9           MOV     A,R1
+   \   000154   7004         JNZ     ??zcl_report_send_8
+   \   000156   7900         MOV     R1,#0x0
+   \   000158   8002         SJMP    ??zcl_report_send_6
+   \                     ??zcl_report_send_8:
+   \   00015A   79FD         MOV     R1,#-0x3
+   \                     ??zcl_report_send_6:
+   \   00015C   741C         MOV     A,#0x1c
+   \   00015E   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000161   7F0B         MOV     R7,#0xb
+   \   000163   02....       LJMP    ?BANKED_LEAVE_XDATA
+     60          }
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   12....       LCALL   ??afFindEndPointDesc?relay
+   \   000003   8A..         MOV     ?V0 + 0,R2
+   \   000005   8B..         MOV     ?V0 + 1,R3
+   \   000007   AC..         MOV     R4,?V0 + 0
+   \   000009   AD..         MOV     R5,?V0 + 1
+   \   00000B   EC           MOV     A,R4
+   \   00000C   4D           ORL     A,R5
+   \   00000D   22           RET
+     61          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     62          int8 zcl_default_response(uint8 src_ep, uint16 cluster,
+   \                     zcl_default_response:
+     63                                    uint8 for_seq, uint8 for_cmd, uint8 status)
+     64          {
+   \   000000   74F4         MOV     A,#-0xc
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 12
+   \   000005                ; Auto size: 18
+   \   000005   74EE         MOV     A,#-0x12
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+   \   00000A   EC           MOV     A,R4
+   \   00000B   85..82       MOV     DPL,?XSP + 0
+   \   00000E   85..83       MOV     DPH,?XSP + 1
+   \   000011   F0           MOVX    @DPTR,A
+   \   000012   E9           MOV     A,R1
+   \   000013   FE           MOV     R6,A
+   \   000014   8A..         MOV     ?V0 + 2,R2
+   \   000016   8B..         MOV     ?V0 + 3,R3
+   \   000018   ED           MOV     A,R5
+   \   000019   FF           MOV     R7,A
+   \   00001A   741E         MOV     A,#0x1e
+   \   00001C   12....       LCALL   ?XSTACK_DISP0_8
+   \   00001F   E0           MOVX    A,@DPTR
+   \   000020   F5..         MOV     ?V0 + 0,A
+     65              afAddrType_t dst;
+     66              endPointDesc_t *ep_desc;
+     67              uint8 buf[5];
+     68              uint8 rc;
+     69          
+     70              osal_memset(&dst, 0, sizeof(dst));
+   \   000022                ; Setup parameters for call to function osal_memset
+   \   000022   7C0C         MOV     R4,#0xc
+   \   000024   7D00         MOV     R5,#0x0
+   \   000026   7900         MOV     R1,#0x0
+   \   000028   7406         MOV     A,#0x6
+   \   00002A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00002D   AA82         MOV     R2,DPL
+   \   00002F   AB83         MOV     R3,DPH
+   \   000031   12....       LCALL   ??osal_memset?relay
+     71              dst.addrMode = (afAddrMode_t)Addr16Bit;
+   \   000034   740E         MOV     A,#0xe
+   \   000036   12....       LCALL   ?XSTACK_DISP0_8
+   \   000039   7402         MOV     A,#0x2
+   \   00003B   F0           MOVX    @DPTR,A
+     72              dst.addr.shortAddr = 0x0000;
+   \   00003C   7406         MOV     A,#0x6
+   \   00003E   12....       LCALL   ?XSTACK_DISP0_8
+   \   000041   E4           CLR     A
+   \   000042   F0           MOVX    @DPTR,A
+   \   000043   A3           INC     DPTR
+   \   000044   F0           MOVX    @DPTR,A
+     73              dst.endPoint = 0x01;
+   \   000045   740F         MOV     A,#0xf
+   \   000047   12....       LCALL   ?XSTACK_DISP0_8
+   \   00004A   7401         MOV     A,#0x1
+   \   00004C   F0           MOVX    @DPTR,A
+     74          
+     75              buf[0] = 0x18;                                 /* FC: cluster-spec | s→c | no default */
+   \   00004D   12....       LCALL   ?XSTACK_DISP0_8
+   \   000050   7418         MOV     A,#0x18
+   \   000052   F0           MOVX    @DPTR,A
+     76              buf[1] = for_seq;
+   \   000053   85..82       MOV     DPL,?XSP + 0
+   \   000056   85..83       MOV     DPH,?XSP + 1
+   \   000059   E0           MOVX    A,@DPTR
+   \   00005A   C0E0         PUSH    A
+   \   00005C   7402         MOV     A,#0x2
+   \   00005E   12....       LCALL   ?XSTACK_DISP0_8
+   \   000061   D0E0         POP     A
+   \   000063   F0           MOVX    @DPTR,A
+     77              buf[2] = 0x0B;                                 /* Default Response */
+   \   000064   7403         MOV     A,#0x3
+   \   000066   12....       LCALL   ?XSTACK_DISP0_8
+   \   000069   740B         MOV     A,#0xb
+   \   00006B   F0           MOVX    @DPTR,A
+     78              buf[3] = for_cmd;
+   \   00006C   7404         MOV     A,#0x4
+   \   00006E   12....       LCALL   ?XSTACK_DISP0_8
+   \   000071   EF           MOV     A,R7
+   \   000072   F0           MOVX    @DPTR,A
+     79              buf[4] = status;
+   \   000073   7405         MOV     A,#0x5
+   \   000075   12....       LCALL   ?XSTACK_DISP0_8
+   \   000078   E5..         MOV     A,?V0 + 0
+   \   00007A   F0           MOVX    @DPTR,A
+     80          
+     81              ep_desc = afFindEndPointDesc(src_ep);
+   \   00007B                ; Setup parameters for call to function afFindEndPointDesc
+   \   00007B   EE           MOV     A,R6
+   \   00007C   F9           MOV     R1,A
+   \   00007D   12....       LCALL   ?Subroutine0 & 0xFFFF
+     82              if (ep_desc == 0) return -2;
+   \                     ??CrossCallReturnLabel_1:
+   \   000080   7004         JNZ     ??zcl_default_response_0
+   \   000082   79FE         MOV     R1,#-0x2
+   \   000084   8054         SJMP    ??zcl_default_response_1
+     83          
+     84              rc = AF_DataRequest(&dst, ep_desc, cluster,
+     85                                  sizeof(buf), buf, &for_seq,
+     86                                  AF_DISCV_ROUTE, AF_DEFAULT_RADIUS);
+     87              return (rc == afStatus_SUCCESS) ? 0 : -3;
+   \                     ??zcl_default_response_0:
+   \   000086                ; Setup parameters for call to function AF_DataRequest
+   \   000086   75..1E       MOV     ?V0 + 0,#0x1e
+   \   000089   78..         MOV     R0,#?V0 + 0
+   \   00008B   12....       LCALL   ?PUSH_XSTACK_I_ONE
+   \   00008E   7401         MOV     A,#0x1
+   \   000090   12....       LCALL   ?XSTACK_DISP0_8
+   \   000093   8582..       MOV     ?V0 + 0,DPL
+   \   000096   8583..       MOV     ?V0 + 1,DPH
+   \   000099   78..         MOV     R0,#?V0 + 0
+   \   00009B   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00009E   7404         MOV     A,#0x4
+   \   0000A0   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000A3   8582..       MOV     ?V0 + 0,DPL
+   \   0000A6   8583..       MOV     ?V0 + 1,DPH
+   \   0000A9   78..         MOV     R0,#?V0 + 0
+   \   0000AB   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000AE   75..05       MOV     ?V0 + 0,#0x5
+   \   0000B1   75..00       MOV     ?V0 + 1,#0x0
+   \   0000B4   78..         MOV     R0,#?V0 + 0
+   \   0000B6   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000B9   78..         MOV     R0,#?V0 + 2
+   \   0000BB   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000BE   7920         MOV     R1,#0x20
+   \   0000C0   740F         MOV     A,#0xf
+   \   0000C2   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000C5   AA82         MOV     R2,DPL
+   \   0000C7   AB83         MOV     R3,DPH
+   \   0000C9   12....       LCALL   ??AF_DataRequest?relay
+   \   0000CC   7409         MOV     A,#0x9
+   \   0000CE   12....       LCALL   ?DEALLOC_XSTACK8
+   \   0000D1   E9           MOV     A,R1
+   \   0000D2   7004         JNZ     ??zcl_default_response_2
+   \   0000D4   7900         MOV     R1,#0x0
+   \   0000D6   8002         SJMP    ??zcl_default_response_1
+   \                     ??zcl_default_response_2:
+   \   0000D8   79FD         MOV     R1,#-0x3
+   \                     ??zcl_default_response_1:
+   \   0000DA   7412         MOV     A,#0x12
+   \   0000DC   12....       LCALL   ?DEALLOC_XSTACK8
+   \   0000DF   7F04         MOV     R7,#0x4
+   \   0000E1   02....       LJMP    ?BANKED_LEAVE_XDATA
+     88          }
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??zcl_report_send?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    zcl_report_send
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??zcl_default_response?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    zcl_default_response
+
+   Maximum stack usage in bytes:
+
+     Function                ISTACK PSTACK XSTACK
+     --------                ------ ------ ------
+     zcl_default_response        1      0     40
+       -> osal_memset            0      0     60
+       -> afFindEndPointDesc     0      0     60
+       -> AF_DataRequest         0      0     78
+     zcl_report_send             1      0     60
+       -> osal_memset            0      0     94
+       -> osal_memcpy            0      0    100
+       -> afFindEndPointDesc     0      0     94
+       -> AF_DataRequest         0      0    112
+
+
+   Segment part sizes:
+
+     Function/Label               Bytes
+     --------------               -----
+     s_zcl_seq                       1
+     zcl_report_send               358
+     ?Subroutine0                   14
+     zcl_default_response          228
+     ??zcl_report_send?relay         6
+     ??zcl_default_response?relay    6
+
+ 
+ 600 bytes in segment BANKED_CODE
+  12 bytes in segment BANK_RELAYS
+   1 byte  in segment XDATA_Z
+ 
+ 612 bytes of CODE  memory
+   1 byte  of XDATA memory
+
+Errors: none
+Warnings: 1

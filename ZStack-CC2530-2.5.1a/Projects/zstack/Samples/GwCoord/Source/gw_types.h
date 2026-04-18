@@ -27,6 +27,12 @@
 #define CMD_ZB_REPORT       0x20u
 #define CMD_ZB_CMD          0x21u
 #define CMD_ZB_ERR          0x7Fu
+#define ZB_DEV_UNKNOWN      0x00u
+#define ZB_DEV_ROUTER       0x01u
+#define ZB_DEV_ENDDEV       0x02u
+#define ZB_ROLE_UNKNOWN     0x00u
+#define ZB_ROLE_TEMP_HUM    0x01u
+#define ZB_ROLE_LUX         0x02u
 
 /* ---------- dtype ---------- */
 #define DTYPE_BOOL          0x01u
@@ -58,7 +64,7 @@
 
 /* ---------- 网络 ---------- */
 #define ZB_CHANNEL_DEFAULT  15u
-#define ZB_NODE_MAX         16u
+#define ZB_NODE_MAX         8u
 #define ZB_HEARTBEAT_S      60u
 
 /* ---------- OSAL 事件号（CC2530.md §5.6） ---------- */
