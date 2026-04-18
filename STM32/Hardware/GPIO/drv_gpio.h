@@ -1,0 +1,34 @@
+#ifndef __DRV_GPIO_H__
+#define __DRV_GPIO_H__
+
+#include "stm32f10x.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void drv_gpio_init_board(void);        /* LED/KEY/ZB RESET/WiFi EN/Buzzer */
+
+/* 板上 LED（PC13/14/15，低有效） */
+void led_red_set(uint8_t on);
+void led_green_set(uint8_t on);
+void led_blue_set(uint8_t on);
+
+/* CC2530 RESET（PC4，低有效） */
+void cc2530_reset_pulse(void);         /* 拉低 200us 后释放 */
+
+/* WiFi EN（PB12） */
+void wifi_en_set(uint8_t on);
+
+/* 蜂鸣器（PA15） */
+void buzzer_set(uint8_t on);
+
+/* 按键（PB6/PB7，上拉） */
+uint8_t key1_pressed(void);
+uint8_t key2_pressed(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\FWlib\inc;..\App;..\Core;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\Hardware\oled;..\Hardware\wifi</IncludePath>
+              <IncludePath>..\FWlib\inc;.;..\Hardware\OLED;..\Hardware\USART;..\Hardware\GPIO;..\Hardware\TIM;..\Hardware\FLASH;..\Hardware\WIFI;..\Hardware\ZIGBEE;..\SYSTEM;..\Core</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -377,8 +377,13 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>App</GroupName>
+          <GroupName>User</GroupName>
           <Files>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\main.c</FilePath>
+            </File>
             <File>
               <FileName>stm32f10x_it.c</FileName>
               <FileType>1</FileType>
@@ -389,10 +394,100 @@
               <FileType>1</FileType>
               <FilePath>.\system_stm32f10x.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>App</GroupName>
+          <Files>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>gw_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FilePath>.\gw_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>router.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\router.c</FilePath>
+            </File>
+            <File>
+              <FileName>automation.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\automation.c</FilePath>
+            </File>
+            <File>
+              <FileName>oled_view.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\oled_view.c</FilePath>
+            </File>
+            <File>
+              <FileName>thresholds.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\thresholds.c</FilePath>
+            </File>
+            <File>
+              <FileName>frame.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\frame.c</FilePath>
+            </File>
+            <File>
+              <FileName>json.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\json.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Hardware</GroupName>
+          <Files>
+            <File>
+              <FileName>drv_oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\OLED\drv_oled.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\USART\drv_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\GPIO\drv_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\TIM\drv_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\FLASH\drv_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>wifi_link.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\WIFI\wifi_link.c</FilePath>
+            </File>
+            <File>
+              <FileName>zb_link.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\ZIGBEE\zb_link.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>SYSTEM</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\bsp_clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_log.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\SYSTEM\bsp_log.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -528,41 +623,6 @@
               <FileName>stm32f10x_wwdg.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FWlib\src\stm32f10x_wwdg.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>SYSTEM</GroupName>
-          <Files>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\SYSTEM\delay\delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>sys.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\SYSTEM\sys\sys.c</FilePath>
-            </File>
-            <File>
-              <FileName>usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\SYSTEM\usart\usart.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Hardware</GroupName>
-          <Files>
-            <File>
-              <FileName>oled.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\oled\oled.c</FilePath>
-            </File>
-            <File>
-              <FileName>wifi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Hardware\wifi\wifi.c</FilePath>
             </File>
           </Files>
         </Group>

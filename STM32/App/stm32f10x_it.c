@@ -127,14 +127,10 @@ void PendSV_Handler(void)
 {
 }
 
-/**
-  * @brief  This function handles SysTick Handler.
-  * @param  None
-  * @retval None
-  */
-void SysTick_Handler(void)
-{
-}
+/* SysTick_Handler / USART1_IRQHandler / USART2_IRQHandler / UART4_IRQHandler
+ * 实现位于 App/drv/drv_tim.c 与 App/drv/drv_usart.c。此文件不再提供空实现，
+ * 避免符号冲突。
+ */
 
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
