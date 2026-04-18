@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  15:16:27 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  15:56:57 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -44,7 +44,7 @@
 //                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Components\mac\low_level\srf04\single_chip\mac /
-//                          _csp_tx.c -D HAL_UART=TRUE -lC                    /
+//                          _csp_tx.c -D HAL_UART=TRUE -D HAL_LCD=FALSE -lC   /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\CoordinatorEB\List\ -lA      /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /

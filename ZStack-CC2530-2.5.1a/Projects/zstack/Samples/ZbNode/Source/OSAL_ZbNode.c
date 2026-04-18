@@ -40,6 +40,7 @@ void osalInitTasks( void )
 #if defined ( ZIGBEE_FRAGMENTATION )
   APSF_Init( taskID++ );
 #endif
+  ZbNode_PreInit();
   ZDApp_Init( taskID++ );
   ZbNode_Init( taskID );
 }

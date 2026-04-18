@@ -1,0 +1,1451 @@
+###############################################################################
+#                                                                             #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:51:04 #
+# Copyright 2004-2011 IAR Systems AB.                                         #
+#                                                                             #
+#    Core               =  plain                                              #
+#    Code model         =  banked                                             #
+#    Data model         =  large                                              #
+#    Calling convention =  xdata reentrant                                    #
+#    Constant location  =  data_rom                                           #
+#    Dptr setup         =  1,16                                               #
+#    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\Source\node_oled_view.c                  #
+#    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\Tools\CC2530DB\f8wE #
+#                          ndev.cfg (-DCPU32MHZ -DROOT=__near_func            #
+#                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6         #
+#                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\.. #
+#                          \Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO         #
+#                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR       #
+#                          -DDEFAULT_CHANLIST=0x00000800                      #
+#                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                       #
+#                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_MA #
+#                          SK=0x007F -DBEACON_REQUEST_DELAY=100               #
+#                          -DBEACON_REQ_DELAY_MASK=0x00FF                     #
+#                          -DLINK_STATUS_JITTER_MASK=0x007F                   #
+#                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_PO #
+#                          LLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7             #
+#                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3    #
+#                          -DNWK_MAX_DATA_RETRIES=2                           #
+#                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9         #
+#                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40           #
+#                          -DNWK_MAX_BINDING_ENTRIES=4                        #
+#                          -DMAX_BINDING_CLUSTER_IDS=4 "-DDEFAULT_KEY={0x01,  #
+#                          0x03, 0x05, 0x07, 0x09, 0x0B, 0x0D, 0x0F, 0x00,    #
+#                          0x02, 0x04, 0x06, 0x08, 0x0A, 0x0C, 0x0D}"         #
+#                          -DMAC_MAX_FRAME_SIZE=116                           #
+#                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
+#                          __code" -DGENERIC=__generic                        #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
+#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
+#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\Source\node_oled_ #
+#                          view.c -D NWK_AUTO_POLL -D NODE_ROLE=2 -D          #
+#                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC                #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\List\ -lA     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\List\         #
+#                          --diag_suppress Pe001,Pa010 -o                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\ -e       #
+#                          --no_code_motion --debug --core=plain --dptr=16,1  #
+#                          --data_model=large --code_model=banked             #
+#                          --calling_convention=xdata_reentrant               #
+#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\ -I                          #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\hal\target\CC2530EB\ -I                      #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
+#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
+#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
+#                          nents\mac\high_level\ -I                           #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\l #
+#                          ow_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\mac\low_level\srf04\single_chip\ -I  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mt\   #
+#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\os #
+#                          al\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C #
+#                          omponents\services\saddr\ -I                       #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\servi #
+#                          ces\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\stack\af\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a #
+#                          \Projects\zstack\Samples\ZbNode\CC2530DB\..\..\..\ #
+#                          ..\..\Components\stack\nwk\ -I                     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs #
+#                          tack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compon #
+#                          ents\stack\sec\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
+#                          ojects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\ #
+#                          ..\Components\stack\sys\ -I                        #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\stack #
+#                          \zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zst #
+#                          ack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compone #
+#                          nts\zmac\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects #
+#                          \zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com #
+#                          ponents\zmac\f8w\ -Ohz --require_prototypes        #
+#    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\List\node_ole #
+#                          d_view.lst                                         #
+#    Object file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\node_oled #
+#                          _view.r51                                          #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\node_oled_view.c
+      1          /*
+                  ^
+Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
+          only issued once)
+      2           * 节点侧 OLED 视图：将 node_oled_model_t 渲染到 4 行（每行 16 个 8x16 字符）。
+      3           * 不依赖 stdio/printf（IAR-8051 上 sprintf 体积太大且容易栈溢出），手写小整数转字符。
+      4           */
+      5          
+      6          #include "node_oled_view.h"
+      7          #include "oled_ssd1306.h"
+      8          #include "board_e18ms1.h"
+      9          
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     10          static node_oled_model_t s_model;
+   \                     s_model:
+   \   000000                DS 14
+   \   00000E                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     11          static node_oled_model_t s_last;
+   \                     s_last:
+   \   000000                DS 14
+   \   00000E                REQUIRE __INIT_XDATA_Z
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     12          static uint8             s_initialized = 0;
+   \                     s_initialized:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+     13          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     14          static void line_clear(char *buf)
+   \                     line_clear:
+     15          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     16              uint8 i;
+     17              for (i = 0; i < 16u; ++i) buf[i] = ' ';
+   \   000004   7420         MOV     A,#0x20
+   \   000006   8A82         MOV     DPL,R2
+   \   000008   8B83         MOV     DPH,R3
+   \   00000A   7810         MOV     R0,#0x10
+   \                     ??line_clear_0:
+   \   00000C   F0           MOVX    @DPTR,A
+   \   00000D   A3           INC     DPTR
+   \   00000E   D8FC         DJNZ    R0,??line_clear_0
+     18              buf[16] = '\0';
+   \   000010   EA           MOV     A,R2
+   \   000011   2410         ADD     A,#0x10
+   \   000013   F582         MOV     DPL,A
+   \   000015   EB           MOV     A,R3
+   \   000016   3400         ADDC    A,#0x0
+   \   000018   F583         MOV     DPH,A
+   \   00001A   E4           CLR     A
+   \   00001B   F0           MOVX    @DPTR,A
+     19          }
+   \   00001C                REQUIRE ?Subroutine0
+   \   00001C                ; // Fall through to label ?Subroutine0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   D083         POP     DPH
+   \   000002   D082         POP     DPL
+   \   000004   02....       LJMP    ?BRET
+     20          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     21          static void put_char(char *buf, uint8 *idx, char c)
+   \                     put_char:
+     22          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+     23              if (*idx < 16u) {
+   \   000005   8C82         MOV     DPL,R4
+   \   000007   8D83         MOV     DPH,R5
+   \   000009   E0           MOVX    A,@DPTR
+   \   00000A   C3           CLR     C
+   \   00000B   9410         SUBB    A,#0x10
+   \   00000D   5007         JNC     ??CrossCallReturnLabel_8
+     24                  buf[*idx] = c;
+   \   00000F   12....       LCALL   ?Subroutine4 & 0xFFFF
+     25                  (*idx)++;
+     26              }
+   \                     ??CrossCallReturnLabel_2:
+   \   000012   E9           MOV     A,R1
+   \   000013   12....       LCALL   ?Subroutine7 & 0xFFFF
+     27          }
+   \                     ??CrossCallReturnLabel_8:
+   \   000016                REQUIRE ?Subroutine1
+   \   000016                ; // Fall through to label ?Subroutine1
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine1:
+   \   000000   7F01         MOV     R7,#0x1
+   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine7:
+   \   000000   F0           MOVX    @DPTR,A
+   \   000001   8C82         MOV     DPL,R4
+   \   000003   8D83         MOV     DPH,R5
+   \   000005   E0           MOVX    A,@DPTR
+   \   000006   04           INC     A
+   \   000007   F0           MOVX    @DPTR,A
+   \   000008   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine4:
+   \   000000   E0           MOVX    A,@DPTR
+   \   000001   FE           MOV     R6,A
+   \   000002   EA           MOV     A,R2
+   \   000003   2E           ADD     A,R6
+   \   000004   F582         MOV     DPL,A
+   \   000006   EB           MOV     A,R3
+   \   000007   3400         ADDC    A,#0x0
+   \   000009   F583         MOV     DPH,A
+   \   00000B   22           RET
+     28          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     29          static void put_str(char *buf, uint8 *idx, const char *s)
+   \                     put_str:
+     30          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   7409         MOV     A,#0x9
+   \   000007   12....       LCALL   ?XSTACK_DISP0_8
+   \   00000A   12....       LCALL   ??Subroutine11_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_27:
+   \   00000D   801C         SJMP    ??put_str_0
+     31              while (*s != '\0' && *idx < 16u) {
+     32                  buf[*idx] = *s;
+   \                     ??put_str_1:
+   \   00000F   8882         MOV     DPL,R0
+   \   000011   8983         MOV     DPH,R1
+   \   000013   E0           MOVX    A,@DPTR
+   \   000014   C0E0         PUSH    A
+   \   000016   8C82         MOV     DPL,R4
+   \   000018   8D83         MOV     DPH,R5
+   \   00001A   12....       LCALL   ?Subroutine4 & 0xFFFF
+   \                     ??CrossCallReturnLabel_3:
+   \   00001D   D0E0         POP     A
+   \   00001F   12....       LCALL   ?Subroutine7 & 0xFFFF
+     33                  (*idx)++;
+     34                  s++;
+   \                     ??CrossCallReturnLabel_9:
+   \   000022   8882         MOV     DPL,R0
+   \   000024   8983         MOV     DPH,R1
+   \   000026   A3           INC     DPTR
+   \   000027   A882         MOV     R0,DPL
+   \   000029   A983         MOV     R1,DPH
+     35              }
+   \                     ??put_str_0:
+   \   00002B   8882         MOV     DPL,R0
+   \   00002D   8983         MOV     DPH,R1
+   \   00002F   E0           MOVX    A,@DPTR
+   \   000030   600A         JZ      ??put_str_2
+   \   000032   8C82         MOV     DPL,R4
+   \   000034   8D83         MOV     DPH,R5
+   \   000036   E0           MOVX    A,@DPTR
+   \   000037   C3           CLR     C
+   \   000038   9410         SUBB    A,#0x10
+   \   00003A   40D3         JC      ??put_str_1
+     36          }
+   \                     ??put_str_2:
+   \   00003C   80..         SJMP    ?Subroutine1
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ??Subroutine11_0:
+   \   000000   E0           MOVX    A,@DPTR
+   \   000001   F8           MOV     R0,A
+   \   000002   A3           INC     DPTR
+   \   000003   E0           MOVX    A,@DPTR
+   \   000004   F9           MOV     R1,A
+   \   000005   22           RET
+     37          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     38          static void put_u16(char *buf, uint8 *idx, uint16 value)
+   \                     put_u16:
+     39          {
+   \   000000   74F2         MOV     A,#-0xe
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 14
+   \   000005                ; Auto size: 6
+   \   000005   74FA         MOV     A,#-0x6
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+   \   00000A   EA           MOV     A,R2
+   \   00000B   FE           MOV     R6,A
+   \   00000C   EB           MOV     A,R3
+   \   00000D   FF           MOV     R7,A
+   \   00000E   8C..         MOV     ?V0 + 0,R4
+   \   000010   8D..         MOV     ?V0 + 1,R5
+   \   000012   7414         MOV     A,#0x14
+   \   000014   12....       LCALL   ?XSTACK_DISP0_8
+   \   000017   E0           MOVX    A,@DPTR
+   \   000018   FC           MOV     R4,A
+   \   000019   A3           INC     DPTR
+   \   00001A   E0           MOVX    A,@DPTR
+   \   00001B   FD           MOV     R5,A
+     40              char tmp[6];
+     41              uint8 len = 0;
+   \   00001C   75..00       MOV     ?V0 + 2,#0x0
+     42          
+     43              do {
+     44                  tmp[len++] = (char)('0' + (value % 10u));
+   \                     ??put_u16_0:
+   \   00001F   EC           MOV     A,R4
+   \   000020   F8           MOV     R0,A
+   \   000021   ED           MOV     A,R5
+   \   000022   F9           MOV     R1,A
+   \   000023   7A0A         MOV     R2,#0xa
+   \   000025   7B00         MOV     R3,#0x0
+   \   000027   12....       LCALL   ?US_DIV_MOD
+   \   00002A   EA           MOV     A,R2
+   \   00002B   2430         ADD     A,#0x30
+   \   00002D   C0E0         PUSH    A
+   \   00002F   12....       LCALL   ?Subroutine6 & 0xFFFF
+   \                     ??CrossCallReturnLabel_6:
+   \   000032   D0E0         POP     A
+   \   000034   F0           MOVX    @DPTR,A
+   \   000035   05..         INC     ?V0 + 2
+     45                  value = (uint16)(value / 10u);
+   \   000037   EC           MOV     A,R4
+   \   000038   F8           MOV     R0,A
+   \   000039   ED           MOV     A,R5
+   \   00003A   F9           MOV     R1,A
+   \   00003B   7A0A         MOV     R2,#0xa
+   \   00003D   7B00         MOV     R3,#0x0
+   \   00003F   12....       LCALL   ?US_DIV_MOD
+   \   000042   88..         MOV     ?V0 + 4,R0
+   \   000044   89..         MOV     ?V0 + 5,R1
+   \   000046   AC..         MOV     R4,?V0 + 4
+   \   000048   AD..         MOV     R5,?V0 + 5
+     46              } while (value != 0u && len < sizeof(tmp));
+   \   00004A   EC           MOV     A,R4
+   \   00004B   4D           ORL     A,R5
+   \   00004C   6006         JZ      ??put_u16_1
+   \   00004E   E5..         MOV     A,?V0 + 2
+   \   000050   9406         SUBB    A,#0x6
+   \   000052   40CB         JC      ??put_u16_0
+     47          
+     48              while (len > 0u) {
+   \                     ??put_u16_1:
+   \   000054   E5..         MOV     A,?V0 + 2
+   \   000056   6014         JZ      ??put_u16_2
+     49                  put_char(buf, idx, tmp[--len]);
+   \   000058   15..         DEC     ?V0 + 2
+   \   00005A                ; Setup parameters for call to function put_char
+   \   00005A   12....       LCALL   ?Subroutine6 & 0xFFFF
+     50              }
+   \                     ??CrossCallReturnLabel_7:
+   \   00005D   E0           MOVX    A,@DPTR
+   \   00005E   F9           MOV     R1,A
+   \   00005F   AC..         MOV     R4,?V0 + 0
+   \   000061   AD..         MOV     R5,?V0 + 1
+   \   000063   EE           MOV     A,R6
+   \   000064   FA           MOV     R2,A
+   \   000065   EF           MOV     A,R7
+   \   000066   FB           MOV     R3,A
+   \   000067   12....       LCALL   ??put_char?relay
+   \   00006A   80E8         SJMP    ??put_u16_1
+     51          }
+   \                     ??put_u16_2:
+   \   00006C   7406         MOV     A,#0x6
+   \   00006E   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000071   7F06         MOV     R7,#0x6
+   \   000073   02....       LJMP    ?BANKED_LEAVE_XDATA
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine6:
+   \   000000   85....       MOV     ?V0 + 4,?V0 + 2
+   \   000003   85..82       MOV     DPL,?XSP + 0
+   \   000006   85..83       MOV     DPH,?XSP + 1
+   \   000009   E582         MOV     A,DPL
+   \   00000B   25..         ADD     A,?V0 + 4
+   \   00000D   F582         MOV     DPL,A
+   \   00000F   E583         MOV     A,DPH
+   \   000011   3400         ADDC    A,#0x0
+   \   000013   F583         MOV     DPH,A
+   \   000015   22           RET
+     52          
+     53          static void put_hex16(char *buf, uint8 *idx, uint16 value)
+     54          {
+     55              uint8 shift;
+     56              for (shift = 0u; shift < 4u; ++shift) {
+     57                  uint8 nibble = (uint8)((value >> ((3u - shift) * 4u)) & 0x0Fu);
+     58                  put_char(buf, idx, (char)(nibble < 10u ? ('0' + nibble) : ('A' + nibble - 10u)));
+     59              }
+     60          }
+     61          
+     62          static void put_temp_x100(char *buf, uint8 *idx, int16 value)
+     63          {
+     64              uint16 abs_v;
+     65          
+     66              if (value < 0) {
+     67                  put_char(buf, idx, '-');
+     68                  abs_v = (uint16)(-value);
+     69              } else {
+     70                  abs_v = (uint16)value;
+     71              }
+     72              put_u16(buf, idx, (uint16)(abs_v / 100u));
+     73              put_char(buf, idx, '.');
+     74              put_char(buf, idx, (char)('0' + ((abs_v / 10u) % 10u)));
+     75              put_char(buf, idx, (char)('0' + (abs_v % 10u)));
+     76          }
+     77          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     78          static void render(void)
+   \                     render:
+     79          {
+   \   000000   74F4         MOV     A,#-0xc
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 12
+   \   000005                ; Auto size: 18
+   \   000005   74EE         MOV     A,#-0x12
+   \   000007   12....       LCALL   ?ALLOC_XSTACK8
+     80              char line[17];
+     81              uint8 idx;
+     82          
+     83              /* Row 0：节点角色 + 网络状态 */
+     84              line_clear(line);
+   \   00000A                ; Setup parameters for call to function line_clear
+   \   00000A   7401         MOV     A,#0x1
+   \   00000C   12....       LCALL   ?XSTACK_DISP0_8
+   \   00000F   12....       LCALL   ?Subroutine8 & 0xFFFF
+     85              idx = 0;
+     86              if (s_model.role == 2u) {
+   \                     ??CrossCallReturnLabel_10:
+   \   000012   90....       MOV     DPTR,#s_model
+   \   000015   E0           MOVX    A,@DPTR
+   \   000016   6402         XRL     A,#0x2
+   \   000018   7008         JNZ     ??render_0
+     87                  put_str(line, &idx, "N2 Lux ");
+   \   00001A                ; Setup parameters for call to function put_str
+   \   00001A   75....       MOV     ?V0 + 0,#`?<Constant "N2 Lux ">` & 0xff
+   \   00001D   75....       MOV     ?V0 + 1,#(`?<Constant "N2 Lux ">` >> 8) & 0xff
+   \   000020   8006         SJMP    ??render_1
+     88              } else {
+     89                  put_str(line, &idx, "N1 TempHum ");
+   \                     ??render_0:
+   \   000022                ; Setup parameters for call to function put_str
+   \   000022   75....       MOV     ?V0 + 0,#`?<Constant "N1 TempHum ">` & 0xff
+   \   000025   75....       MOV     ?V0 + 1,#(`?<Constant "N1 TempHum ">` >> 8) & 0xff
+   \                     ??render_1:
+   \   000028   78..         MOV     R0,#?V0 + 0
+   \   00002A   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00002D   7402         MOV     A,#0x2
+   \   00002F   12....       LCALL   ?XSTACK_DISP0_8
+   \   000032   AC82         MOV     R4,DPL
+   \   000034   AD83         MOV     R5,DPH
+   \   000036   7403         MOV     A,#0x3
+   \   000038   12....       LCALL   ?XSTACK_DISP0_8
+     90              }
+   \   00003B   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_14:
+   \   00003E   12....       LCALL   ?DEALLOC_XSTACK8
+     91              put_str(line, &idx, s_model.online ? "OK" : "..");
+   \   000041   90....       MOV     DPTR,#s_model + 1
+   \   000044   E0           MOVX    A,@DPTR
+   \   000045   6008         JZ      ??render_2
+   \   000047   75....       MOV     ?V0 + 0,#`?<Constant "OK">` & 0xff
+   \   00004A   75....       MOV     ?V0 + 1,#(`?<Constant "OK">` >> 8) & 0xff
+   \   00004D   8006         SJMP    ??render_3
+   \                     ??render_2:
+   \   00004F   75....       MOV     ?V0 + 0,#`?<Constant "..">` & 0xff
+   \   000052   75....       MOV     ?V0 + 1,#(`?<Constant "..">` >> 8) & 0xff
+   \                     ??render_3:
+   \   000055                ; Setup parameters for call to function put_str
+   \   000055   78..         MOV     R0,#?V0 + 0
+   \   000057   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00005A   7402         MOV     A,#0x2
+   \   00005C   12....       LCALL   ?XSTACK_DISP0_8
+   \   00005F   AC82         MOV     R4,DPL
+   \   000061   AD83         MOV     R5,DPH
+   \   000063   7403         MOV     A,#0x3
+   \   000065   12....       LCALL   ?XSTACK_DISP0_8
+   \   000068   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_15:
+   \   00006B   12....       LCALL   ?DEALLOC_XSTACK8
+     92              oled_ssd1306_draw_text(0, line);
+   \   00006E                ; Setup parameters for call to function oled_ssd1306_draw_text
+   \   00006E   7401         MOV     A,#0x1
+   \   000070   12....       LCALL   ?XSTACK_DISP0_8
+   \   000073   AA82         MOV     R2,DPL
+   \   000075   AB83         MOV     R3,DPH
+   \   000077   7900         MOV     R1,#0x0
+   \   000079   12....       LCALL   ??oled_ssd1306_draw_text?relay
+     93          
+     94              /* Row 1：短地址 + 信道 */
+     95              line_clear(line);
+   \   00007C                ; Setup parameters for call to function line_clear
+   \   00007C   7401         MOV     A,#0x1
+   \   00007E   12....       LCALL   ?XSTACK_DISP0_8
+   \   000081   12....       LCALL   ?Subroutine8 & 0xFFFF
+     96              idx = 0;
+     97              put_str(line, &idx, "ID:");
+   \                     ??CrossCallReturnLabel_11:
+   \   000084                ; Setup parameters for call to function put_str
+   \   000084   75....       MOV     ?V0 + 0,#`?<Constant "ID:">` & 0xff
+   \   000087   75....       MOV     ?V0 + 1,#(`?<Constant "ID:">` >> 8) & 0xff
+   \   00008A   78..         MOV     R0,#?V0 + 0
+   \   00008C   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00008F   7402         MOV     A,#0x2
+   \   000091   12....       LCALL   ?XSTACK_DISP0_8
+   \   000094   AC82         MOV     R4,DPL
+   \   000096   AD83         MOV     R5,DPH
+   \   000098   7403         MOV     A,#0x3
+   \   00009A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00009D   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_16:
+   \   0000A0   12....       LCALL   ?DEALLOC_XSTACK8
+     98              put_hex16(line, &idx, s_model.short_addr);
+   \   0000A3   90....       MOV     DPTR,#s_model + 2
+   \   0000A6   E0           MOVX    A,@DPTR
+   \   0000A7   FE           MOV     R6,A
+   \   0000A8   A3           INC     DPTR
+   \   0000A9   E0           MOVX    A,@DPTR
+   \   0000AA   FF           MOV     R7,A
+   \   0000AB   75..00       MOV     ?V0 + 0,#0x0
+   \                     ??render_4:
+   \   0000AE   8E..         MOV     ?V0 + 2,R6
+   \   0000B0   8F..         MOV     ?V0 + 3,R7
+   \   0000B2   7403         MOV     A,#0x3
+   \   0000B4   C3           CLR     C
+   \   0000B5   95..         SUBB    A,?V0 + 0
+   \   0000B7   33           RLC     A
+   \   0000B8   33           RLC     A
+   \   0000B9   54FC         ANL     A,#0xfc
+   \   0000BB   78..         MOV     R0,#?V0 + 2
+   \   0000BD   12....       LCALL   ?US_SHR
+   \   0000C0   E5..         MOV     A,?V0 + 2
+   \   0000C2   540F         ANL     A,#0xf
+   \   0000C4   F8           MOV     R0,A
+   \   0000C5   C3           CLR     C
+   \   0000C6   940A         SUBB    A,#0xa
+   \   0000C8   5004         JNC     ??render_5
+   \   0000CA   7430         MOV     A,#0x30
+   \   0000CC   8002         SJMP    ??render_6
+   \                     ??render_5:
+   \   0000CE   7437         MOV     A,#0x37
+   \                     ??render_6:
+   \   0000D0   28           ADD     A,R0
+   \   0000D1   F9           MOV     R1,A
+   \   0000D2                ; Setup parameters for call to function put_char
+   \   0000D2   85..82       MOV     DPL,?XSP + 0
+   \   0000D5   85..83       MOV     DPH,?XSP + 1
+   \   0000D8   AC82         MOV     R4,DPL
+   \   0000DA   AD83         MOV     R5,DPH
+   \   0000DC   7401         MOV     A,#0x1
+   \   0000DE   12....       LCALL   ?XSTACK_DISP0_8
+   \   0000E1   AA82         MOV     R2,DPL
+   \   0000E3   AB83         MOV     R3,DPH
+   \   0000E5   12....       LCALL   ??put_char?relay
+   \   0000E8   05..         INC     ?V0 + 0
+   \   0000EA   E5..         MOV     A,?V0 + 0
+   \   0000EC   C3           CLR     C
+   \   0000ED   9404         SUBB    A,#0x4
+   \   0000EF   40BD         JC      ??render_4
+     99              put_str(line, &idx, " CH:");
+   \   0000F1                ; Setup parameters for call to function put_str
+   \   0000F1   75....       MOV     ?V0 + 0,#`?<Constant " CH:">` & 0xff
+   \   0000F4   75....       MOV     ?V0 + 1,#(`?<Constant " CH:">` >> 8) & 0xff
+   \   0000F7   78..         MOV     R0,#?V0 + 0
+   \   0000F9   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0000FC   7402         MOV     A,#0x2
+   \   0000FE   12....       LCALL   ?XSTACK_DISP0_8
+   \   000101   AC82         MOV     R4,DPL
+   \   000103   AD83         MOV     R5,DPH
+   \   000105   7403         MOV     A,#0x3
+   \   000107   12....       LCALL   ?XSTACK_DISP0_8
+   \   00010A   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_17:
+   \   00010D   12....       LCALL   ?DEALLOC_XSTACK8
+    100              put_u16(line, &idx, s_model.channel);
+   \   000110                ; Setup parameters for call to function put_u16
+   \   000110   90....       MOV     DPTR,#s_model + 4
+   \   000113   E0           MOVX    A,@DPTR
+   \   000114   F5..         MOV     ?V0 + 0,A
+   \   000116   75..00       MOV     ?V0 + 1,#0x0
+   \   000119   78..         MOV     R0,#?V0 + 0
+   \   00011B   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00011E   7402         MOV     A,#0x2
+   \   000120   12....       LCALL   ?XSTACK_DISP0_8
+   \   000123   AC82         MOV     R4,DPL
+   \   000125   AD83         MOV     R5,DPH
+   \   000127   7403         MOV     A,#0x3
+   \   000129   12....       LCALL   ?XSTACK_DISP0_8
+   \   00012C   AA82         MOV     R2,DPL
+   \   00012E   AB83         MOV     R3,DPH
+   \   000130   12....       LCALL   ??put_u16?relay
+   \   000133   7402         MOV     A,#0x2
+   \   000135   12....       LCALL   ?DEALLOC_XSTACK8
+    101              oled_ssd1306_draw_text(1, line);
+   \   000138                ; Setup parameters for call to function oled_ssd1306_draw_text
+   \   000138   7401         MOV     A,#0x1
+   \   00013A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00013D   AA82         MOV     R2,DPL
+   \   00013F   AB83         MOV     R3,DPH
+   \   000141   7901         MOV     R1,#0x1
+   \   000143   12....       LCALL   ??oled_ssd1306_draw_text?relay
+    102          
+    103              /* Row 2：传感数据 */
+    104              line_clear(line);
+   \   000146                ; Setup parameters for call to function line_clear
+   \   000146   7401         MOV     A,#0x1
+   \   000148   12....       LCALL   ?XSTACK_DISP0_8
+   \   00014B   12....       LCALL   ?Subroutine8 & 0xFFFF
+    105              idx = 0;
+    106              if (!s_model.has_sample) {
+   \                     ??CrossCallReturnLabel_12:
+   \   00014E   90....       MOV     DPTR,#s_model + 13
+   \   000151   E0           MOVX    A,@DPTR
+   \   000152   7023         JNZ     ??render_7
+    107                  put_str(line, &idx, "----");
+   \   000154                ; Setup parameters for call to function put_str
+   \   000154   75....       MOV     ?V0 + 0,#`?<Constant "----">` & 0xff
+   \   000157   75....       MOV     ?V0 + 1,#(`?<Constant "----">` >> 8) & 0xff
+   \                     ??render_8:
+   \   00015A   78..         MOV     R0,#?V0 + 0
+   \   00015C   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00015F   7402         MOV     A,#0x2
+   \   000161   12....       LCALL   ?XSTACK_DISP0_8
+   \   000164   AC82         MOV     R4,DPL
+   \   000166   AD83         MOV     R5,DPH
+   \   000168   7403         MOV     A,#0x3
+   \   00016A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00016D   AA82         MOV     R2,DPL
+   \   00016F   AB83         MOV     R3,DPH
+   \   000171   12....       LCALL   ??put_str?relay
+   \   000174   02....       LJMP    ??render_9 & 0xFFFF
+    108              } else if (s_model.role == 2u) {
+   \                     ??render_7:
+   \   000177   90....       MOV     DPTR,#s_model
+   \   00017A   E0           MOVX    A,@DPTR
+   \   00017B   6402         XRL     A,#0x2
+   \   00017D   7047         JNZ     ??render_10
+    109                  put_str(line, &idx, "L:");
+   \   00017F                ; Setup parameters for call to function put_str
+   \   00017F   75....       MOV     ?V0 + 0,#`?<Constant "L:">` & 0xff
+   \   000182   75....       MOV     ?V0 + 1,#(`?<Constant "L:">` >> 8) & 0xff
+   \   000185   78..         MOV     R0,#?V0 + 0
+   \   000187   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00018A   7402         MOV     A,#0x2
+   \   00018C   12....       LCALL   ?XSTACK_DISP0_8
+   \   00018F   AC82         MOV     R4,DPL
+   \   000191   AD83         MOV     R5,DPH
+   \   000193   7403         MOV     A,#0x3
+   \   000195   12....       LCALL   ?XSTACK_DISP0_8
+   \   000198   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_18:
+   \   00019B   12....       LCALL   ?DEALLOC_XSTACK8
+    110                  put_u16(line, &idx, s_model.lux);
+   \   00019E                ; Setup parameters for call to function put_u16
+   \   00019E   90....       MOV     DPTR,#s_model + 9
+   \   0001A1   12....       LCALL   ?PUSH_XSTACK8_X_TWO
+   \   0001A4   7402         MOV     A,#0x2
+   \   0001A6   12....       LCALL   ?XSTACK_DISP0_8
+   \   0001A9   AC82         MOV     R4,DPL
+   \   0001AB   AD83         MOV     R5,DPH
+   \   0001AD   7403         MOV     A,#0x3
+   \   0001AF   12....       LCALL   ?XSTACK_DISP0_8
+   \   0001B2   AA82         MOV     R2,DPL
+   \   0001B4   AB83         MOV     R3,DPH
+   \   0001B6   12....       LCALL   ??put_u16?relay
+   \   0001B9   7402         MOV     A,#0x2
+   \   0001BB   12....       LCALL   ?DEALLOC_XSTACK8
+    111                  put_str(line, &idx, " lx");
+   \   0001BE                ; Setup parameters for call to function put_str
+   \   0001BE   75....       MOV     ?V0 + 0,#`?<Constant " lx">` & 0xff
+   \   0001C1   75....       MOV     ?V0 + 1,#(`?<Constant " lx">` >> 8) & 0xff
+   \   0001C4   8094         SJMP    ??render_8
+    112              } else {
+    113                  put_str(line, &idx, "T:");
+   \                     ??render_10:
+   \   0001C6                ; Setup parameters for call to function put_str
+   \   0001C6   75....       MOV     ?V0 + 0,#`?<Constant "T:">` & 0xff
+   \   0001C9   75....       MOV     ?V0 + 1,#(`?<Constant "T:">` >> 8) & 0xff
+   \   0001CC   78..         MOV     R0,#?V0 + 0
+   \   0001CE   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0001D1   7402         MOV     A,#0x2
+   \   0001D3   12....       LCALL   ?XSTACK_DISP0_8
+   \   0001D6   AC82         MOV     R4,DPL
+   \   0001D8   AD83         MOV     R5,DPH
+   \   0001DA   7403         MOV     A,#0x3
+   \   0001DC   12....       LCALL   ?XSTACK_DISP0_8
+   \   0001DF   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_19:
+   \   0001E2   12....       LCALL   ?DEALLOC_XSTACK8
+    114                  put_temp_x100(line, &idx, s_model.temp_x100);
+   \   0001E5   90....       MOV     DPTR,#s_model + 5
+   \   0001E8   E0           MOVX    A,@DPTR
+   \   0001E9   F5..         MOV     ?V0 + 0,A
+   \   0001EB   A3           INC     DPTR
+   \   0001EC   E0           MOVX    A,@DPTR
+   \   0001ED   F5..         MOV     ?V0 + 1,A
+   \   0001EF   C3           CLR     C
+   \   0001F0   9400         SUBB    A,#0x0
+   \   0001F2   A2D2         MOV     C,0xD0 /* PSW */.2
+   \   0001F4   65D0         XRL     A,PSW
+   \   0001F6   33           RLC     A
+   \   0001F7   5023         JNC     ??render_11
+   \   0001F9                ; Setup parameters for call to function put_char
+   \   0001F9   792D         MOV     R1,#0x2d
+   \   0001FB   85..82       MOV     DPL,?XSP + 0
+   \   0001FE   85..83       MOV     DPH,?XSP + 1
+   \   000201   AC82         MOV     R4,DPL
+   \   000203   AD83         MOV     R5,DPH
+   \   000205   7401         MOV     A,#0x1
+   \   000207   12....       LCALL   ?XSTACK_DISP0_8
+   \   00020A   AA82         MOV     R2,DPL
+   \   00020C   AB83         MOV     R3,DPH
+   \   00020E   12....       LCALL   ??put_char?relay
+   \   000211   C3           CLR     C
+   \   000212   E4           CLR     A
+   \   000213   95..         SUBB    A,?V0 + 0
+   \   000215   FE           MOV     R6,A
+   \   000216   E4           CLR     A
+   \   000217   95..         SUBB    A,?V0 + 1
+   \   000219   FF           MOV     R7,A
+   \   00021A   8004         SJMP    ??render_12
+   \                     ??render_11:
+   \   00021C   AE..         MOV     R6,?V0 + 0
+   \   00021E   AF..         MOV     R7,?V0 + 1
+   \                     ??render_12:
+   \   000220                ; Setup parameters for call to function put_u16
+   \   000220   EE           MOV     A,R6
+   \   000221   F8           MOV     R0,A
+   \   000222   EF           MOV     A,R7
+   \   000223   F9           MOV     R1,A
+   \   000224   7A64         MOV     R2,#0x64
+   \   000226   7B00         MOV     R3,#0x0
+   \   000228   12....       LCALL   ?US_DIV_MOD
+   \   00022B   88..         MOV     ?V0 + 0,R0
+   \   00022D   89..         MOV     ?V0 + 1,R1
+   \   00022F   78..         MOV     R0,#?V0 + 0
+   \   000231   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000234   7402         MOV     A,#0x2
+   \   000236   12....       LCALL   ?XSTACK_DISP0_8
+   \   000239   AC82         MOV     R4,DPL
+   \   00023B   AD83         MOV     R5,DPH
+   \   00023D   7403         MOV     A,#0x3
+   \   00023F   12....       LCALL   ?XSTACK_DISP0_8
+   \   000242   AA82         MOV     R2,DPL
+   \   000244   AB83         MOV     R3,DPH
+   \   000246   12....       LCALL   ??put_u16?relay
+   \   000249   7402         MOV     A,#0x2
+   \   00024B   12....       LCALL   ?DEALLOC_XSTACK8
+   \   00024E                ; Setup parameters for call to function put_char
+   \   00024E   792E         MOV     R1,#0x2e
+   \   000250   85..82       MOV     DPL,?XSP + 0
+   \   000253   85..83       MOV     DPH,?XSP + 1
+   \   000256   AC82         MOV     R4,DPL
+   \   000258   AD83         MOV     R5,DPH
+   \   00025A   7401         MOV     A,#0x1
+   \   00025C   12....       LCALL   ?XSTACK_DISP0_8
+   \   00025F   12....       LCALL   ?Subroutine5 & 0xFFFF
+   \                     ??CrossCallReturnLabel_4:
+   \   000262   12....       LCALL   ?US_DIV_MOD
+   \   000265   7A0A         MOV     R2,#0xa
+   \   000267   7B00         MOV     R3,#0x0
+   \   000269   12....       LCALL   ?US_DIV_MOD
+   \   00026C   12....       LCALL   ?Subroutine2 & 0xFFFF
+   \                     ??CrossCallReturnLabel_0:
+   \   00026F   12....       LCALL   ?XSTACK_DISP0_8
+   \   000272   12....       LCALL   ?Subroutine5 & 0xFFFF
+   \                     ??CrossCallReturnLabel_5:
+   \   000275   12....       LCALL   ?US_DIV_MOD
+   \   000278   12....       LCALL   ?Subroutine2 & 0xFFFF
+   \                     ??CrossCallReturnLabel_1:
+   \   00027B   12....       LCALL   ?XSTACK_DISP0_8
+   \   00027E   AA82         MOV     R2,DPL
+   \   000280   AB83         MOV     R3,DPH
+   \   000282   12....       LCALL   ??put_char?relay
+    115                  put_str(line, &idx, " H:");
+   \   000285                ; Setup parameters for call to function put_str
+   \   000285   75....       MOV     ?V0 + 0,#`?<Constant " H:">` & 0xff
+   \   000288   75....       MOV     ?V0 + 1,#(`?<Constant " H:">` >> 8) & 0xff
+   \   00028B   78..         MOV     R0,#?V0 + 0
+   \   00028D   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   000290   7402         MOV     A,#0x2
+   \   000292   12....       LCALL   ?XSTACK_DISP0_8
+   \   000295   AC82         MOV     R4,DPL
+   \   000297   AD83         MOV     R5,DPH
+   \   000299   7403         MOV     A,#0x3
+   \   00029B   12....       LCALL   ?XSTACK_DISP0_8
+   \   00029E   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_20:
+   \   0002A1   12....       LCALL   ?DEALLOC_XSTACK8
+    116                  put_u16(line, &idx, (uint16)(s_model.hum_x100 / 100u));
+   \   0002A4                ; Setup parameters for call to function put_u16
+   \   0002A4   12....       LCALL   ?Subroutine3 & 0xFFFF
+    117              }
+   \                     ??CrossCallReturnLabel_31:
+   \   0002A7   7A64         MOV     R2,#0x64
+   \   0002A9   7B00         MOV     R3,#0x0
+   \   0002AB   12....       LCALL   ?US_DIV_MOD
+   \   0002AE   88..         MOV     ?V0 + 0,R0
+   \   0002B0   89..         MOV     ?V0 + 1,R1
+   \   0002B2   78..         MOV     R0,#?V0 + 0
+   \   0002B4   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0002B7   7402         MOV     A,#0x2
+   \   0002B9   12....       LCALL   ?XSTACK_DISP0_8
+   \   0002BC   AC82         MOV     R4,DPL
+   \   0002BE   AD83         MOV     R5,DPH
+   \   0002C0   7403         MOV     A,#0x3
+   \   0002C2   12....       LCALL   ?XSTACK_DISP0_8
+   \   0002C5   AA82         MOV     R2,DPL
+   \   0002C7   AB83         MOV     R3,DPH
+   \   0002C9   12....       LCALL   ??put_u16?relay
+   \                     ??render_9:
+   \   0002CC   7402         MOV     A,#0x2
+   \   0002CE   12....       LCALL   ?DEALLOC_XSTACK8
+    118              oled_ssd1306_draw_text(2, line);
+   \   0002D1                ; Setup parameters for call to function oled_ssd1306_draw_text
+   \   0002D1   7401         MOV     A,#0x1
+   \   0002D3   12....       LCALL   ?XSTACK_DISP0_8
+   \   0002D6   AA82         MOV     R2,DPL
+   \   0002D8   AB83         MOV     R3,DPH
+   \   0002DA   7902         MOV     R1,#0x2
+   \   0002DC   12....       LCALL   ??oled_ssd1306_draw_text?relay
+    119          
+    120              /* Row 3：执行器状态 */
+    121              line_clear(line);
+   \   0002DF                ; Setup parameters for call to function line_clear
+   \   0002DF   7401         MOV     A,#0x1
+   \   0002E1   12....       LCALL   ?XSTACK_DISP0_8
+   \   0002E4   12....       LCALL   ?Subroutine8 & 0xFFFF
+    122              idx = 0;
+    123              put_str(line, &idx, "LED:");
+   \                     ??CrossCallReturnLabel_13:
+   \   0002E7                ; Setup parameters for call to function put_str
+   \   0002E7   75....       MOV     ?V0 + 0,#`?<Constant "LED:">` & 0xff
+   \   0002EA   75....       MOV     ?V0 + 1,#(`?<Constant "LED:">` >> 8) & 0xff
+   \   0002ED   78..         MOV     R0,#?V0 + 0
+   \   0002EF   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   0002F2   7402         MOV     A,#0x2
+   \   0002F4   12....       LCALL   ?XSTACK_DISP0_8
+   \   0002F7   AC82         MOV     R4,DPL
+   \   0002F9   AD83         MOV     R5,DPH
+   \   0002FB   7403         MOV     A,#0x3
+   \   0002FD   12....       LCALL   ?XSTACK_DISP0_8
+   \   000300   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_21:
+   \   000303   12....       LCALL   ?DEALLOC_XSTACK8
+    124              put_str(line, &idx, s_model.led_on ? "ON " : "OFF");
+   \   000306   90....       MOV     DPTR,#s_model + 11
+   \   000309   E0           MOVX    A,@DPTR
+   \   00030A   6008         JZ      ??render_13
+   \   00030C   75....       MOV     ?V0 + 0,#`?<Constant "ON ">` & 0xff
+   \   00030F   75....       MOV     ?V0 + 1,#(`?<Constant "ON ">` >> 8) & 0xff
+   \   000312   8006         SJMP    ??render_14
+   \                     ??render_13:
+   \   000314   75....       MOV     ?V0 + 0,#`?<Constant "OFF">` & 0xff
+   \   000317   75....       MOV     ?V0 + 1,#(`?<Constant "OFF">` >> 8) & 0xff
+   \                     ??render_14:
+   \   00031A                ; Setup parameters for call to function put_str
+   \   00031A   78..         MOV     R0,#?V0 + 0
+   \   00031C   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00031F   7402         MOV     A,#0x2
+   \   000321   12....       LCALL   ?XSTACK_DISP0_8
+   \   000324   AC82         MOV     R4,DPL
+   \   000326   AD83         MOV     R5,DPH
+   \   000328   7403         MOV     A,#0x3
+   \   00032A   12....       LCALL   ?XSTACK_DISP0_8
+   \   00032D   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_22:
+   \   000330   12....       LCALL   ?DEALLOC_XSTACK8
+    125              put_str(line, &idx, " BZ:");
+   \   000333                ; Setup parameters for call to function put_str
+   \   000333   75....       MOV     ?V0 + 0,#`?<Constant " BZ:">` & 0xff
+   \   000336   75....       MOV     ?V0 + 1,#(`?<Constant " BZ:">` >> 8) & 0xff
+   \   000339   78..         MOV     R0,#?V0 + 0
+   \   00033B   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00033E   7402         MOV     A,#0x2
+   \   000340   12....       LCALL   ?XSTACK_DISP0_8
+   \   000343   AC82         MOV     R4,DPL
+   \   000345   AD83         MOV     R5,DPH
+   \   000347   7403         MOV     A,#0x3
+   \   000349   12....       LCALL   ?XSTACK_DISP0_8
+   \   00034C   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_23:
+   \   00034F   12....       LCALL   ?DEALLOC_XSTACK8
+    126              put_str(line, &idx, s_model.buzzer_on ? "ON" : "OFF");
+   \   000352   90....       MOV     DPTR,#s_model + 12
+   \   000355   E0           MOVX    A,@DPTR
+   \   000356   6008         JZ      ??render_15
+   \   000358   75....       MOV     ?V0 + 0,#`?<Constant "ON">` & 0xff
+   \   00035B   75....       MOV     ?V0 + 1,#(`?<Constant "ON">` >> 8) & 0xff
+   \   00035E   8006         SJMP    ??render_16
+   \                     ??render_15:
+   \   000360   75....       MOV     ?V0 + 0,#`?<Constant "OFF">` & 0xff
+   \   000363   75....       MOV     ?V0 + 1,#(`?<Constant "OFF">` >> 8) & 0xff
+   \                     ??render_16:
+   \   000366                ; Setup parameters for call to function put_str
+   \   000366   78..         MOV     R0,#?V0 + 0
+   \   000368   12....       LCALL   ?PUSH_XSTACK_I_TWO
+   \   00036B   7402         MOV     A,#0x2
+   \   00036D   12....       LCALL   ?XSTACK_DISP0_8
+   \   000370   AC82         MOV     R4,DPL
+   \   000372   AD83         MOV     R5,DPH
+   \   000374   7403         MOV     A,#0x3
+   \   000376   12....       LCALL   ?XSTACK_DISP0_8
+   \   000379   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_24:
+   \   00037C   12....       LCALL   ?DEALLOC_XSTACK8
+    127              oled_ssd1306_draw_text(3, line);
+   \   00037F                ; Setup parameters for call to function oled_ssd1306_draw_text
+   \   00037F   7401         MOV     A,#0x1
+   \   000381   12....       LCALL   ?XSTACK_DISP0_8
+   \   000384   AA82         MOV     R2,DPL
+   \   000386   AB83         MOV     R3,DPH
+   \   000388   7903         MOV     R1,#0x3
+   \   00038A   12....       LCALL   ??oled_ssd1306_draw_text?relay
+    128          }
+   \   00038D   7412         MOV     A,#0x12
+   \   00038F   12....       LCALL   ?DEALLOC_XSTACK8
+   \   000392   7F04         MOV     R7,#0x4
+   \   000394   02....       LJMP    ?BANKED_LEAVE_XDATA
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine9:
+   \   000000   AA82         MOV     R2,DPL
+   \   000002   AB83         MOV     R3,DPH
+   \   000004   12....       LCALL   ??put_str?relay
+   \   000007   7402         MOV     A,#0x2
+   \   000009   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine8:
+   \   000000   AA82         MOV     R2,DPL
+   \   000002   AB83         MOV     R3,DPH
+   \   000004   12....       LCALL   ??line_clear?relay
+   \   000007   85..82       MOV     DPL,?XSP + 0
+   \   00000A   85..83       MOV     DPH,?XSP + 1
+   \   00000D   E4           CLR     A
+   \   00000E   F0           MOVX    @DPTR,A
+   \   00000F   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine3:
+   \   000000   90....       MOV     DPTR,#s_model + 7
+   \   000003                REQUIRE ??Subroutine11_0
+   \   000003                ; // Fall through to label ??Subroutine11_0
+    129          
+    130          static uint8 model_changed(void)
+    131          {
+    132              /* 简单 memcmp 替代：逐字段判等，避免拉进 string.h 依赖 */
+    133              if (s_model.role        != s_last.role)        return 1u;
+    134              if (s_model.online      != s_last.online)      return 1u;
+    135              if (s_model.short_addr  != s_last.short_addr)  return 1u;
+    136              if (s_model.channel     != s_last.channel)     return 1u;
+    137              if (s_model.temp_x100   != s_last.temp_x100)   return 1u;
+    138              if (s_model.hum_x100    != s_last.hum_x100)    return 1u;
+    139              if (s_model.lux         != s_last.lux)         return 1u;
+    140              if (s_model.led_on      != s_last.led_on)      return 1u;
+    141              if (s_model.buzzer_on   != s_last.buzzer_on)   return 1u;
+    142              if (s_model.has_sample  != s_last.has_sample)  return 1u;
+    143              return 0u;
+    144          }
+    145          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    146          void node_oled_view_init(uint8 role)
+   \                     node_oled_view_init:
+    147          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   E9           MOV     A,R1
+   \   000006   FE           MOV     R6,A
+    148              uint8 i;
+    149              uint8 *p;
+    150          
+    151              /* memset 替代：byte-wise 清零，避免依赖 string.h */
+    152              p = (uint8 *)&s_model;
+    153              for (i = 0; i < sizeof(s_model); ++i) p[i] = 0;
+   \   000007   E4           CLR     A
+   \   000008   90....       MOV     DPTR,#s_model
+   \   00000B   780E         MOV     R0,#0xe
+   \                     ??node_oled_view_init_0:
+   \   00000D   F0           MOVX    @DPTR,A
+   \   00000E   A3           INC     DPTR
+   \   00000F   D8FC         DJNZ    R0,??node_oled_view_init_0
+    154              p = (uint8 *)&s_last;
+    155              for (i = 0; i < sizeof(s_last); ++i)  p[i] = 0xFFu;   /* 强制首次 render */
+   \   000011   74FF         MOV     A,#-0x1
+   \   000013   90....       MOV     DPTR,#s_last
+   \   000016   780E         MOV     R0,#0xe
+   \                     ??node_oled_view_init_1:
+   \   000018   F0           MOVX    @DPTR,A
+   \   000019   A3           INC     DPTR
+   \   00001A   D8FC         DJNZ    R0,??node_oled_view_init_1
+    156          
+    157              s_model.role = role;
+   \   00001C   EE           MOV     A,R6
+   \   00001D   90....       MOV     DPTR,#s_model
+   \   000020   F0           MOVX    @DPTR,A
+    158              oled_ssd1306_init();
+   \   000021                ; Setup parameters for call to function oled_ssd1306_init
+   \   000021   12....       LCALL   ??oled_ssd1306_init?relay
+    159              s_initialized = 1u;
+   \   000024   90....       MOV     DPTR,#s_initialized
+   \   000027   7401         MOV     A,#0x1
+   \   000029   F0           MOVX    @DPTR,A
+    160              render();
+   \   00002A                ; Setup parameters for call to function render
+   \   00002A   12....       LCALL   ?Subroutine10 & 0xFFFF
+    161              s_last = s_model;
+   \                     ??CrossCallReturnLabel_25:
+   \   00002D   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+    162          }
+   \   000030   02....       LJMP    ?Subroutine1 & 0xFFFF
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine10:
+   \   000000   12....       LCALL   ??render?relay
+   \   000003   90....       MOV     DPTR,#s_model
+   \   000006   7C..         MOV     R4,#s_last & 0xff
+   \   000008   7D..         MOV     R5,#(s_last >> 8) & 0xff
+   \   00000A   740E         MOV     A,#0xe
+   \   00000C   22           RET
+    163          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    164          void node_oled_view_set(const node_oled_model_t *m)
+   \                     node_oled_view_set:
+    165          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+    166              if (m != 0) {
+   \   000004   EA           MOV     A,R2
+   \   000005   4B           ORL     A,R3
+   \   000006   6017         JZ      ??node_oled_view_set_0
+    167                  /* 不直接 = *m 以保留 role（init 已固定） */
+    168                  uint8 saved_role = s_model.role;
+   \   000008   90....       MOV     DPTR,#s_model
+   \   00000B   E0           MOVX    A,@DPTR
+   \   00000C   F8           MOV     R0,A
+    169                  s_model = *m;
+   \   00000D   8A82         MOV     DPL,R2
+   \   00000F   8B83         MOV     DPH,R3
+   \   000011   7C..         MOV     R4,#s_model & 0xff
+   \   000013   7D..         MOV     R5,#(s_model >> 8) & 0xff
+   \   000015   740E         MOV     A,#0xe
+   \   000017   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+    170                  s_model.role = saved_role;
+   \   00001A   E8           MOV     A,R0
+   \   00001B   90....       MOV     DPTR,#s_model
+   \   00001E   F0           MOVX    @DPTR,A
+    171              }
+    172          }
+   \                     ??node_oled_view_set_0:
+   \   00001F   02....       LJMP    ?Subroutine0 & 0xFFFF
+    173          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    174          void node_oled_view_refresh(void)
+   \                     node_oled_view_refresh:
+    175          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+    176              if (!s_initialized) return;
+   \   000004   90....       MOV     DPTR,#s_initialized
+   \   000007   E0           MOVX    A,@DPTR
+   \   000008   7003         JNZ     $+5
+   \   00000A   02....       LJMP    ??node_oled_view_refresh_0 & 0xFFFF
+    177              if (!model_changed()) return;
+   \   00000D   90....       MOV     DPTR,#s_model
+   \   000010   E0           MOVX    A,@DPTR
+   \   000011   F8           MOV     R0,A
+   \   000012   90....       MOV     DPTR,#s_last
+   \   000015   E0           MOVX    A,@DPTR
+   \   000016   68           XRL     A,R0
+   \   000017   6003         JZ      $+5
+   \   000019   02....       LJMP    ??node_oled_view_refresh_1 & 0xFFFF
+   \   00001C   90....       MOV     DPTR,#s_model + 1
+   \   00001F   E0           MOVX    A,@DPTR
+   \   000020   F8           MOV     R0,A
+   \   000021   90....       MOV     DPTR,#s_last + 1
+   \   000024   E0           MOVX    A,@DPTR
+   \   000025   68           XRL     A,R0
+   \   000026   7075         JNZ     ??node_oled_view_refresh_1
+   \   000028   90....       MOV     DPTR,#s_model + 2
+   \   00002B   12....       LCALL   ??Subroutine11_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_28:
+   \   00002E   90....       MOV     DPTR,#s_last + 2
+   \   000031   E0           MOVX    A,@DPTR
+   \   000032   68           XRL     A,R0
+   \   000033   7003         JNZ     ??node_oled_view_refresh_2
+   \   000035   A3           INC     DPTR
+   \   000036   E0           MOVX    A,@DPTR
+   \   000037   69           XRL     A,R1
+   \                     ??node_oled_view_refresh_2:
+   \   000038   7063         JNZ     ??node_oled_view_refresh_1
+   \   00003A   90....       MOV     DPTR,#s_model + 4
+   \   00003D   E0           MOVX    A,@DPTR
+   \   00003E   F8           MOV     R0,A
+   \   00003F   90....       MOV     DPTR,#s_last + 4
+   \   000042   E0           MOVX    A,@DPTR
+   \   000043   68           XRL     A,R0
+   \   000044   7057         JNZ     ??node_oled_view_refresh_1
+   \   000046   90....       MOV     DPTR,#s_model + 5
+   \   000049   12....       LCALL   ??Subroutine11_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_29:
+   \   00004C   90....       MOV     DPTR,#s_last + 5
+   \   00004F   E0           MOVX    A,@DPTR
+   \   000050   68           XRL     A,R0
+   \   000051   7003         JNZ     ??node_oled_view_refresh_3
+   \   000053   A3           INC     DPTR
+   \   000054   E0           MOVX    A,@DPTR
+   \   000055   69           XRL     A,R1
+   \                     ??node_oled_view_refresh_3:
+   \   000056   7045         JNZ     ??node_oled_view_refresh_1
+   \   000058   12....       LCALL   ?Subroutine3 & 0xFFFF
+   \                     ??CrossCallReturnLabel_32:
+   \   00005B   90....       MOV     DPTR,#s_last + 7
+   \   00005E   E0           MOVX    A,@DPTR
+   \   00005F   68           XRL     A,R0
+   \   000060   7003         JNZ     ??node_oled_view_refresh_4
+   \   000062   A3           INC     DPTR
+   \   000063   E0           MOVX    A,@DPTR
+   \   000064   69           XRL     A,R1
+   \                     ??node_oled_view_refresh_4:
+   \   000065   7036         JNZ     ??node_oled_view_refresh_1
+   \   000067   90....       MOV     DPTR,#s_model + 9
+   \   00006A   12....       LCALL   ??Subroutine11_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_30:
+   \   00006D   90....       MOV     DPTR,#s_last + 9
+   \   000070   E0           MOVX    A,@DPTR
+   \   000071   68           XRL     A,R0
+   \   000072   7003         JNZ     ??node_oled_view_refresh_5
+   \   000074   A3           INC     DPTR
+   \   000075   E0           MOVX    A,@DPTR
+   \   000076   69           XRL     A,R1
+   \                     ??node_oled_view_refresh_5:
+   \   000077   7024         JNZ     ??node_oled_view_refresh_1
+   \   000079   90....       MOV     DPTR,#s_model + 11
+   \   00007C   E0           MOVX    A,@DPTR
+   \   00007D   F8           MOV     R0,A
+   \   00007E   90....       MOV     DPTR,#s_last + 11
+   \   000081   E0           MOVX    A,@DPTR
+   \   000082   68           XRL     A,R0
+   \   000083   7018         JNZ     ??node_oled_view_refresh_1
+   \   000085   90....       MOV     DPTR,#s_model + 12
+   \   000088   E0           MOVX    A,@DPTR
+   \   000089   F8           MOV     R0,A
+   \   00008A   90....       MOV     DPTR,#s_last + 12
+   \   00008D   E0           MOVX    A,@DPTR
+   \   00008E   68           XRL     A,R0
+   \   00008F   700C         JNZ     ??node_oled_view_refresh_1
+   \   000091   90....       MOV     DPTR,#s_model + 13
+   \   000094   E0           MOVX    A,@DPTR
+   \   000095   F8           MOV     R0,A
+   \   000096   90....       MOV     DPTR,#s_last + 13
+   \   000099   E0           MOVX    A,@DPTR
+   \   00009A   68           XRL     A,R0
+   \   00009B   6006         JZ      ??node_oled_view_refresh_0
+    178              render();
+   \                     ??node_oled_view_refresh_1:
+   \   00009D                ; Setup parameters for call to function render
+   \   00009D   12....       LCALL   ?Subroutine10 & 0xFFFF
+    179              s_last = s_model;
+   \                     ??CrossCallReturnLabel_26:
+   \   0000A0   12....       LCALL   ?MOVE_LONG8_XDATA_XDATA
+    180          }
+   \                     ??node_oled_view_refresh_0:
+   \   0000A3   02....       LJMP    ?Subroutine0 & 0xFFFF
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine5:
+   \   000000   AA82         MOV     R2,DPL
+   \   000002   AB83         MOV     R3,DPH
+   \   000004   12....       LCALL   ??put_char?relay
+   \   000007                ; Setup parameters for call to function put_char
+   \   000007                ; Setup parameters for call to function put_char
+   \   000007   EE           MOV     A,R6
+   \   000008   F8           MOV     R0,A
+   \   000009   EF           MOV     A,R7
+   \   00000A   F9           MOV     R1,A
+   \   00000B   7A0A         MOV     R2,#0xa
+   \   00000D   7B00         MOV     R3,#0x0
+   \   00000F   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine2:
+   \   000000   EA           MOV     A,R2
+   \   000001   2430         ADD     A,#0x30
+   \   000003   F9           MOV     R1,A
+   \   000004   85..82       MOV     DPL,?XSP + 0
+   \   000007   85..83       MOV     DPH,?XSP + 1
+   \   00000A   AC82         MOV     R4,DPL
+   \   00000C   AD83         MOV     R5,DPH
+   \   00000E   7401         MOV     A,#0x1
+   \   000010   22           RET
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??line_clear?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    line_clear
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??put_char?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    put_char
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??put_str?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    put_str
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??put_u16?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    put_u16
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??render?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    render
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??node_oled_view_init?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    node_oled_view_init
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??node_oled_view_set?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    node_oled_view_set
+
+   \                                 In  segment BANK_RELAYS, align 1
+   \                     ??node_oled_view_refresh?relay:
+   \   000000   12....       LCALL   ?BDISPATCH
+   \   000003   ......       DC24    node_oled_view_refresh
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "N2 Lux ">`:
+   \   000000   4E32204C     DB "N2 Lux "
+   \            75782000
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "N1 TempHum ">`:
+   \   000000   4E312054     DB "N1 TempHum "
+   \            656D7048
+   \            756D2000
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "OK">`:
+   \   000000   4F4B00       DB "OK"
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "..">`:
+   \   000000   2E2E00       DB ".."
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "ID:">`:
+   \   000000   49443A00     DB "ID:"
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant " CH:">`:
+   \   000000   2043483A     DB " CH:"
+   \            00      
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "----">`:
+   \   000000   2D2D2D2D     DB "----"
+   \            00      
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "L:">`:
+   \   000000   4C3A00       DB "L:"
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant " lx">`:
+   \   000000   206C7800     DB " lx"
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "T:">`:
+   \   000000   543A00       DB "T:"
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant " H:">`:
+   \   000000   20483A00     DB " H:"
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "LED:">`:
+   \   000000   4C45443A     DB "LED:"
+   \            00      
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "ON ">`:
+   \   000000   4F4E2000     DB "ON "
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "OFF">`:
+   \   000000   4F464600     DB "OFF"
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant " BZ:">`:
+   \   000000   20425A3A     DB " BZ:"
+   \            00      
+
+   \                                 In  segment XDATA_ROM_C, align 1
+   \                     `?<Constant "ON">`:
+   \   000000   4F4E00       DB "ON"
+
+   Maximum stack usage in bytes:
+
+     Function                    ISTACK PSTACK XSTACK
+     --------                    ------ ------ ------
+     line_clear                      3      0     30
+     node_oled_view_init             0      0      9
+       -> oled_ssd1306_init          0      0     18
+       -> render                     0      0     18
+     node_oled_view_refresh          2      0      0
+       -> render                     4      0      0
+     node_oled_view_set              2      0      0
+     put_char                        1      0     39
+     put_str                         1      0     41
+     put_u16                         1      0     52
+       -> put_char                   0      0     40
+     render                          0      0     41
+       -> line_clear                 0      0     60
+       -> put_str                    0      0     64
+       -> put_str                    0      0     64
+       -> put_str                    0      0     64
+       -> oled_ssd1306_draw_text     0      0     60
+       -> line_clear                 0      0     60
+       -> put_str                    0      0     64
+       -> put_char                   0      0     60
+       -> put_str                    0      0     64
+       -> put_u16                    0      0     64
+       -> oled_ssd1306_draw_text     0      0     60
+       -> line_clear                 0      0     60
+       -> put_str                    0      0     64
+       -> put_str                    0      0     64
+       -> put_u16                    0      0     64
+       -> put_str                    0      0     64
+       -> put_str                    0      0     64
+       -> put_char                   0      0     60
+       -> put_u16                    0      0     64
+       -> put_char                   0      0     60
+       -> put_char                   0      0     60
+       -> put_char                   0      0     60
+       -> put_str                    0      0     64
+       -> put_u16                    0      0     64
+       -> oled_ssd1306_draw_text     0      0     60
+       -> line_clear                 0      0     60
+       -> put_str                    0      0     64
+       -> put_str                    0      0     64
+       -> put_str                    0      0     64
+       -> put_str                    0      0     64
+       -> oled_ssd1306_draw_text     0      0     60
+
+
+   Segment part sizes:
+
+     Function/Label                 Bytes
+     --------------                 -----
+     s_model                          14
+     s_last                           14
+     s_initialized                     1
+     line_clear                       28
+     ?Subroutine0                      7
+     put_char                         22
+     ?Subroutine1                      5
+     ?Subroutine7                      9
+     ?Subroutine4                     12
+     put_str                          62
+     ??Subroutine11_0                  6
+     put_u16                         118
+     ?Subroutine6                     22
+     render                          919
+     ?Subroutine9                     10
+     ?Subroutine8                     16
+     ?Subroutine3                      3
+     node_oled_view_init              51
+     ?Subroutine10                    13
+     node_oled_view_set               34
+     node_oled_view_refresh          166
+     ?Subroutine5                     16
+     ?Subroutine2                     17
+     ??line_clear?relay                6
+     ??put_char?relay                  6
+     ??put_str?relay                   6
+     ??put_u16?relay                   6
+     ??render?relay                    6
+     ??node_oled_view_init?relay       6
+     ??node_oled_view_set?relay        6
+     ??node_oled_view_refresh?relay    6
+     ?<Constant "N2 Lux ">             8
+     ?<Constant "N1 TempHum ">        12
+     ?<Constant "OK">                  3
+     ?<Constant "..">                  3
+     ?<Constant "ID:">                 4
+     ?<Constant " CH:">                5
+     ?<Constant "----">                5
+     ?<Constant "L:">                  3
+     ?<Constant " lx">                 4
+     ?<Constant "T:">                  3
+     ?<Constant " H:">                 4
+     ?<Constant "LED:">                5
+     ?<Constant "ON ">                 4
+     ?<Constant "OFF">                 4
+     ?<Constant " BZ:">                5
+     ?<Constant "ON">                  3
+
+ 
+ 1 536 bytes in segment BANKED_CODE
+    48 bytes in segment BANK_RELAYS
+    75 bytes in segment XDATA_ROM_C
+    29 bytes in segment XDATA_Z
+ 
+ 1 584 bytes of CODE  memory
+    75 bytes of CONST memory
+    29 bytes of XDATA memory
+
+Errors: none
+Warnings: 1

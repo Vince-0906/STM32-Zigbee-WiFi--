@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  11:20:37 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:37 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -43,11 +43,12 @@
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Components\mac\low_level\srf04\single_chip\mac_m #
 #                          em.c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D            #
-#                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
-#                          ojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDev #
-#                          iceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Proje #
-#                          cts\zstack\Samples\ZbNode\CC2530DB\Node1_EndDevice #
-#                          EB\List\ --diag_suppress Pe001,Pa010 -o            #
+#                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC                #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\         #
+#                          --diag_suppress Pe001,Pa010 -o                     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e       #
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #

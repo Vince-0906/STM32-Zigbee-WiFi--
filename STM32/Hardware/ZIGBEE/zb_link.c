@@ -26,7 +26,8 @@ void zb_link_init(zb_link_on_frame_t cb)
     frame_parser_init(&s_parser);
     s_cb = cb;
     s_last_ping_ms = 0;
-    s_last_rx_ms = 0;
+    /* 初值给当前 ms，用于"首次启动从未收到回帧"的场景也能按心跳超时触发复位。 */
+    s_last_rx_ms = ms_now();
     s_miss_cnt = 0;
     s_alive = 0;
 }
@@ -73,8 +74,9 @@ void zb_link_tick(uint32_t now_ms)
     if (now_ms - s_last_ping_ms >= ZB_HEARTBEAT_MS) {
         s_last_ping_ms = now_ms;
         (void)zb_link_send(CMD_ZB_PING, 0, 0);
-        /* 如果自上次收到 > 心跳窗口，计一次 miss */
-        if (s_last_rx_ms != 0 && (now_ms - s_last_rx_ms) > ZB_HEARTBEAT_MS) {
+        /* 如果自上次收到 > 心跳窗口，计一次 miss（s_last_rx_ms 在 init 时已置为
+         * 当前 ms，因此首次上电若 CC2530 一直无回帧也能正常累计） */
+        if ((now_ms - s_last_rx_ms) > ZB_HEARTBEAT_MS) {
             if (s_miss_cnt < 255) s_miss_cnt++;
             if (s_miss_cnt >= ZB_HEARTBEAT_FAILS) {
                 LOGW("zb", "heartbeat lost, resetting CC2530");

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  15:16:33 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  21:05:35 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -44,7 +44,7 @@
 //                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Projects\zstack\Samples\GwCoord\Source\oled_ss /
-//                          d1306.c -D HAL_UART=TRUE -lC                      /
+//                          d1306.c -D HAL_UART=TRUE -D HAL_LCD=FALSE -lC     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\CoordinatorEB\List\ -lA      /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -137,6 +137,7 @@
         EXTERN ?BANKED_ENTER_XDATA
         EXTERN ?BANKED_LEAVE_XDATA
         EXTERN ?BDISPATCH
+        EXTERN ?BRET
         EXTERN ?S_SHL
         EXTERN ?V0
 
@@ -147,28 +148,34 @@
         FUNCTION ??oled_ssd1306_draw_text?relay,0203H
         PUBLIC ??oled_ssd1306_init?relay
         FUNCTION ??oled_ssd1306_init?relay,0203H
+        FUNCTION ??oled_wait_ms?relay,0203H
         FUNCTION ??oled_write?relay,0203H
         FUNCTION oled_set_pos,021203H
-        ARGFRAME XSTACK, 16, STACK
+        ARGFRAME XSTACK, 17, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         LOCFRAME XSTACK, 9, STACK
         PUBLIC oled_ssd1306_clear
         FUNCTION oled_ssd1306_clear,021203H
-        ARGFRAME XSTACK, 10, STACK
+        ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         LOCFRAME XSTACK, 9, STACK
         PUBLIC oled_ssd1306_draw_text
         FUNCTION oled_ssd1306_draw_text,021203H
         ARGFRAME XSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
+        LOCFRAME XSTACK, 17, STACK
         PUBLIC oled_ssd1306_init
         FUNCTION oled_ssd1306_init,021203H
         ARGFRAME XSTACK, 0, STACK
-        LOCFRAME XSTACK, 10, STACK
+        LOCFRAME ISTACK, 2, STACK
+        FUNCTION oled_wait_ms,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 9, STACK
         FUNCTION oled_write,021203H
-        ARGFRAME XSTACK, 16, STACK
+        ARGFRAME XSTACK, 17, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         LOCFRAME XSTACK, 9, STACK
@@ -328,10 +335,12 @@
         CFI ?RET_LOW Frame(CFA_SP, 1)
         CFI EndCommon cfiCommon1
         
+Onboard_wait        SYMBOL "Onboard_wait"
 soft_i2c_start      SYMBOL "soft_i2c_start"
 soft_i2c_write_byte SYMBOL "soft_i2c_write_byte"
 soft_i2c_stop       SYMBOL "soft_i2c_stop"
 soft_i2c_init       SYMBOL "soft_i2c_init"
+??Onboard_wait?relay SYMBOL "?relay", Onboard_wait
 ??soft_i2c_init?relay SYMBOL "?relay", soft_i2c_init
 ??soft_i2c_start?relay SYMBOL "?relay", soft_i2c_start
 ??soft_i2c_stop?relay SYMBOL "?relay", soft_i2c_stop
@@ -343,6 +352,13 @@ oled_ssd1306_draw_text SYMBOL "oled_ssd1306_draw_text"
 oled_ssd1306_init   SYMBOL "oled_ssd1306_init"
 ??oled_ssd1306_init?relay SYMBOL "?relay", oled_ssd1306_init
 
+        EXTERN Onboard_wait
+        FUNCTION Onboard_wait,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         EXTERN soft_i2c_start
         FUNCTION soft_i2c_start,0202H
         ARGFRAME ISTACK, 0, STACK
@@ -366,11 +382,13 @@ oled_ssd1306_init   SYMBOL "oled_ssd1306_init"
         ARGFRAME DOVERLAY, 0, STATIC
         EXTERN soft_i2c_init
         FUNCTION soft_i2c_init,0202H
-        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME ISTACK, 2, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 10, STACK
+        ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN ??Onboard_wait?relay
+        FUNCTION ??Onboard_wait?relay,00H
         EXTERN ??soft_i2c_init?relay
         FUNCTION ??soft_i2c_init?relay,00H
         EXTERN ??soft_i2c_start?relay
@@ -381,10 +399,18 @@ oled_ssd1306_init   SYMBOL "oled_ssd1306_init"
         FUNCTION ??soft_i2c_write_byte?relay,00H
 
 // D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\GwCoord\Source\oled_ssd1306.c
-//    1 #include "oled_ssd1306.h"
-//    2 
-//    3 #include "soft_i2c.h"
-//    4 #include "../../../../../../STM32/Hardware/OLED/oledfont.h"
+//    1 /*
+//    2  * SSD1306 128x64 OLED 驱动（CC2530 协调器侧，P1.2=SCL, P1.3=SDA 软件 I2C）。
+//    3  * 初始化时序参考 references/OLED/HARDWARE/OLED/oled.c 中 OLED_Init()，
+//    4  * 该参考在 STM32F103 上上电即亮，本项目 STM32 侧 drv_oled.c 用同一时序也已实测 OK，
+//    5  * 因此这里拷贝同一组参数。
+//    6  */
+//    7 
+//    8 #include "oled_ssd1306.h"
+//    9 
+//   10 #include "soft_i2c.h"
+//   11 #include "OnBoard.h"
+//   12 #include "../../../../../../STM32/Hardware/OLED/oledfont.h"
 
         RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
         DATA8
@@ -1910,19 +1936,86 @@ asc2_1608:
         DB 0
         DB 32
         DB 0
-//    5 
-//    6 #define OLED_ADDR      0x78u
-//    7 #define OLED_CMD_MODE  0x00u
-//    8 #define OLED_DAT_MODE  0x40u
-//    9 
+//   13 
+//   14 #define OLED_ADDR      0x78u
+//   15 #define OLED_CMD_MODE  0x00u
+//   16 #define OLED_DAT_MODE  0x40u
+//   17 
+//   18 /* MicroWait 是 NOP 循环（~265 ns/iter @32 MHz），不是真正的微秒校准；
+//   19  * 这里把它封装成粗略的毫秒延时，只在 OLED 上电稳定这类非时序关键场合使用。 */
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   10 static void oled_write(uint8 mode, uint8 value)
-oled_write:
+//   20 static void oled_wait_ms(uint16 ms)
+oled_wait_ms:
         CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function oled_wait_ms
+        CODE
+//   21 {
+        FUNCALL oled_wait_ms, Onboard_wait
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+        MOV     A,R2
+        MOV     R6,A
+        MOV     A,R3
+        MOV     R7,A
+        SJMP    ??oled_wait_ms_0
+//   22     while (ms-- != 0u) {
+//   23         MicroWait(4000);    /* 约 1 ms，够用 */
+??oled_wait_ms_1:
+        ; Setup parameters for call to function Onboard_wait
+        MOV     R2,#-0x60
+        MOV     R3,#0xf
+        LCALL   ??Onboard_wait?relay
+//   24     }
+??oled_wait_ms_0:
+        MOV     A,R6
+        MOV     R0,A
+        MOV     A,R7
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#-0x1
+        DEC     R6
+        MOV     A,R1
+        ADDC    A,#-0x1
+        MOV     R7,A
+        MOV     A,R0
+        ORL     A,R1
+        JNZ     ??oled_wait_ms_1
+//   25 }
+        SJMP    ?Subroutine0
+        CFI EndBlock cfiBlock0
+//   26 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   27 static void oled_write(uint8 mode, uint8 value)
+oled_write:
+        CFI Block cfiBlock1 Using cfiCommon0
         CFI Function oled_write
         CODE
-//   11 {
+//   28 {
         FUNCALL oled_write, soft_i2c_start
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -1997,58 +2090,41 @@ oled_write:
         MOV     R7,A
         MOV     A,R2
         MOV     R6,A
-//   12     soft_i2c_start();
+//   29     soft_i2c_start();
         ; Setup parameters for call to function soft_i2c_start
         LCALL   ??soft_i2c_start?relay
-//   13     (void)soft_i2c_write_byte(OLED_ADDR);
+//   30     (void)soft_i2c_write_byte(OLED_ADDR);
         ; Setup parameters for call to function soft_i2c_write_byte
         MOV     R1,#0x78
         LCALL   ??soft_i2c_write_byte?relay
-//   14     (void)soft_i2c_write_byte(mode);
+//   31     (void)soft_i2c_write_byte(mode);
         ; Setup parameters for call to function soft_i2c_write_byte
         MOV     A,R7
         MOV     R1,A
         LCALL   ??soft_i2c_write_byte?relay
-//   15     (void)soft_i2c_write_byte(value);
+//   32     (void)soft_i2c_write_byte(value);
         ; Setup parameters for call to function soft_i2c_write_byte
         MOV     A,R6
         MOV     R1,A
         LCALL   ??soft_i2c_write_byte?relay
-//   16     soft_i2c_stop();
+//   33     soft_i2c_stop();
         ; Setup parameters for call to function soft_i2c_stop
         LCALL   ??soft_i2c_stop?relay
-        CFI EndBlock cfiBlock0
-//   17 }
-        REQUIRE ?Subroutine0
-        ; // Fall through to label ?Subroutine0
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine0:
-        CFI Block cfiBlock1 Using cfiCommon0
-        CFI NoFunction
-        CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 9)
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        MOV     R7,#0x1
-        LJMP    ?BANKED_LEAVE_XDATA
+//   34 }
+        SJMP    ?Subroutine0
         CFI EndBlock cfiBlock1
-//   18 
+//   35 
+//   36 #define WR_CMD(c)  oled_write(OLED_CMD_MODE, (uint8)(c))
+//   37 #define WR_DAT(d)  oled_write(OLED_DAT_MODE, (uint8)(d))
+//   38 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   19 static void oled_set_pos(uint8 x, uint8 page)
+//   39 static void oled_set_pos(uint8 x, uint8 page)
 oled_set_pos:
         CFI Block cfiBlock2 Using cfiCommon0
         CFI Function oled_set_pos
         CODE
-//   20 {
+//   40 {
         FUNCALL oled_set_pos, oled_write
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -2101,14 +2177,14 @@ oled_set_pos:
         MOV     R6,A
         MOV     A,R2
         MOV     R7,A
-//   21     oled_write(OLED_CMD_MODE, (uint8)(0xB0u | page));
+//   41     WR_CMD(0xB0u | page);
         ; Setup parameters for call to function oled_write
         MOV     A,#-0x50
         ORL     A,R7
         MOV     R2,A
         MOV     R1,#0x0
         LCALL   ??oled_write?relay
-//   22     oled_write(OLED_CMD_MODE, (uint8)(0x10u | ((x >> 4) & 0x0Fu)));
+//   42     WR_CMD(0x10u | ((x >> 4) & 0x0Fu));
         ; Setup parameters for call to function oled_write
         MOV     A,R6
         SWAP    A
@@ -2117,165 +2193,647 @@ oled_set_pos:
         MOV     R2,A
         MOV     R1,#0x0
         LCALL   ??oled_write?relay
-//   23     oled_write(OLED_CMD_MODE, (uint8)(x & 0x0Fu));
+//   43     WR_CMD(0x00u | (x & 0x0Fu));
         ; Setup parameters for call to function oled_write
         MOV     A,#0xf
         ANL     A,R6
         MOV     R2,A
         MOV     R1,#0x0
         LCALL   ??oled_write?relay
-//   24 }
-        SJMP    ?Subroutine0
         CFI EndBlock cfiBlock2
-//   25 
-//   26 static void oled_fill_page(uint8 page, uint8 value)
-//   27 {
-//   28     uint8 x;
-//   29 
-//   30     oled_set_pos(0, page);
-//   31     for (x = 0; x < 128u; ++x) {
-//   32         oled_write(OLED_DAT_MODE, value);
-//   33     }
-//   34 }
-//   35 
+//   44 }
+        REQUIRE ?Subroutine0
+        ; // Fall through to label ?Subroutine0
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   36 void oled_ssd1306_init(void)
-oled_ssd1306_init:
+?Subroutine0:
         CFI Block cfiBlock3 Using cfiCommon0
-        CFI Function oled_ssd1306_init
-        CODE
-//   37 {
-        FUNCALL oled_ssd1306_init, soft_i2c_init
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 10, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 10, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_init, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 10, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 10, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_init, oled_ssd1306_clear
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 10, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 10, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        MOV     A,#-0xa
-        LCALL   ?BANKED_ENTER_XDATA
-        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI NoFunction
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
         CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
         CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
         CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 10)
-        ; Saved register size: 10
-        ; Auto size: 0
-//   38     static const uint8 init_seq[] = {
-//   39         0xAE, 0x20, 0x10, 0xB0, 0xC8, 0x00, 0x10, 0x40,
-//   40         0x81, 0x7F, 0xA1, 0xA6, 0xA8, 0x3F, 0xA4, 0xD3,
-//   41         0x00, 0xD5, 0xF0, 0xD9, 0x22, 0xDA, 0x12, 0xDB,
-//   42         0x20, 0x8D, 0x14, 0xAF
-//   43     };
-//   44     uint8 i;
-//   45 
-//   46     soft_i2c_init();
-        ; Setup parameters for call to function soft_i2c_init
-        LCALL   ??soft_i2c_init?relay
-//   47     for (i = 0; i < sizeof(init_seq); ++i) {
-        MOV     R6,#0x0
-//   48         oled_write(OLED_CMD_MODE, init_seq[i]);
-??oled_ssd1306_init_0:
-        ; Setup parameters for call to function oled_write
-        MOV     ?V0 + 0,R6
-        MOV     A,#??init_seq & 0xff
-        ADD     A,?V0 + 0
-        MOV     DPL,A
-        MOV     A,#(??init_seq >> 8) & 0xff
-        ADDC    A,#0x0
-        MOV     DPH,A
-        MOVX    A,@DPTR
-        MOV     R2,A
-        MOV     R1,#0x0
-        LCALL   ??oled_write?relay
-//   49     }
-        INC     R6
-        MOV     A,R6
-        CLR     C
-        SUBB    A,#0x1c
-        JC      ??oled_ssd1306_init_0
-//   50     oled_ssd1306_clear();
-        ; Setup parameters for call to function oled_ssd1306_clear
-        LCALL   ??oled_ssd1306_clear?relay
-//   51 }
-        MOV     R7,#0x2
+        MOV     R7,#0x1
         LJMP    ?BANKED_LEAVE_XDATA
         CFI EndBlock cfiBlock3
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-??init_seq:
-        DB 174
-        DB 32
-        DB 16
-        DB 176
-        DB 200
-        DB 0
-        DB 16
-        DB 64
-        DB 129
-        DB 127
-        DB 161
-        DB 166
-        DB 168
-        DB 63
-        DB 164
-        DB 211
-        DB 0
-        DB 213
-        DB 240
-        DB 217
-        DB 34
-        DB 218
-        DB 18
-        DB 219
-        DB 32
-        DB 141
-        DB 20
-        DB 175
-//   52 
+//   45 
+//   46 static void oled_fill_page(uint8 page, uint8 value)
+//   47 {
+//   48     uint8 x;
+//   49 
+//   50     oled_set_pos(0, page);
+//   51     for (x = 0; x < 128u; ++x) {
+//   52         WR_DAT(value);
+//   53     }
+//   54 }
+//   55 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   53 void oled_ssd1306_clear(void)
-oled_ssd1306_clear:
+//   56 void oled_ssd1306_init(void)
+oled_ssd1306_init:
         CFI Block cfiBlock4 Using cfiCommon0
+        CFI Function oled_ssd1306_init
+        CODE
+//   57 {
+        FUNCALL oled_ssd1306_init, soft_i2c_init
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_wait_ms
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_wait_ms
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_ssd1306_clear
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+//   58     soft_i2c_init();
+        ; Setup parameters for call to function soft_i2c_init
+        LCALL   ??soft_i2c_init?relay
+//   59 
+//   60     /* SSD1306 上电后 VCC 需要稳定 ≥ 100 ms 才能可靠接收命令。 */
+//   61     oled_wait_ms(120);
+        ; Setup parameters for call to function oled_wait_ms
+        MOV     R2,#0x78
+        MOV     R3,#0x0
+        LCALL   ??oled_wait_ms?relay
+//   62 
+//   63     /* ---- 与 STM32 侧一致的 SSD1306 初始化序列 ---- */
+//   64     WR_CMD(0xAE);               /* display off */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x52
+        LCALL   ?Subroutine2 & 0xFFFF
+//   65     WR_CMD(0x00); WR_CMD(0x10); /* set column address */
+??CrossCallReturnLabel_2:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x10
+        LCALL   ?Subroutine3 & 0xFFFF
+//   66     WR_CMD(0x40);               /* set start line */
+//   67     WR_CMD(0x81); WR_CMD(0xCF); /* contrast 0xCF */
+??CrossCallReturnLabel_4:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x7f
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x31
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   68     WR_CMD(0xA1);               /* seg remap */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x5f
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   69     WR_CMD(0xC8);               /* COM scan dir */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x38
+        LCALL   ?Subroutine4 & 0xFFFF
+//   70     WR_CMD(0xA6);               /* normal display */
+//   71     WR_CMD(0xA8); WR_CMD(0x3F); /* multiplex 1/64 */
+??CrossCallReturnLabel_6:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x58
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x3f
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   72     WR_CMD(0xD3); WR_CMD(0x00); /* display offset 0 */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x2d
+        LCALL   ?Subroutine2 & 0xFFFF
+//   73     WR_CMD(0xD5); WR_CMD(0x80); /* clock divide */
+??CrossCallReturnLabel_3:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x2b
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x80
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   74     WR_CMD(0xD9); WR_CMD(0xF1); /* pre-charge */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x27
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0xf
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   75     WR_CMD(0xDA); WR_CMD(0x12); /* COM pins */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x26
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x12
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   76     WR_CMD(0xDB); WR_CMD(0x40); /* VCOMH */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x25
+        LCALL   ?Subroutine3 & 0xFFFF
+//   77     WR_CMD(0x20); WR_CMD(0x02); /* page addressing mode */
+??CrossCallReturnLabel_5:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x20
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x2
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   78     WR_CMD(0x8D); WR_CMD(0x14); /* charge pump enable */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x73
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x14
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   79     WR_CMD(0xA4);               /* entire display on = RAM */
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x5c
+        LCALL   ?Subroutine4 & 0xFFFF
+//   80     WR_CMD(0xA6);               /* inverse off */
+//   81     WR_CMD(0xAF);               /* display on */
+??CrossCallReturnLabel_7:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x51
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   82 
+//   83     oled_wait_ms(20);
+        ; Setup parameters for call to function oled_wait_ms
+        MOV     R2,#0x14
+        MOV     R3,#0x0
+        LCALL   ??oled_wait_ms?relay
+//   84     oled_ssd1306_clear();
+        ; Setup parameters for call to function oled_ssd1306_clear
+        LCALL   ??oled_ssd1306_clear?relay
+//   85 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-4
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-3
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock4
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine4:
+        CFI Block cfiCond5 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_6
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        CFI Block cfiCond6 Using cfiCommon0
+        CFI (cfiCond6) NoFunction
+        CFI (cfiCond6) Conditional ??CrossCallReturnLabel_7
+        CFI (cfiCond6) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond6) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond6) CFA_SP SP+-5
+        CFI Block cfiPicker7 Using cfiCommon1
+        CFI (cfiPicker7) NoFunction
+        CFI (cfiPicker7) Picker
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x5a
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        RET
+        CFI EndBlock cfiCond5
+        CFI EndBlock cfiCond6
+        CFI EndBlock cfiPicker7
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine3:
+        CFI Block cfiCond8 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_4
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        CFI Block cfiCond9 Using cfiCommon0
+        CFI (cfiCond9) NoFunction
+        CFI (cfiCond9) Conditional ??CrossCallReturnLabel_5
+        CFI (cfiCond9) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond9) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond9) CFA_SP SP+-5
+        CFI Block cfiPicker10 Using cfiCommon1
+        CFI (cfiPicker10) NoFunction
+        CFI (cfiPicker10) Picker
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x40
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        RET
+        CFI EndBlock cfiCond8
+        CFI EndBlock cfiCond9
+        CFI EndBlock cfiPicker10
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine2:
+        CFI Block cfiCond11 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_2
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        CFI Block cfiCond12 Using cfiCommon0
+        CFI (cfiCond12) NoFunction
+        CFI (cfiCond12) Conditional ??CrossCallReturnLabel_3
+        CFI (cfiCond12) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond12) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond12) CFA_SP SP+-5
+        CFI Block cfiPicker13 Using cfiCommon1
+        CFI (cfiPicker13) NoFunction
+        CFI (cfiPicker13) Picker
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x0
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        RET
+        CFI EndBlock cfiCond11
+        CFI EndBlock cfiCond12
+        CFI EndBlock cfiPicker13
+//   86 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   87 void oled_ssd1306_clear(void)
+oled_ssd1306_clear:
+        CFI Block cfiBlock14 Using cfiCommon0
         CFI Function oled_ssd1306_clear
         CODE
-//   54 {
+//   88 {
         FUNCALL oled_ssd1306_clear, oled_set_pos
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -2313,11 +2871,11 @@ oled_ssd1306_clear:
         CFI CFA_XSP16 add(XSP16, 9)
         ; Saved register size: 9
         ; Auto size: 0
-//   55     uint8 page;
-//   56 
-//   57     for (page = 0; page < 8u; ++page) {
+//   89     uint8 page;
+//   90 
+//   91     for (page = 0; page < 8u; ++page) {
         MOV     R6,#0x0
-//   58         oled_fill_page(page, 0x00u);
+//   92         oled_fill_page(page, 0x00u);
 ??oled_ssd1306_clear_0:
         ; Setup parameters for call to function oled_set_pos
         MOV     A,R6
@@ -2333,223 +2891,69 @@ oled_ssd1306_clear:
         DEC     R7
         MOV     A,R7
         JNZ     ??oled_ssd1306_clear_1
-//   59     }
+//   93     }
         INC     R6
         MOV     A,R6
         CLR     C
         SUBB    A,#0x8
         JC      ??oled_ssd1306_clear_0
-//   60 }
-        SJMP    ?Subroutine0
-        CFI EndBlock cfiBlock4
-//   61 
+//   94 }
+        LJMP    ?Subroutine0 & 0xFFFF
+        CFI EndBlock cfiBlock14
+//   95 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   62 void oled_ssd1306_draw_text(uint8 row, const char *text)
+//   96 void oled_ssd1306_draw_text(uint8 row, const char *text)
 oled_ssd1306_draw_text:
-        CFI Block cfiBlock5 Using cfiCommon0
+        CFI Block cfiBlock15 Using cfiCommon0
         CFI Function oled_ssd1306_draw_text
         CODE
-//   63 {
+//   97 {
         FUNCALL oled_ssd1306_draw_text, oled_set_pos
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
+        LOCFRAME XSTACK, 17, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
+        ARGFRAME XSTACK, 17, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL oled_ssd1306_draw_text, oled_write
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
+        LOCFRAME XSTACK, 17, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
+        ARGFRAME XSTACK, 17, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL oled_ssd1306_draw_text, oled_set_pos
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
+        LOCFRAME XSTACK, 17, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
+        ARGFRAME XSTACK, 17, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL oled_ssd1306_draw_text, oled_write
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
+        LOCFRAME XSTACK, 17, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
+        ARGFRAME XSTACK, 17, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL oled_ssd1306_draw_text, oled_write
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 16, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 16, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        MOV     A,#-0x10
+        MOV     A,#-0x11
         LCALL   ?BANKED_ENTER_XDATA
         CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
         CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
@@ -2557,420 +2961,189 @@ oled_ssd1306_draw_text:
         CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
         CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
         CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
         CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 16)
-        ; Saved register size: 16
+        CFI CFA_XSP16 add(XSP16, 17)
+        ; Saved register size: 17
         ; Auto size: 0
-        MOV     ?V0 + 4,R2
-        MOV     ?V0 + 5,R3
-//   64     uint8 i;
-//   65     uint8 ch;
-//   66     uint8 x;
-//   67     uint8 page;
-//   68 
-//   69     if (row > 3u) {
+        MOV     A,R2
+        MOV     R6,A
+        MOV     A,R3
+        MOV     R7,A
+//   98     uint8 i;
+//   99     uint8 ch;
+//  100     uint8 x;
+//  101     uint8 page;
+//  102     uint8 col;
+//  103     const uint8 *glyph;
+//  104 
+//  105     if (row > 3u) {
         MOV     A,R1
         CLR     C
         SUBB    A,#0x4
         JC      $+5
         LJMP    ??oled_ssd1306_draw_text_0 & 0xFFFF
-//   70         return;
-//   71     }
-//   72 
-//   73     page = (uint8)(row * 2u);
+//  106         return;
+//  107     }
+//  108 
+//  109     page = (uint8)(row * 2u);
         MOV     A,R1
         CLR     C
         RLC     A
-        MOV     ?V0 + 2,A
-//   74     x = 0u;
-        MOV     ?V0 + 0,#0x0
-//   75     for (i = 0; i < 16u; ++i) {
-        MOV     ?V0 + 3,#0x0
-//   76         ch = (text != 0 && text[i] != '\0') ? (uint8)text[i] : (uint8)' ';
+        MOV     ?V0 + 3,A
+//  110     x = 0u;
+        MOV     ?V0 + 2,#0x0
+//  111     for (i = 0; i < 16u; ++i) {
+        MOV     ?V0 + 7,#0x0
+//  112         ch = (text != 0 && text[i] != '\0') ? (uint8)text[i] : (uint8)' ';
 ??oled_ssd1306_draw_text_1:
-        MOV     A,?V0 + 4
-        ORL     A,?V0 + 5
+        MOV     A,R6
+        ORL     A,R7
         JZ      ??oled_ssd1306_draw_text_2
-        MOV     ?V0 + 6,?V0 + 3
-        MOV     A,?V0 + 4
-        ADD     A,?V0 + 6
+        MOV     ?V0 + 0,?V0 + 7
+        MOV     A,R6
+        ADD     A,?V0 + 0
         MOV     DPL,A
-        MOV     A,?V0 + 5
+        MOV     A,R7
         ADDC    A,#0x0
         MOV     DPH,A
         MOVX    A,@DPTR
         JZ      ??oled_ssd1306_draw_text_2
-        MOV     ?V0 + 6,A
+        MOV     ?V0 + 0,A
         SJMP    ??oled_ssd1306_draw_text_3
 ??oled_ssd1306_draw_text_2:
-        MOV     ?V0 + 6,#0x20
-//   77         if (ch < 0x20u || ch > 0x7Eu) {
+        MOV     ?V0 + 0,#0x20
+//  113         if (ch < 0x20u || ch > 0x7Eu) {
 ??oled_ssd1306_draw_text_3:
         MOV     A,#-0x20
-        ADD     A,?V0 + 6
+        ADD     A,?V0 + 0
         CLR     C
         SUBB    A,#0x5f
         JC      ??oled_ssd1306_draw_text_4
-//   78             ch = (uint8)'?';
-        MOV     ?V0 + 6,#0x3f
-//   79         }
-//   80         oled_set_pos(x, page);
+//  114             ch = (uint8)'?';
+        MOV     ?V0 + 0,#0x3f
+//  115         }
+//  116         glyph = (const uint8 *)&asc2_1608[ch - 0x20u][0];
 ??oled_ssd1306_draw_text_4:
-        ; Setup parameters for call to function oled_set_pos
-        MOV     R2,?V0 + 2
-        MOV     R1,?V0 + 0
-        LCALL   ??oled_set_pos?relay
-//   81         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][0]);
-        MOV     ?V0 + 7,#0x0
+        MOV     ?V0 + 1,#0x0
         MOV     A,#0x4
-        MOV     R0,#?V0 + 6
+        MOV     R0,#?V0 + 0
         LCALL   ?S_SHL
         MOV     A,#asc2_1608 & 0xff
-        ADD     A,?V0 + 6
-        MOV     R6,A
-        MOV     A,#(asc2_1608 >> 8) & 0xff
-        ADDC    A,?V0 + 7
-        MOV     R7,A
-        ; Setup parameters for call to function oled_write
-        MOV     A,R6
-        ADD     A,#0x0
-        LCALL   ?Subroutine1 & 0xFFFF
-//   82         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][1]);
-??CrossCallReturnLabel_0:
-        ADD     A,#0x1
-        LCALL   ?Subroutine1 & 0xFFFF
-//   83         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][2]);
-??CrossCallReturnLabel_1:
-        ADD     A,#0x2
-        LCALL   ?Subroutine1 & 0xFFFF
-//   84         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][3]);
-??CrossCallReturnLabel_2:
-        ADD     A,#0x3
-        LCALL   ?Subroutine1 & 0xFFFF
-//   85         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][4]);
-??CrossCallReturnLabel_3:
-        ADD     A,#0x4
-        LCALL   ?Subroutine1 & 0xFFFF
-//   86         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][5]);
-??CrossCallReturnLabel_4:
-        ADD     A,#0x5
-        LCALL   ?Subroutine1 & 0xFFFF
-//   87         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][6]);
-??CrossCallReturnLabel_5:
-        ADD     A,#0x6
-        LCALL   ?Subroutine1 & 0xFFFF
-//   88         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][7]);
-??CrossCallReturnLabel_6:
-        ADD     A,#0x7
-        LCALL   ?Subroutine2 & 0xFFFF
-//   89 
-//   90         oled_set_pos(x, (uint8)(page + 1u));
-??CrossCallReturnLabel_14:
-        ; Setup parameters for call to function oled_set_pos
-        MOV     A,#0x1
-        ADD     A,?V0 + 2
-        MOV     R2,A
-        MOV     R1,?V0 + 0
-        LCALL   ??oled_set_pos?relay
-//   91         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][8]);
-        ; Setup parameters for call to function oled_write
-        MOV     A,R6
-        ADD     A,#0x8
-        LCALL   ?Subroutine1 & 0xFFFF
-//   92         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][9]);
-??CrossCallReturnLabel_7:
-        ADD     A,#0x9
-        LCALL   ?Subroutine1 & 0xFFFF
-//   93         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][10]);
-??CrossCallReturnLabel_8:
-        ADD     A,#0xa
-        LCALL   ?Subroutine1 & 0xFFFF
-//   94         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][11]);
-??CrossCallReturnLabel_9:
-        ADD     A,#0xb
-        LCALL   ?Subroutine1 & 0xFFFF
-//   95         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][12]);
-??CrossCallReturnLabel_10:
-        ADD     A,#0xc
-        LCALL   ?Subroutine1 & 0xFFFF
-//   96         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][13]);
-??CrossCallReturnLabel_11:
-        ADD     A,#0xd
-        LCALL   ?Subroutine1 & 0xFFFF
-//   97         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][14]);
-??CrossCallReturnLabel_12:
-        ADD     A,#0xe
-        LCALL   ?Subroutine1 & 0xFFFF
-//   98         oled_write(OLED_DAT_MODE, asc2_1608[ch - 0x20u][15]);
-??CrossCallReturnLabel_13:
-        ADD     A,#0xf
-        LCALL   ?Subroutine2 & 0xFFFF
-//   99 
-//  100         x = (uint8)(x + 8u);
-??CrossCallReturnLabel_15:
-        MOV     A,#0x8
         ADD     A,?V0 + 0
         MOV     ?V0 + 0,A
-//  101     }
-        INC     ?V0 + 3
-        MOV     A,?V0 + 3
+        MOV     A,#((asc2_1608 - 512) >> 8) & 0xff
+        ADDC    A,?V0 + 1
+        MOV     ?V0 + 1,A
+//  117 
+//  118         /* 字形是 16 字节：前 8 字节画到 page，后 8 字节画到 page+1。 */
+//  119         oled_set_pos(x, page);
+        ; Setup parameters for call to function oled_set_pos
+        MOV     R2,?V0 + 3
+        MOV     R1,?V0 + 2
+        LCALL   ??oled_set_pos?relay
+//  120         for (col = 0; col < 8u; ++col) {
+        MOV     ?V0 + 8,#0x0
+//  121             WR_DAT(glyph[col]);
+??oled_ssd1306_draw_text_5:
+        ; Setup parameters for call to function oled_write
+        LCALL   ?Subroutine5 & 0xFFFF
+//  122         }
+??CrossCallReturnLabel_8:
+        LCALL   ?Subroutine1 & 0xFFFF
+??CrossCallReturnLabel_0:
+        JC      ??oled_ssd1306_draw_text_5
+//  123         oled_set_pos(x, (uint8)(page + 1u));
+        ; Setup parameters for call to function oled_set_pos
+        MOV     A,#0x1
+        ADD     A,?V0 + 3
+        MOV     R2,A
+        MOV     R1,?V0 + 2
+        LCALL   ??oled_set_pos?relay
+//  124         for (col = 0; col < 8u; ++col) {
+        MOV     ?V0 + 8,#0x0
+//  125             WR_DAT(glyph[col + 8u]);
+??oled_ssd1306_draw_text_6:
+        ; Setup parameters for call to function oled_write
+        LCALL   ?Subroutine5 & 0xFFFF
+//  126         }
+??CrossCallReturnLabel_9:
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        LCALL   ?Subroutine1 & 0xFFFF
+??CrossCallReturnLabel_1:
+        JC      ??oled_ssd1306_draw_text_6
+//  127 
+//  128         x = (uint8)(x + 8u);
+        MOV     A,#0x8
+        ADD     A,?V0 + 2
+        MOV     ?V0 + 2,A
+//  129     }
+        INC     ?V0 + 7
+        MOV     A,?V0 + 7
         CLR     C
         SUBB    A,#0x10
-        JNC     $+5
-        LJMP    ??oled_ssd1306_draw_text_1 & 0xFFFF
+        JC      ??oled_ssd1306_draw_text_1
 ??oled_ssd1306_draw_text_0:
-        MOV     R7,#0x8
+        MOV     R7,#0x9
         LJMP    ?BANKED_LEAVE_XDATA
-        CFI EndBlock cfiBlock5
-//  102 }
+        CFI EndBlock cfiBlock15
+//  130 }
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine2:
-        CFI Block cfiCond6 Using cfiCommon0
-        CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_14
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond7 Using cfiCommon0
-        CFI (cfiCond7) NoFunction
-        CFI (cfiCond7) Conditional ??CrossCallReturnLabel_15
-        CFI (cfiCond7) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond7) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond7) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond7) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond7) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond7) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond7) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond7) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond7) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond7) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond7) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond7) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond7) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond7) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond7) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond7) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond7) CFA_SP SP+0
-        CFI (cfiCond7) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiPicker8 Using cfiCommon1
-        CFI (cfiPicker8) NoFunction
-        CFI (cfiPicker8) Picker
-        LCALL   ?Subroutine3 & 0xFFFF
-??CrossCallReturnLabel_16:
-        RET
-        CFI EndBlock cfiCond6
-        CFI EndBlock cfiCond7
-        CFI EndBlock cfiPicker8
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine3:
-        CFI Block cfiCond9 Using cfiCommon0
-        CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_16, ??CrossCallReturnLabel_14
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond10 Using cfiCommon0
-        CFI (cfiCond10) NoFunction
-        CFI (cfiCond10) Conditional ??CrossCallReturnLabel_16, ??CrossCallReturnLabel_15
-        CFI (cfiCond10) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond10) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond10) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond10) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond10) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond10) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond10) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond10) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond10) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond10) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond10) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond10) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond10) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond10) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond10) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond10) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond10) CFA_SP SP+0
-        CFI (cfiCond10) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond11 Using cfiCommon0
-        CFI (cfiCond11) NoFunction
-        CFI (cfiCond11) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_0
-        CFI (cfiCond11) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond11) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond11) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond11) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond11) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond11) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond11) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond11) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond11) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond11) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond11) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond11) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond11) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond11) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond11) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond11) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond11) CFA_SP SP+0
-        CFI (cfiCond11) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond12 Using cfiCommon0
-        CFI (cfiCond12) NoFunction
-        CFI (cfiCond12) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_1
-        CFI (cfiCond12) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond12) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond12) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond12) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond12) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond12) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond12) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond12) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond12) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond12) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond12) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond12) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond12) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond12) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond12) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond12) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond12) CFA_SP SP+0
-        CFI (cfiCond12) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond13 Using cfiCommon0
-        CFI (cfiCond13) NoFunction
-        CFI (cfiCond13) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_2
-        CFI (cfiCond13) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond13) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond13) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond13) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond13) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond13) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond13) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond13) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond13) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond13) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond13) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond13) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond13) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond13) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond13) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond13) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond13) CFA_SP SP+0
-        CFI (cfiCond13) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond14 Using cfiCommon0
-        CFI (cfiCond14) NoFunction
-        CFI (cfiCond14) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_3
-        CFI (cfiCond14) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond14) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond14) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond14) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond14) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond14) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond14) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond14) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond14) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond14) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond14) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond14) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond14) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond14) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond14) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond14) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond14) CFA_SP SP+0
-        CFI (cfiCond14) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond15 Using cfiCommon0
-        CFI (cfiCond15) NoFunction
-        CFI (cfiCond15) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_4
-        CFI (cfiCond15) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond15) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond15) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond15) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond15) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond15) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond15) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond15) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond15) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond15) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond15) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond15) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond15) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond15) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond15) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond15) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond15) CFA_SP SP+0
-        CFI (cfiCond15) CFA_XSP16 add(XSP16, 16)
+?Subroutine5:
         CFI Block cfiCond16 Using cfiCommon0
-        CFI (cfiCond16) NoFunction
-        CFI (cfiCond16) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_5
-        CFI (cfiCond16) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond16) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond16) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond16) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond16) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond16) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond16) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond16) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond16) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond16) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond16) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond16) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond16) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond16) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond16) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond16) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond16) CFA_SP SP+0
-        CFI (cfiCond16) CFA_XSP16 add(XSP16, 16)
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_8
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 17)
         CFI Block cfiCond17 Using cfiCommon0
         CFI (cfiCond17) NoFunction
-        CFI (cfiCond17) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_6
-        CFI (cfiCond17) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond17) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond17) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond17) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond17) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond17) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond17) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond17) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond17) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond17) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI (cfiCond17) Conditional ??CrossCallReturnLabel_9
+        CFI (cfiCond17) R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI (cfiCond17) VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI (cfiCond17) V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI (cfiCond17) V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI (cfiCond17) V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI (cfiCond17) V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI (cfiCond17) V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI (cfiCond17) V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI (cfiCond17) V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI (cfiCond17) V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI (cfiCond17) V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
         CFI (cfiCond17) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
         CFI (cfiCond17) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
         CFI (cfiCond17) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
@@ -2978,199 +3151,38 @@ oled_ssd1306_draw_text:
         CFI (cfiCond17) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
         CFI (cfiCond17) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
         CFI (cfiCond17) CFA_SP SP+0
-        CFI (cfiCond17) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond18 Using cfiCommon0
-        CFI (cfiCond18) NoFunction
-        CFI (cfiCond18) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_7
-        CFI (cfiCond18) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond18) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond18) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond18) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond18) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond18) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond18) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond18) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond18) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond18) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond18) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond18) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond18) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond18) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond18) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond18) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond18) CFA_SP SP+0
-        CFI (cfiCond18) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond19 Using cfiCommon0
-        CFI (cfiCond19) NoFunction
-        CFI (cfiCond19) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_8
-        CFI (cfiCond19) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond19) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond19) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond19) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond19) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond19) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond19) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond19) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond19) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond19) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond19) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond19) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond19) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond19) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond19) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond19) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond19) CFA_SP SP+0
-        CFI (cfiCond19) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond20 Using cfiCommon0
-        CFI (cfiCond20) NoFunction
-        CFI (cfiCond20) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_9
-        CFI (cfiCond20) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond20) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond20) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond20) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond20) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond20) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond20) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond20) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond20) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond20) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond20) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond20) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond20) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond20) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond20) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond20) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond20) CFA_SP SP+0
-        CFI (cfiCond20) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond21 Using cfiCommon0
-        CFI (cfiCond21) NoFunction
-        CFI (cfiCond21) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_10
-        CFI (cfiCond21) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond21) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond21) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond21) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond21) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond21) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond21) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond21) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond21) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond21) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond21) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond21) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond21) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond21) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond21) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond21) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond21) CFA_SP SP+0
-        CFI (cfiCond21) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond22 Using cfiCommon0
-        CFI (cfiCond22) NoFunction
-        CFI (cfiCond22) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_11
-        CFI (cfiCond22) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond22) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond22) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond22) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond22) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond22) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond22) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond22) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond22) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond22) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond22) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond22) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond22) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond22) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond22) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond22) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond22) CFA_SP SP+0
-        CFI (cfiCond22) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond23 Using cfiCommon0
-        CFI (cfiCond23) NoFunction
-        CFI (cfiCond23) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_12
-        CFI (cfiCond23) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond23) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond23) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond23) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond23) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond23) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond23) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond23) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond23) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond23) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond23) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond23) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond23) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond23) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond23) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond23) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond23) CFA_SP SP+0
-        CFI (cfiCond23) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond24 Using cfiCommon0
-        CFI (cfiCond24) NoFunction
-        CFI (cfiCond24) Conditional ??CrossCallReturnLabel_17, ??CrossCallReturnLabel_13
-        CFI (cfiCond24) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond24) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond24) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond24) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond24) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond24) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond24) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond24) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond24) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond24) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond24) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond24) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond24) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond24) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond24) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond24) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond24) CFA_SP SP+0
-        CFI (cfiCond24) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiPicker25 Using cfiCommon1
-        CFI (cfiPicker25) NoFunction
-        CFI (cfiPicker25) Picker
+        CFI (cfiCond17) CFA_XSP16 add(XSP16, 17)
+        CFI Block cfiPicker18 Using cfiCommon1
+        CFI (cfiPicker18) NoFunction
+        CFI (cfiPicker18) Picker
+        MOV     ?V0 + 4,?V0 + 8
+        MOV     A,?V0 + 0
+        ADD     A,?V0 + 4
         MOV     DPL,A
-        MOV     A,R7
-        ADDC    A,#-0x2
+        MOV     A,?V0 + 1
+        ADDC    A,#0x0
         MOV     DPH,A
-        MOVX    A,@DPTR
-        MOV     R2,A
-        MOV     R1,#0x40
-        LCALL   ??oled_write?relay
         RET
-        CFI EndBlock cfiCond9
-        CFI EndBlock cfiCond10
-        CFI EndBlock cfiCond11
-        CFI EndBlock cfiCond12
-        CFI EndBlock cfiCond13
-        CFI EndBlock cfiCond14
-        CFI EndBlock cfiCond15
         CFI EndBlock cfiCond16
         CFI EndBlock cfiCond17
-        CFI EndBlock cfiCond18
-        CFI EndBlock cfiCond19
-        CFI EndBlock cfiCond20
-        CFI EndBlock cfiCond21
-        CFI EndBlock cfiCond22
-        CFI EndBlock cfiCond23
-        CFI EndBlock cfiCond24
-        CFI EndBlock cfiPicker25
+        CFI EndBlock cfiPicker18
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
 ?Subroutine1:
-        CFI Block cfiCond26 Using cfiCommon0
+        CFI Block cfiCond19 Using cfiCommon0
         CFI NoFunction
         CFI Conditional ??CrossCallReturnLabel_0
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
         CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
         CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
         CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
@@ -3178,316 +3190,50 @@ oled_ssd1306_draw_text:
         CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
         CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
         CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond27 Using cfiCommon0
-        CFI (cfiCond27) NoFunction
-        CFI (cfiCond27) Conditional ??CrossCallReturnLabel_1
-        CFI (cfiCond27) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond27) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond27) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond27) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond27) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond27) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond27) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond27) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond27) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond27) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond27) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond27) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond27) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond27) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond27) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond27) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond27) CFA_SP SP+0
-        CFI (cfiCond27) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond28 Using cfiCommon0
-        CFI (cfiCond28) NoFunction
-        CFI (cfiCond28) Conditional ??CrossCallReturnLabel_2
-        CFI (cfiCond28) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond28) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond28) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond28) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond28) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond28) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond28) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond28) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond28) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond28) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond28) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond28) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond28) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond28) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond28) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond28) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond28) CFA_SP SP+0
-        CFI (cfiCond28) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond29 Using cfiCommon0
-        CFI (cfiCond29) NoFunction
-        CFI (cfiCond29) Conditional ??CrossCallReturnLabel_3
-        CFI (cfiCond29) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond29) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond29) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond29) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond29) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond29) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond29) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond29) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond29) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond29) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond29) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond29) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond29) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond29) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond29) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond29) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond29) CFA_SP SP+0
-        CFI (cfiCond29) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond30 Using cfiCommon0
-        CFI (cfiCond30) NoFunction
-        CFI (cfiCond30) Conditional ??CrossCallReturnLabel_4
-        CFI (cfiCond30) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond30) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond30) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond30) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond30) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond30) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond30) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond30) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond30) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond30) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond30) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond30) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond30) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond30) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond30) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond30) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond30) CFA_SP SP+0
-        CFI (cfiCond30) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond31 Using cfiCommon0
-        CFI (cfiCond31) NoFunction
-        CFI (cfiCond31) Conditional ??CrossCallReturnLabel_5
-        CFI (cfiCond31) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond31) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond31) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond31) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond31) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond31) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond31) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond31) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond31) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond31) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond31) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond31) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond31) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond31) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond31) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond31) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond31) CFA_SP SP+0
-        CFI (cfiCond31) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond32 Using cfiCommon0
-        CFI (cfiCond32) NoFunction
-        CFI (cfiCond32) Conditional ??CrossCallReturnLabel_6
-        CFI (cfiCond32) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond32) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond32) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond32) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond32) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond32) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond32) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond32) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond32) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond32) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond32) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond32) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond32) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond32) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond32) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond32) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond32) CFA_SP SP+0
-        CFI (cfiCond32) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond33 Using cfiCommon0
-        CFI (cfiCond33) NoFunction
-        CFI (cfiCond33) Conditional ??CrossCallReturnLabel_7
-        CFI (cfiCond33) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond33) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond33) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond33) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond33) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond33) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond33) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond33) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond33) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond33) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond33) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond33) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond33) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond33) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond33) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond33) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond33) CFA_SP SP+0
-        CFI (cfiCond33) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond34 Using cfiCommon0
-        CFI (cfiCond34) NoFunction
-        CFI (cfiCond34) Conditional ??CrossCallReturnLabel_8
-        CFI (cfiCond34) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond34) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond34) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond34) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond34) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond34) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond34) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond34) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond34) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond34) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond34) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond34) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond34) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond34) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond34) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond34) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond34) CFA_SP SP+0
-        CFI (cfiCond34) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond35 Using cfiCommon0
-        CFI (cfiCond35) NoFunction
-        CFI (cfiCond35) Conditional ??CrossCallReturnLabel_9
-        CFI (cfiCond35) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond35) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond35) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond35) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond35) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond35) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond35) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond35) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond35) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond35) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond35) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond35) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond35) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond35) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond35) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond35) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond35) CFA_SP SP+0
-        CFI (cfiCond35) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond36 Using cfiCommon0
-        CFI (cfiCond36) NoFunction
-        CFI (cfiCond36) Conditional ??CrossCallReturnLabel_10
-        CFI (cfiCond36) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond36) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond36) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond36) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond36) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond36) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond36) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond36) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond36) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond36) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond36) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond36) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond36) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond36) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond36) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond36) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond36) CFA_SP SP+0
-        CFI (cfiCond36) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond37 Using cfiCommon0
-        CFI (cfiCond37) NoFunction
-        CFI (cfiCond37) Conditional ??CrossCallReturnLabel_11
-        CFI (cfiCond37) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond37) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond37) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond37) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond37) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond37) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond37) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond37) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond37) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond37) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond37) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond37) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond37) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond37) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond37) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond37) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond37) CFA_SP SP+0
-        CFI (cfiCond37) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond38 Using cfiCommon0
-        CFI (cfiCond38) NoFunction
-        CFI (cfiCond38) Conditional ??CrossCallReturnLabel_12
-        CFI (cfiCond38) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond38) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond38) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond38) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond38) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond38) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond38) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond38) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond38) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond38) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond38) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond38) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond38) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond38) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond38) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond38) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond38) CFA_SP SP+0
-        CFI (cfiCond38) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiCond39 Using cfiCommon0
-        CFI (cfiCond39) NoFunction
-        CFI (cfiCond39) Conditional ??CrossCallReturnLabel_13
-        CFI (cfiCond39) R6 load(1, XDATA, add(CFA_XSP16, literal(-16)))
-        CFI (cfiCond39) VB load(1, XDATA, add(CFA_XSP16, literal(-15)))
-        CFI (cfiCond39) V0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
-        CFI (cfiCond39) V1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond39) V2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond39) V3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond39) V4 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond39) V5 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond39) V6 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond39) V7 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond39) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond39) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond39) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond39) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond39) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond39) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond39) CFA_SP SP+0
-        CFI (cfiCond39) CFA_XSP16 add(XSP16, 16)
-        CFI Block cfiPicker40 Using cfiCommon1
-        CFI (cfiPicker40) NoFunction
-        CFI (cfiPicker40) Picker
-        LCALL   ?Subroutine3 & 0xFFFF
-??CrossCallReturnLabel_17:
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        ; Setup parameters for call to function oled_write
-        MOV     A,R6
+        CFI CFA_XSP16 add(XSP16, 17)
+        CFI Block cfiCond20 Using cfiCommon0
+        CFI (cfiCond20) NoFunction
+        CFI (cfiCond20) Conditional ??CrossCallReturnLabel_1
+        CFI (cfiCond20) R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI (cfiCond20) VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI (cfiCond20) V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI (cfiCond20) V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI (cfiCond20) V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI (cfiCond20) V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI (cfiCond20) V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI (cfiCond20) V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI (cfiCond20) V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI (cfiCond20) V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI (cfiCond20) V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI (cfiCond20) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI (cfiCond20) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI (cfiCond20) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI (cfiCond20) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI (cfiCond20) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI (cfiCond20) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI (cfiCond20) CFA_SP SP+0
+        CFI (cfiCond20) CFA_XSP16 add(XSP16, 17)
+        CFI Block cfiPicker21 Using cfiCommon1
+        CFI (cfiPicker21) NoFunction
+        CFI (cfiPicker21) Picker
+        MOVX    A,@DPTR
+        MOV     R2,A
+        MOV     R1,#0x40
+        LCALL   ??oled_write?relay
+        INC     ?V0 + 8
+        MOV     A,?V0 + 8
+        CLR     C
+        SUBB    A,#0x8
         RET
-        CFI EndBlock cfiCond26
-        CFI EndBlock cfiCond27
-        CFI EndBlock cfiCond28
-        CFI EndBlock cfiCond29
-        CFI EndBlock cfiCond30
-        CFI EndBlock cfiCond31
-        CFI EndBlock cfiCond32
-        CFI EndBlock cfiCond33
-        CFI EndBlock cfiCond34
-        CFI EndBlock cfiCond35
-        CFI EndBlock cfiCond36
-        CFI EndBlock cfiCond37
-        CFI EndBlock cfiCond38
-        CFI EndBlock cfiCond39
-        CFI EndBlock cfiPicker40
+        CFI EndBlock cfiCond19
+        CFI EndBlock cfiCond20
+        CFI EndBlock cfiPicker21
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??oled_wait_ms?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    oled_wait_ms
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??oled_write?relay:
@@ -3521,12 +3267,12 @@ oled_ssd1306_draw_text:
 
         END
 // 
-//   396 bytes in segment BANKED_CODE
-//    30 bytes in segment BANK_RELAYS
-// 1 548 bytes in segment XDATA_ROM_C
+//   549 bytes in segment BANKED_CODE
+//    36 bytes in segment BANK_RELAYS
+// 1 520 bytes in segment XDATA_ROM_C
 // 
-//   426 bytes of CODE  memory
-// 1 548 bytes of CONST memory
+//   585 bytes of CODE  memory
+// 1 520 bytes of CONST memory
 //
 //Errors: none
 //Warnings: 1

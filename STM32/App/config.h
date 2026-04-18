@@ -98,13 +98,13 @@
  * 不要将此默认值推送到公共仓库。
  */
 #ifndef WIFI_SSID
-#define WIFI_SSID "611-2"
+#define WIFI_SSID "CMCC-701"
 #endif
 #ifndef WIFI_PWD
-#define WIFI_PWD  "hdsx61#203"
+#define WIFI_PWD  "88888888"
 #endif
 #ifndef SERVER_IP
-#define SERVER_IP "192.168.62.35"
+#define SERVER_IP "192.168.1.85"
 #endif
 #ifndef SERVER_PORT
 #define SERVER_PORT 23333u

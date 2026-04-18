@@ -4270,6 +4270,24 @@
     <file>
       <name>$PROJ_DIR$\..\Source\sensor_ldr.h</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\soft_i2c.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\soft_i2c.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\node_oled_view.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\node_oled_view.h</name>
+    </file>
   </group>
   <group>
     <name>HAL</name>

@@ -126,16 +126,27 @@ int json_add_uint(char *buf, uint16_t cap, uint16_t cur, const char *k, uint32_t
     return append(buf, cap, cur, tmp, (uint16_t)n);
 }
 
+int json_add_bool(char *buf, uint16_t cap, uint16_t cur, const char *k, uint8_t v)
+{
+    char tmp[32];
+    int n = snprintf(tmp, sizeof(tmp), "\"%s\":%s,", k, v ? "true" : "false");
+    if (n < 0 || n >= (int)sizeof(tmp)) return RC_ERR_NO_SPACE;
+    return append(buf, cap, cur, tmp, (uint16_t)n);
+}
+
 int json_add_fp2(char *buf, uint16_t cap, uint16_t cur, const char *k, int32_t x100)
 {
     char tmp[64];
     int32_t whole;
     int32_t frac;
     int n;
+    const char *sign = "";
     whole = x100 / 100;
     frac  = x100 % 100;
     if (frac < 0) frac = -frac;
-    n = snprintf(tmp, sizeof(tmp), "\"%s\":%ld.%02ld,", k, (long)whole, (long)frac);
+    /* 当整数部分为 0 但原值为负（例如 -0.50°C）时，%ld 会丢掉负号。 */
+    if (x100 < 0 && whole == 0) sign = "-";
+    n = snprintf(tmp, sizeof(tmp), "\"%s\":%s%ld.%02ld,", k, sign, (long)whole, (long)frac);
     if (n < 0 || n >= (int)sizeof(tmp)) return RC_ERR_NO_SPACE;
     return append(buf, cap, cur, tmp, (uint16_t)n);
 }

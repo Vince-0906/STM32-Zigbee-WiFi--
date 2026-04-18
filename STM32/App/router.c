@@ -390,7 +390,7 @@ static void send_ack(int32_t seq, uint8_t ok, const char *err)
     n = json_begin(buf, sizeof(buf));
     n = json_add_str(buf, sizeof(buf), (uint16_t)n, "t", "ack");
     n = json_add_int(buf, sizeof(buf), (uint16_t)n, "seq", seq);
-    n = json_add_str(buf, sizeof(buf), (uint16_t)n, "ok", ok ? "true" : "false");
+    n = json_add_bool(buf, sizeof(buf), (uint16_t)n, "ok", ok);
     if (err) {
         n = json_add_str(buf, sizeof(buf), (uint16_t)n, "err", err);
     }
@@ -423,6 +423,7 @@ static void on_cmd_json(const char *line, uint16_t n)
     uint32_t node;
     uint8_t ep;
     uint8_t onoff;
+    const node_state_t *ns;
 
     seq = 0;
     node = 0;
@@ -454,6 +455,18 @@ static void on_cmd_json(const char *line, uint16_t n)
         onoff = 1u;
     } else if (strcmp(op, "off") == 0) {
         onoff = 0u;
+    } else if (strcmp(op, "toggle") == 0) {
+        /* 使用网关缓存的执行器状态翻转；缓存未知按关处理（上次确认为关或未知）。 */
+        ns = router_node((uint16_t)node);
+        if (ns == 0) {
+            send_ack(seq, 0, "node");
+            return;
+        }
+        if (ep == 1u) {
+            onoff = (uint8_t)(ns->led_state ? 0u : 1u);
+        } else {
+            onoff = (uint8_t)(ns->buzzer_state ? 0u : 1u);
+        }
     } else {
         send_ack(seq, 0, "op");
         return;

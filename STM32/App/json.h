@@ -27,6 +27,7 @@ int json_end  (char *buf, uint16_t cap, uint16_t cur);
 int json_add_str (char *buf, uint16_t cap, uint16_t cur, const char *k, const char *v);
 int json_add_int (char *buf, uint16_t cap, uint16_t cur, const char *k, int32_t v);
 int json_add_uint(char *buf, uint16_t cap, uint16_t cur, const char *k, uint32_t v);
+int json_add_bool(char *buf, uint16_t cap, uint16_t cur, const char *k, uint8_t v); /* 输出 true/false */
 int json_add_fp2 (char *buf, uint16_t cap, uint16_t cur, const char *k, int32_t x100); /* 输出 x100/100 精度两位 */
 
 #ifdef __cplusplus

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  11:20:36 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:36 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -43,11 +43,12 @@
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Projects\zstack\Samples\ZbNode\Source\actuator /
 //                          .c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D             /
-//                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\P /
-//                          rojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndD /
-//                          eviceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr /
-//                          ojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDe /
-//                          viceEB\List\ --diag_suppress Pe001,Pa010 -o       /
+//                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC               /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA   /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\       /
+//                          --diag_suppress Pe001,Pa010 -o                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e     /
 //                          --no_code_motion --debug --core=plain             /
@@ -603,7 +604,7 @@ actuator_init:
         ; Auto size: 0
 //   33     pin_output(NODE_LED_PORT, NODE_LED_PIN);
         ; Setup parameters for call to function pin_output
-        MOV     R2,#0x0
+        MOV     R2,#0x4
         MOV     R1,#0x1
         LCALL   ??pin_output?relay
 //   34     pin_output(NODE_BUZZER_PORT, NODE_BUZZER_PIN);
@@ -669,7 +670,7 @@ actuator_led_set:
         ; Setup parameters for call to function pin_write
         MOV     A,R7
         MOV     R3,A
-        MOV     R2,#0x0
+        MOV     R2,#0x4
         MOV     R1,#0x1
         LCALL   ??pin_write?relay
 //   43     s_led = onoff ? 1 : 0;

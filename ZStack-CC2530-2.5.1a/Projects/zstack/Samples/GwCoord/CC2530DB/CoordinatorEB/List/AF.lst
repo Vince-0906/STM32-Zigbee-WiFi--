@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  15:16:24 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  15:57:04 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -43,12 +43,12 @@
 #                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
 #                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
-#                          a\Components\stack\af\AF.c -D HAL_UART=TRUE -lC    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\CoordinatorEB\List\ -lA        #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\CoordinatorEB\List\            #
-#                          --diag_suppress Pe001,Pa010 -o                     #
+#                          a\Components\stack\af\AF.c -D HAL_UART=TRUE -D     #
+#                          HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\CoordinatorE #
+#                          B\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
+#                          zstack\Samples\GwCoord\CC2530DB\CoordinatorEB\List #
+#                          \ --diag_suppress Pe001,Pa010 -o                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\CoordinatorEB\Obj\ -e          #
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #

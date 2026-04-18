@@ -32,6 +32,7 @@ static wifi_st_t    s_st = W_IDLE;
 static uint32_t     s_st_ts = 0;
 static uint32_t     s_at_deadline = 0;
 static uint32_t     s_backoff_s = 2;
+static uint32_t     s_last_rx_ms = 0;        /* 用于透传态链路空闲看门狗 */
 static wifi_line_cb_t s_cb = 0;
 
 #define LINE_BUF_SZ   JSON_LINE_MAX
@@ -169,6 +170,7 @@ void wifi_link_init(wifi_line_cb_t cb)
     s_socket_connect_seen = 0;
     s_socket_conid = 0;
     s_backoff_s = 2;
+    s_last_rx_ms = 0;
 }
 
 uint8_t wifi_link_is_up(void)
@@ -219,6 +221,7 @@ void wifi_link_poll(uint32_t now_ms)
         if (wifi_uart_read(&b, 1) == 0) {
             break;
         }
+        s_last_rx_ms = now_ms;
         if (s_st == W_TRANSPARENT) {
             if (b == '\n' || b == '\r') {
                 if (s_line_len > 0 && s_cb) {
@@ -300,6 +303,7 @@ void wifi_link_tick(uint32_t now_ms)
         if (s_at_hit) {
             enter(W_TRANSPARENT, now_ms, 0);
             s_backoff_s = 2;
+            s_last_rx_ms = now_ms;
         } else if (s_at_fail) {
             log_timeout_detail();
             enter_backoff(now_ms);
@@ -310,6 +314,11 @@ void wifi_link_tick(uint32_t now_ms)
         break;
 
     case W_TRANSPARENT:
+        /* 规范书 §4.3/§8.1：透传态 TCP_DEAD_MS 内没有任何下行字节就复位链路。 */
+        if (s_last_rx_ms != 0 && (now_ms - s_last_rx_ms) > TCP_DEAD_MS) {
+            LOGW("wifi", "transparent idle >%ums, reconnect", (unsigned)TCP_DEAD_MS);
+            enter_backoff(now_ms);
+        }
         break;
 
     case W_BACKOFF:

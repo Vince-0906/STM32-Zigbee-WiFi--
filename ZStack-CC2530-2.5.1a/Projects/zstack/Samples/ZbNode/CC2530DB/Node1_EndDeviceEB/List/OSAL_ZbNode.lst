@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  15:21:54 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:34 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -43,11 +43,12 @@
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Projects\zstack\Samples\ZbNode\Source\OSAL_ZbNod #
 #                          e.c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D             #
-#                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr #
-#                          ojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDev #
-#                          iceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Proje #
-#                          cts\zstack\Samples\ZbNode\CC2530DB\Node1_EndDevice #
-#                          EB\List\ --diag_suppress Pe001,Pa010 -o            #
+#                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC                #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\         #
+#                          --diag_suppress Pe001,Pa010 -o                     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e       #
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
@@ -215,18 +216,21 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000030   7904         MOV     R1,#0x4
    \   000032   12....       LCALL   ??APSF_Init?relay
      42          #endif
-     43            ZDApp_Init( taskID++ );
-   \   000035                ; Setup parameters for call to function ZDApp_Init
-   \   000035   7905         MOV     R1,#0x5
-   \   000037   12....       LCALL   ??ZDApp_Init?relay
-     44            ZbNode_Init( taskID );
-   \   00003A                ; Setup parameters for call to function ZbNode_Init
-   \   00003A   7906         MOV     R1,#0x6
-   \   00003C   12....       LCALL   ??ZbNode_Init?relay
-     45          }
-   \   00003F   D083         POP     DPH
-   \   000041   D082         POP     DPL
-   \   000043   02....       LJMP    ?BRET
+     43            ZbNode_PreInit();
+   \   000035                ; Setup parameters for call to function ZbNode_PreInit
+   \   000035   12....       LCALL   ??ZbNode_PreInit?relay
+     44            ZDApp_Init( taskID++ );
+   \   000038                ; Setup parameters for call to function ZDApp_Init
+   \   000038   7905         MOV     R1,#0x5
+   \   00003A   12....       LCALL   ??ZDApp_Init?relay
+     45            ZbNode_Init( taskID );
+   \   00003D                ; Setup parameters for call to function ZbNode_Init
+   \   00003D   7906         MOV     R1,#0x6
+   \   00003F   12....       LCALL   ??ZbNode_Init?relay
+     46          }
+   \   000042   D083         POP     DPH
+   \   000044   D082         POP     DPL
+   \   000046   02....       LJMP    ?BRET
 
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??osalInitTasks?relay:
@@ -245,6 +249,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
        -> Hal_Init           4      0      0
        -> APS_Init           4      0      0
        -> APSF_Init          4      0      0
+       -> ZbNode_PreInit     4      0      0
        -> ZDApp_Init         4      0      0
        -> ZbNode_Init        4      0      0
 
@@ -256,16 +261,16 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      tasksArr                14
      tasksCnt                 1
      tasksEvents              2
-     osalInitTasks           70
+     osalInitTasks           73
      ??osalInitTasks?relay    6
 
  
- 70 bytes in segment BANKED_CODE
+ 73 bytes in segment BANKED_CODE
   6 bytes in segment BANK_RELAYS
  15 bytes in segment XDATA_ROM_C
   2 bytes in segment XDATA_Z
  
- 76 bytes of CODE  memory
+ 79 bytes of CODE  memory
  15 bytes of CONST memory
   2 bytes of XDATA memory
 

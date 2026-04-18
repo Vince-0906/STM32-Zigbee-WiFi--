@@ -14,8 +14,8 @@ void led_red_set(uint8_t on);
 void led_green_set(uint8_t on);
 void led_blue_set(uint8_t on);
 
-/* CC2530 RESET（PC4，低有效） */
-void cc2530_reset_pulse(void);         /* 拉低 200us 后释放 */
+/* CC2530 RESET（PC4，低有效），约 1ms 低电平脉冲 */
+void cc2530_reset_pulse(void);
 
 /* WiFi EN（PB12） */
 void wifi_en_set(uint8_t on);

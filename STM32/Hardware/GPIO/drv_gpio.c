@@ -12,7 +12,7 @@ void drv_gpio_init_board(void)
     GPIO_Init(GPIOC, &gi);
     GPIO_SetBits(GPIOC, GPIO_Pin_4);
 
-    /* PC13/14/15 LED - 开漏+上拉 */
+    /* PC13/14/15 LED - 推挽输出，高电平熄灭 */
     gi.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
     gi.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOC, &gi);
@@ -24,13 +24,16 @@ void drv_gpio_init_board(void)
     GPIO_Init(GPIOB, &gi);
     GPIO_ResetBits(GPIOB, GPIO_Pin_12);
 
-    /* PA15 BUZZER（AFIO 解除 JTAG 复用；经 PNP Q1(8550) 驱动，低电平有效）
-     * 先把 ODR 置 1，再切换为推挽输出，避免 GPIO_Init 瞬间输出低电平使蜂鸣器短促鸣叫 */
+    /* PA15 BUZZER：上电实测为"高电平鸣叫、低电平静默"（板上 Q1 实际为 NPN 式接法，
+     * stm32_board.md §4.10 注明需要实测）。
+     * 启动时 PA15 默认被 JTDI 内部上拉钳在高，先把 ODR 置 0 再切推挽输出，
+     * 避免 GPIO_Init 瞬间仍是高电平让蜂鸣器长鸣。 */
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
-    GPIO_SetBits(GPIOA, GPIO_Pin_15);
+    GPIO_ResetBits(GPIOA, GPIO_Pin_15);
     gi.GPIO_Pin = GPIO_Pin_15;
     gi.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOA, &gi);
+    GPIO_ResetBits(GPIOA, GPIO_Pin_15);
 
     /* PB6/PB7 KEY 上拉输入 */
     gi.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
@@ -57,9 +60,9 @@ void wifi_en_set(uint8_t on)
 
 void buzzer_set(uint8_t on)
 {
-    /* PNP 三极管：基极低电平导通，鸣叫 */
-    if (on) GPIO_ResetBits(GPIOA, GPIO_Pin_15);
-    else    GPIO_SetBits(GPIOA, GPIO_Pin_15);
+    /* 板上实测：PA15 高电平 = 鸣叫，低电平 = 静默（注意与 stm32_board.md §4.10 的注释相反） */
+    if (on) GPIO_SetBits(GPIOA, GPIO_Pin_15);
+    else    GPIO_ResetBits(GPIOA, GPIO_Pin_15);
 }
 
 uint8_t key1_pressed(void) { return (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6) == 0); }

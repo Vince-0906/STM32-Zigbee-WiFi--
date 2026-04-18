@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  11:20:31 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:36 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -43,11 +43,11 @@
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Components\hal\common\hal_drivers.c -D         /
 //                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=FALSE    /
-//                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\ /
-//                          Samples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\   /
-//                          -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\ /
-//                          Samples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\   /
-//                          --diag_suppress Pe001,Pa010 -o                    /
+//                          -D HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a /
+//                          \Projects\zstack\Samples\ZbNode\CC2530DB\Node1_En /
+//                          dDeviceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\ /
+//                          Projects\zstack\Samples\ZbNode\CC2530DB\Node1_End /
+//                          DeviceEB\List\ --diag_suppress Pe001,Pa010 -o     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e     /
 //                          --no_code_motion --debug --core=plain             /
@@ -253,7 +253,6 @@
 HalAdcInit          SYMBOL "HalAdcInit"
 HalDmaInit          SYMBOL "HalDmaInit"
 HalAesInit          SYMBOL "HalAesInit"
-HalLcdInit          SYMBOL "HalLcdInit"
 HalLedInit          SYMBOL "HalLedInit"
 HalKeyInit          SYMBOL "HalKeyInit"
 osal_msg_receive    SYMBOL "osal_msg_receive"
@@ -266,7 +265,6 @@ osal_start_timerEx  SYMBOL "osal_start_timerEx"
 ??HalDmaInit?relay  SYMBOL "?relay", HalDmaInit
 ??HalKeyInit?relay  SYMBOL "?relay", HalKeyInit
 ??HalKeyPoll?relay  SYMBOL "?relay", HalKeyPoll
-??HalLcdInit?relay  SYMBOL "?relay", HalLcdInit
 ??HalLedInit?relay  SYMBOL "?relay", HalLedInit
 ??HalLedUpdate?relay SYMBOL "?relay", HalLedUpdate
 ??osal_msg_deallocate?relay SYMBOL "?relay", osal_msg_deallocate
@@ -297,13 +295,6 @@ Hal_ProcessPoll     SYMBOL "Hal_ProcessPoll"
         ARGFRAME DOVERLAY, 0, STATIC
         EXTERN HalAesInit
         FUNCTION HalAesInit,0202H
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        EXTERN HalLcdInit
-        FUNCTION HalLcdInit,0202H
         ARGFRAME ISTACK, 2, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 0, STACK
@@ -368,8 +359,6 @@ Hal_ProcessPoll     SYMBOL "Hal_ProcessPoll"
         FUNCTION ??HalKeyInit?relay,00H
         EXTERN ??HalKeyPoll?relay
         FUNCTION ??HalKeyPoll?relay,00H
-        EXTERN ??HalLcdInit?relay
-        FUNCTION ??HalLcdInit?relay,00H
         EXTERN ??HalLedInit?relay
         FUNCTION ??HalLedInit?relay,00H
         EXTERN ??HalLedUpdate?relay
@@ -592,17 +581,6 @@ HalDriverInit:
         ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL HalDriverInit, HalLcdInit
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL HalDriverInit, HalLedInit
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -663,8 +641,6 @@ HalDriverInit:
 //  150   /* LCD */
 //  151 #if (defined HAL_LCD) && (HAL_LCD == TRUE)
 //  152   HalLcdInit();
-        ; Setup parameters for call to function HalLcdInit
-        LCALL   ??HalLcdInit?relay
 //  153 #endif
 //  154 
 //  155   /* LED */
@@ -1014,11 +990,11 @@ Hal_ProcessPoll:
 //  301 **************************************************************************************************/
 //  302 
 // 
-// 140 bytes in segment BANKED_CODE
+// 137 bytes in segment BANKED_CODE
 //  24 bytes in segment BANK_RELAYS
 //   1 byte  in segment XDATA_Z
 // 
-// 164 bytes of CODE  memory
+// 161 bytes of CODE  memory
 //   1 byte  of XDATA memory
 //
 //Errors: none

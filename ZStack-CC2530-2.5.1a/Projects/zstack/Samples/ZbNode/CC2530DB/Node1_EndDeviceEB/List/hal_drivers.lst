@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  11:20:31 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:36 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -42,12 +42,12 @@
 #                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Components\hal\common\hal_drivers.c -D           #
-#                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=FALSE     #
-#                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
-#                          amples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\     #
-#                          -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
-#                          amples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\     #
-#                          --diag_suppress Pe001,Pa010 -o                     #
+#                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=FALSE -D  #
+#                          HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDevi #
+#                          ceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
+#                          ts\zstack\Samples\ZbNode\CC2530DB\Node1_EndDeviceE #
+#                          B\List\ --diag_suppress Pe001,Pa010 -o             #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e       #
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
@@ -302,15 +302,13 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     150            /* LCD */
     151          #if (defined HAL_LCD) && (HAL_LCD == TRUE)
     152            HalLcdInit();
-   \   00000D                ; Setup parameters for call to function HalLcdInit
-   \   00000D   12....       LCALL   ??HalLcdInit?relay
     153          #endif
     154          
     155            /* LED */
     156          #if (defined HAL_LED) && (HAL_LED == TRUE)
     157            HalLedInit();
-   \   000010                ; Setup parameters for call to function HalLedInit
-   \   000010   12....       LCALL   ??HalLedInit?relay
+   \   00000D                ; Setup parameters for call to function HalLedInit
+   \   00000D   12....       LCALL   ??HalLedInit?relay
     158          #endif
     159          
     160            /* UART */
@@ -321,8 +319,8 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     165            /* KEY */
     166          #if (defined HAL_KEY) && (HAL_KEY == TRUE)
     167            HalKeyInit();
-   \   000013                ; Setup parameters for call to function HalKeyInit
-   \   000013   12....       LCALL   ??HalKeyInit?relay
+   \   000010                ; Setup parameters for call to function HalKeyInit
+   \   000010   12....       LCALL   ??HalKeyInit?relay
     168          #endif
     169          
     170            /* SPI */
@@ -335,7 +333,7 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     177            usbHidInit();
     178          #endif
     179          }
-   \   000016   80..         SJMP    ?Subroutine0
+   \   000013   80..         SJMP    ?Subroutine0
     180          
     181          
     182          /**************************************************************************************************
@@ -568,7 +566,6 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
        -> HalAdcInit              4      0      0
        -> HalDmaInit              4      0      0
        -> HalAesInit              4      0      0
-       -> HalLcdInit              4      0      0
        -> HalLedInit              4      0      0
        -> HalKeyInit              4      0      0
      Hal_Init                     2      0      0
@@ -589,7 +586,7 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
      Hal_TaskID                  1
      Hal_Init                    9
      ?Subroutine0                7
-     HalDriverInit              24
+     HalDriverInit              21
      Hal_ProcessEvent           97
      Hal_ProcessPoll             3
      ??Hal_Init?relay            6
@@ -598,11 +595,11 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
      ??Hal_ProcessPoll?relay     6
 
  
- 140 bytes in segment BANKED_CODE
+ 137 bytes in segment BANKED_CODE
   24 bytes in segment BANK_RELAYS
    1 byte  in segment XDATA_Z
  
- 164 bytes of CODE  memory
+ 161 bytes of CODE  memory
    1 byte  of XDATA memory
 
 Errors: none

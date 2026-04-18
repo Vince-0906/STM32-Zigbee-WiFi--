@@ -19,9 +19,11 @@ extern "C" {
 /* OSAL 事件位 */
 #define ZN_EVT_REPORT       0x0001u
 #define ZN_EVT_REPORT_RETRY 0x0002u
+#define ZN_EVT_STATUS_LED   0x0004u
 
 extern uint8 ZbNode_TaskID;
 
+extern void   ZbNode_PreInit(void);
 extern void   ZbNode_Init(uint8 task_id);
 extern UINT16 ZbNode_ProcessEvent(uint8 task_id, uint16 events);
 

@@ -170,8 +170,14 @@ void gw_main_run(void)
             memset(&om, 0, sizeof(om));
             om.zb_ok = zb_link_alive();
             om.wifi_ok = wifi_link_is_up();
-            om.pc_ok = (wifi_up && s_last_pc_rx_ms != 0 &&
-                        (now - s_last_pc_rx_ms) <= TCP_DEAD_MS) ? 1u : 0u;
+            /* P:1 条件：WiFi 透传已建链（= TCP 与服务器通路存活）。
+             * 若仅以"PC 是否给我们发过数据"判断，只读不写的 PC 工具永远显示 P:0，
+             * 而我们在透传态的 30 s 静默看门狗（§4.3）会在断连时自动拉下 wifi_link_is_up()。 */
+            om.pc_ok = wifi_up ? 1u : 0u;
+            if (s_last_pc_rx_ms != 0 && (now - s_last_pc_rx_ms) > TCP_DEAD_MS) {
+                /* 长时间没有任何下行，提示为 0，哪怕透传还没掉 */
+                om.pc_ok = 0u;
+            }
             if (n1) {
                 om.n1_online = (n1->online && (now - n1->last_update_ms) <= NODE1_STALE_MS) ? 1u : 0u;
                 om.n1_temp_x100 = n1->temp_x100;

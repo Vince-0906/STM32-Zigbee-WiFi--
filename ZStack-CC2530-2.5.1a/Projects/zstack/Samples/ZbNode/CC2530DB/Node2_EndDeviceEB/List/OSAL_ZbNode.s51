@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  15:22:27 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:50:55 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -43,11 +43,12 @@
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Projects\zstack\Samples\ZbNode\Source\OSAL_ZbN /
 //                          ode.c -D NWK_AUTO_POLL -D NODE_ROLE=2 -D          /
-//                          HAL_UART=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\P /
-//                          rojects\zstack\Samples\ZbNode\CC2530DB\Node2_EndD /
-//                          eviceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr /
-//                          ojects\zstack\Samples\ZbNode\CC2530DB\Node2_EndDe /
-//                          viceEB\List\ --diag_suppress Pe001,Pa010 -o       /
+//                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC               /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node2_EndDeviceEB\List\ -lA   /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node2_EndDeviceEB\List\       /
+//                          --diag_suppress Pe001,Pa010 -o                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\ -e     /
 //                          --no_code_motion --debug --core=plain             /
@@ -240,28 +241,30 @@ nwk_init            SYMBOL "nwk_init"
 Hal_Init            SYMBOL "Hal_Init"
 APS_Init            SYMBOL "APS_Init"
 APSF_Init           SYMBOL "APSF_Init"
+ZbNode_PreInit      SYMBOL "ZbNode_PreInit"
 ZDApp_Init          SYMBOL "ZDApp_Init"
 ZbNode_Init         SYMBOL "ZbNode_Init"
 ??APSF_Init?relay   SYMBOL "?relay", APSF_Init
-`?<Name APSF_ProcessEvent 10>` SYMBOL "APSF_ProcessEvent"
-??APSF_ProcessEvent?relay SYMBOL "?relay", `?<Name APSF_ProcessEvent 10>`
+`?<Name APSF_ProcessEvent 11>` SYMBOL "APSF_ProcessEvent"
+??APSF_ProcessEvent?relay SYMBOL "?relay", `?<Name APSF_ProcessEvent 11>`
 ??APS_Init?relay    SYMBOL "?relay", APS_Init
-`?<Name APS_event_loop 13>` SYMBOL "APS_event_loop"
-??APS_event_loop?relay SYMBOL "?relay", `?<Name APS_event_loop 13>`
+`?<Name APS_event_loop 14>` SYMBOL "APS_event_loop"
+??APS_event_loop?relay SYMBOL "?relay", `?<Name APS_event_loop 14>`
 ??Hal_Init?relay    SYMBOL "?relay", Hal_Init
-`?<Name Hal_ProcessEvent 16>` SYMBOL "Hal_ProcessEvent"
-??Hal_ProcessEvent?relay SYMBOL "?relay", `?<Name Hal_ProcessEvent 16>`
+`?<Name Hal_ProcessEvent 17>` SYMBOL "Hal_ProcessEvent"
+??Hal_ProcessEvent?relay SYMBOL "?relay", `?<Name Hal_ProcessEvent 17>`
 ??ZDApp_Init?relay  SYMBOL "?relay", ZDApp_Init
-`?<Name ZDApp_event_loop 19>` SYMBOL "ZDApp_event_loop"
-??ZDApp_event_loop?relay SYMBOL "?relay", `?<Name ZDApp_event_loop 19>`
+`?<Name ZDApp_event_loop 20>` SYMBOL "ZDApp_event_loop"
+??ZDApp_event_loop?relay SYMBOL "?relay", `?<Name ZDApp_event_loop 20>`
 ??ZbNode_Init?relay SYMBOL "?relay", ZbNode_Init
-`?<Name ZbNode_ProcessEvent 22>` SYMBOL "ZbNode_ProcessEvent"
-??ZbNode_ProcessEvent?relay SYMBOL "?relay", `?<Name ZbNode_ProcessEvent 22>`
-`?<Name macEventLoop 24>` SYMBOL "macEventLoop"
-??macEventLoop?relay SYMBOL "?relay", `?<Name macEventLoop 24>`
+??ZbNode_PreInit?relay SYMBOL "?relay", ZbNode_PreInit
+`?<Name ZbNode_ProcessEvent 24>` SYMBOL "ZbNode_ProcessEvent"
+??ZbNode_ProcessEvent?relay SYMBOL "?relay", `?<Name ZbNode_ProcessEvent 24>`
+`?<Name macEventLoop 26>` SYMBOL "macEventLoop"
+??macEventLoop?relay SYMBOL "?relay", `?<Name macEventLoop 26>`
 ??macTaskInit?relay SYMBOL "?relay", macTaskInit
-`?<Name nwk_event_loop 27>` SYMBOL "nwk_event_loop"
-??nwk_event_loop?relay SYMBOL "?relay", `?<Name nwk_event_loop 27>`
+`?<Name nwk_event_loop 29>` SYMBOL "nwk_event_loop"
+??nwk_event_loop?relay SYMBOL "?relay", `?<Name nwk_event_loop 29>`
 ??nwk_init?relay    SYMBOL "?relay", nwk_init
 ??osal_mem_alloc?relay SYMBOL "?relay", osal_mem_alloc
 ??osal_memset?relay SYMBOL "?relay", osal_memset
@@ -317,6 +320,13 @@ osalInitTasks       SYMBOL "osalInitTasks"
         ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN ZbNode_PreInit
+        FUNCTION ZbNode_PreInit,0202H
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         EXTERN ZDApp_Init
         FUNCTION ZDApp_Init,0202H
         ARGFRAME ISTACK, 2, STACK
@@ -349,6 +359,8 @@ osalInitTasks       SYMBOL "osalInitTasks"
         FUNCTION ??ZDApp_event_loop?relay,00H
         EXTERN ??ZbNode_Init?relay
         FUNCTION ??ZbNode_Init?relay,00H
+        EXTERN ??ZbNode_PreInit?relay
+        FUNCTION ??ZbNode_PreInit?relay,00H
         EXTERN ??ZbNode_ProcessEvent?relay
         FUNCTION ??ZbNode_ProcessEvent?relay,00H
         EXTERN ??macEventLoop?relay
@@ -502,6 +514,17 @@ osalInitTasks:
         ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL osalInitTasks, ZbNode_PreInit
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL osalInitTasks, ZDApp_Init
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -573,15 +596,18 @@ osalInitTasks:
         MOV     R1,#0x4
         LCALL   ??APSF_Init?relay
 //   42 #endif
-//   43   ZDApp_Init( taskID++ );
+//   43   ZbNode_PreInit();
+        ; Setup parameters for call to function ZbNode_PreInit
+        LCALL   ??ZbNode_PreInit?relay
+//   44   ZDApp_Init( taskID++ );
         ; Setup parameters for call to function ZDApp_Init
         MOV     R1,#0x5
         LCALL   ??ZDApp_Init?relay
-//   44   ZbNode_Init( taskID );
+//   45   ZbNode_Init( taskID );
         ; Setup parameters for call to function ZbNode_Init
         MOV     R1,#0x6
         LCALL   ??ZbNode_Init?relay
-//   45 }
+//   46 }
         POP     DPH
         CFI DPH0 SameValue
         CFI CFA_SP SP+-4
@@ -599,12 +625,12 @@ osalInitTasks:
 
         END
 // 
-// 70 bytes in segment BANKED_CODE
+// 73 bytes in segment BANKED_CODE
 //  6 bytes in segment BANK_RELAYS
 // 15 bytes in segment XDATA_ROM_C
 //  2 bytes in segment XDATA_Z
 // 
-// 76 bytes of CODE  memory
+// 79 bytes of CODE  memory
 // 15 bytes of CONST memory
 //  2 bytes of XDATA memory
 //

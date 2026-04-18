@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  15:20:55 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  15:56:56 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -44,7 +44,7 @@
 //                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Projects\zstack\Samples\GwCoord\Source\cmd_map /
-//                          .c -D HAL_UART=TRUE -lC                           /
+//                          .c -D HAL_UART=TRUE -D HAL_LCD=FALSE -lC          /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\CoordinatorEB\List\ -lA      /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -244,10 +244,10 @@ GwCoord_SendErr     SYMBOL "GwCoord_SendErr"
 zb_net_send_onoff   SYMBOL "zb_net_send_onoff"
 GwCoord_SendFrame   SYMBOL "GwCoord_SendFrame"
 zb_net_allow_join   SYMBOL "zb_net_allow_join"
+GwCoord_SendNetStatus SYMBOL "GwCoord_SendNetStatus"
 zb_net_count        SYMBOL "zb_net_count"
 zb_net_at           SYMBOL "zb_net_at"
 GwCoord_SendNodeInfo SYMBOL "GwCoord_SendNodeInfo"
-GwCoord_SendNetStatus SYMBOL "GwCoord_SendNetStatus"
 ??GwCoord_SendErr?relay SYMBOL "?relay", GwCoord_SendErr
 ??GwCoord_SendFrame?relay SYMBOL "?relay", GwCoord_SendFrame
 ??GwCoord_SendNetStatus?relay SYMBOL "?relay", GwCoord_SendNetStatus
@@ -287,6 +287,13 @@ cmd_map_dispatch    SYMBOL "cmd_map_dispatch"
         ARGFRAME XSTACK, 10, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN GwCoord_SendNetStatus
+        FUNCTION GwCoord_SendNetStatus,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 10, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         EXTERN zb_net_count
         FUNCTION zb_net_count,0202H
         ARGFRAME ISTACK, 0, STACK
@@ -303,13 +310,6 @@ cmd_map_dispatch    SYMBOL "cmd_map_dispatch"
         ARGFRAME DOVERLAY, 0, STATIC
         EXTERN GwCoord_SendNodeInfo
         FUNCTION GwCoord_SendNodeInfo,0202H
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 10, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        EXTERN GwCoord_SendNetStatus
-        FUNCTION GwCoord_SendNetStatus,0202H
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 10, STACK
@@ -354,35 +354,36 @@ cmd_map_dispatch    SYMBOL "cmd_map_dispatch"
 //   19         return;
 //   20     }
 //   21     zb_net_allow_join(f->payload[0]);
-//   22 }
-//   23 
-//   24 static void do_list_nodes(const frame_t *f)
-//   25 {
-//   26     uint8 i;
-//   27     uint8 cnt;
-//   28     const zb_node_t *n;
-//   29 
-//   30     (void)f;
-//   31     cnt = zb_net_count();
-//   32     for (i = 0; i < cnt; ++i) {
-//   33         n = zb_net_at(i);
-//   34         if (n != 0) {
-//   35             GwCoord_SendNodeInfo(n);
-//   36         }
-//   37     }
-//   38     if (cnt == 0u) {
-//   39         GwCoord_SendNetStatus();
-//   40     }
-//   41 }
-//   42 
+//   22     GwCoord_SendNetStatus();
+//   23 }
+//   24 
+//   25 static void do_list_nodes(const frame_t *f)
+//   26 {
+//   27     uint8 i;
+//   28     uint8 cnt;
+//   29     const zb_node_t *n;
+//   30 
+//   31     (void)f;
+//   32     cnt = zb_net_count();
+//   33     for (i = 0; i < cnt; ++i) {
+//   34         n = zb_net_at(i);
+//   35         if (n != 0) {
+//   36             GwCoord_SendNodeInfo(n);
+//   37         }
+//   38     }
+//   39     if (cnt == 0u) {
+//   40         GwCoord_SendNetStatus();
+//   41     }
+//   42 }
+//   43 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   43 static void do_cmd(const frame_t *f)
+//   44 static void do_cmd(const frame_t *f)
 do_cmd:
         CFI Block cfiBlock0 Using cfiCommon0
         CFI Function do_cmd
         CODE
-//   44 {
+//   45 {
         FUNCALL do_cmd, GwCoord_SendErr
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -452,14 +453,14 @@ do_cmd:
         MOV     R0,A
         MOV     A,R3
         MOV     R1,A
-//   45     uint16 nodeid;
-//   46     uint8 ep;
-//   47     uint16 cluster;
-//   48     uint8 dtype;
-//   49     uint8 vlen;
-//   50     const uint8 *val;
-//   51 
-//   52     if (f->plen < 7u) {
+//   46     uint16 nodeid;
+//   47     uint8 ep;
+//   48     uint16 cluster;
+//   49     uint8 dtype;
+//   50     uint8 vlen;
+//   51     const uint8 *val;
+//   52 
+//   53     if (f->plen < 7u) {
         MOV     DPL,R0
         MOV     DPH,R1
         INC     DPTR
@@ -467,16 +468,16 @@ do_cmd:
         CLR     C
         SUBB    A,#0x7
         JNC     ??do_cmd_0
-//   53         GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
+//   54         GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
 ??do_cmd_1:
         ; Setup parameters for call to function GwCoord_SendErr
         MOV     R2,#0x21
         MOV     R1,#0x20
         LJMP    ??do_cmd_2 & 0xFFFF
-//   54         return;
-//   55     }
-//   56 
-//   57     nodeid  = (uint16)f->payload[0] | ((uint16)f->payload[1] << 8);
+//   55         return;
+//   56     }
+//   57 
+//   58     nodeid  = (uint16)f->payload[0] | ((uint16)f->payload[1] << 8);
 ??do_cmd_0:
         MOV     DPL,R0
         MOV     DPH,R1
@@ -493,7 +494,7 @@ do_cmd:
         MOV     R3,A
         MOV     A,R4
         MOV     R2,A
-//   58     ep      = f->payload[2];
+//   59     ep      = f->payload[2];
         MOV     DPL,R0
         MOV     DPH,R1
         INC     DPTR
@@ -502,8 +503,8 @@ do_cmd:
         INC     DPTR
         MOVX    A,@DPTR
         MOV     ?V0 + 2,A
-//   59     cluster = (uint16)f->payload[3] | ((uint16)f->payload[4] << 8);
-//   60     dtype   = f->payload[5];
+//   60     cluster = (uint16)f->payload[3] | ((uint16)f->payload[4] << 8);
+//   61     dtype   = f->payload[5];
         MOV     DPL,R0
         MOV     DPH,R1
         INC     DPTR
@@ -515,7 +516,7 @@ do_cmd:
         INC     DPTR
         MOVX    A,@DPTR
         MOV     ?V0 + 3,A
-//   61     vlen    = f->payload[6];
+//   62     vlen    = f->payload[6];
         MOV     DPL,R0
         MOV     DPH,R1
         INC     DPTR
@@ -528,14 +529,14 @@ do_cmd:
         INC     DPTR
         MOVX    A,@DPTR
         MOV     ?V0 + 6,A
-//   62     val     = &f->payload[7];
+//   63     val     = &f->payload[7];
         MOV     A,R0
         ADD     A,#0x9
         MOV     R4,A
         MOV     A,R1
         ADDC    A,#0x0
         MOV     R5,A
-//   63     if ((uint16)(7u + vlen) > f->plen) {
+//   64     if ((uint16)(7u + vlen) > f->plen) {
         MOV     DPL,R0
         MOV     DPH,R1
         INC     DPTR
@@ -553,11 +554,11 @@ do_cmd:
         CLR     A
         SUBB    A,R7
         JC      ??do_cmd_1
-//   64         GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
-//   65         return;
-//   66     }
-//   67 
-//   68     if (cluster == ZCL_CLU_ONOFF && dtype == DTYPE_BOOL && vlen == 1u) {
+//   65         GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
+//   66         return;
+//   67     }
+//   68 
+//   69     if (cluster == ZCL_CLU_ONOFF && dtype == DTYPE_BOOL && vlen == 1u) {
         MOV     DPL,R0
         MOV     DPH,R1
         INC     DPTR
@@ -591,7 +592,7 @@ do_cmd:
         MOV     A,#0x1
         XRL     A,?V0 + 6
         JNZ     ??do_cmd_4
-//   69         if (zb_net_send_onoff(nodeid, ep, val[0]) != 0) {
+//   70         if (zb_net_send_onoff(nodeid, ep, val[0]) != 0) {
         ; Setup parameters for call to function zb_net_send_onoff
         MOV     DPL,R4
         MOV     DPH,R5
@@ -601,14 +602,14 @@ do_cmd:
         LCALL   ??zb_net_send_onoff?relay
         MOV     A,R1
         JZ      ??do_cmd_5
-//   70             GwCoord_SendErr(ERRC_SEND_FAIL, CMD_ZB_CMD);
+//   71             GwCoord_SendErr(ERRC_SEND_FAIL, CMD_ZB_CMD);
         ; Setup parameters for call to function GwCoord_SendErr
         MOV     R2,#0x21
         MOV     R1,#0x10
         SJMP    ??do_cmd_2
-//   71         }
-//   72     } else {
-//   73         GwCoord_SendErr(ERRC_UNKNOWN, CMD_ZB_CMD);
+//   72         }
+//   73     } else {
+//   74         GwCoord_SendErr(ERRC_UNKNOWN, CMD_ZB_CMD);
 ??do_cmd_4:
         ; Setup parameters for call to function GwCoord_SendErr
         MOV     R2,#0x21
@@ -619,17 +620,17 @@ do_cmd:
         MOV     R7,#0x7
         LJMP    ?BANKED_LEAVE_XDATA
         CFI EndBlock cfiBlock0
-//   74     }
-//   75 }
-//   76 
+//   75     }
+//   76 }
+//   77 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   77 void cmd_map_dispatch(const frame_t *f)
+//   78 void cmd_map_dispatch(const frame_t *f)
 cmd_map_dispatch:
         CFI Block cfiBlock1 Using cfiCommon0
         CFI Function cmd_map_dispatch
         CODE
-//   78 {
+//   79 {
         FUNCALL cmd_map_dispatch, GwCoord_SendFrame
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -653,6 +654,17 @@ cmd_map_dispatch:
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL cmd_map_dispatch, zb_net_allow_join
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 10, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 10, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL cmd_map_dispatch, GwCoord_SendNetStatus
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
         LOCFRAME XSTACK, 10, STACK
@@ -745,7 +757,7 @@ cmd_map_dispatch:
         CFI CFA_XSP16 add(XSP16, 10)
         ; Saved register size: 10
         ; Auto size: 0
-//   79     switch (f->cmd) {
+//   80     switch (f->cmd) {
         MOV     DPL,R2
         MOV     DPH,R3
         MOVX    A,@DPTR
@@ -758,8 +770,8 @@ cmd_map_dispatch:
         ADD     A,#-0x10
         JZ      ??cmd_map_dispatch_3
         SJMP    ??cmd_map_dispatch_4
-//   80     case CMD_ZB_PING:
-//   81         do_ping(f);
+//   81     case CMD_ZB_PING:
+//   82         do_ping(f);
 ??cmd_map_dispatch_0:
         ; Setup parameters for call to function GwCoord_SendFrame
         MOV     R4,#0x0
@@ -767,10 +779,10 @@ cmd_map_dispatch:
         MOV     R3,#0x0
         MOV     R1,#0x1
         LCALL   ??GwCoord_SendFrame?relay
-//   82         break;
+//   83         break;
         SJMP    ??cmd_map_dispatch_5
-//   83     case CMD_ZB_ALLOW_JOIN:
-//   84         do_allow_join(f);
+//   84     case CMD_ZB_ALLOW_JOIN:
+//   85         do_allow_join(f);
 ??cmd_map_dispatch_1:
         INC     DPTR
         MOVX    A,@DPTR
@@ -788,49 +800,51 @@ cmd_map_dispatch:
         MOVX    A,@DPTR
         MOV     R1,A
         LCALL   ??zb_net_allow_join?relay
+        ; Setup parameters for call to function GwCoord_SendNetStatus
+??cmd_map_dispatch_8:
+        LCALL   ??GwCoord_SendNetStatus?relay
         SJMP    ??cmd_map_dispatch_5
-//   85         break;
-//   86     case CMD_ZB_LIST_NODES:
-//   87         do_list_nodes(f);
+//   86         break;
+//   87     case CMD_ZB_LIST_NODES:
+//   88         do_list_nodes(f);
 ??cmd_map_dispatch_2:
         ; Setup parameters for call to function zb_net_count
         LCALL   ??zb_net_count?relay
         MOV     A,R1
         MOV     R7,A
         MOV     R6,#0x0
-        SJMP    ??cmd_map_dispatch_8
-??cmd_map_dispatch_9:
+        SJMP    ??cmd_map_dispatch_9
+??cmd_map_dispatch_10:
         ; Setup parameters for call to function zb_net_at
         MOV     A,R6
         MOV     R1,A
         LCALL   ??zb_net_at?relay
         MOV     A,R2
         ORL     A,R3
-        JZ      ??cmd_map_dispatch_10
+        JZ      ??cmd_map_dispatch_11
         ; Setup parameters for call to function GwCoord_SendNodeInfo
         LCALL   ??GwCoord_SendNodeInfo?relay
-??cmd_map_dispatch_10:
+??cmd_map_dispatch_11:
         INC     R6
-??cmd_map_dispatch_8:
+??cmd_map_dispatch_9:
         MOV     A,R6
         CLR     C
         SUBB    A,R7
-        JC      ??cmd_map_dispatch_9
+        JC      ??cmd_map_dispatch_10
         MOV     A,R7
         JNZ     ??cmd_map_dispatch_5
         ; Setup parameters for call to function GwCoord_SendNetStatus
-        LCALL   ??GwCoord_SendNetStatus?relay
-        SJMP    ??cmd_map_dispatch_5
-//   88         break;
-//   89     case CMD_ZB_CMD:
-//   90         do_cmd(f);
+        SJMP    ??cmd_map_dispatch_8
+//   89         break;
+//   90     case CMD_ZB_CMD:
+//   91         do_cmd(f);
 ??cmd_map_dispatch_3:
         ; Setup parameters for call to function do_cmd
         LCALL   ??do_cmd?relay
-//   91         break;
+//   92         break;
         SJMP    ??cmd_map_dispatch_5
-//   92     default:
-//   93         GwCoord_SendErr(ERRC_UNKNOWN, f->cmd);
+//   93     default:
+//   94         GwCoord_SendErr(ERRC_UNKNOWN, f->cmd);
 ??cmd_map_dispatch_4:
         ; Setup parameters for call to function GwCoord_SendErr
         MOVX    A,@DPTR
@@ -838,9 +852,9 @@ cmd_map_dispatch:
         MOV     R1,#0x7f
 ??cmd_map_dispatch_7:
         LCALL   ??GwCoord_SendErr?relay
-//   94         break;
-//   95     }
-//   96 }
+//   95         break;
+//   96     }
+//   97 }
 ??cmd_map_dispatch_5:
         MOV     R7,#0x2
         LJMP    ?BANKED_LEAVE_XDATA

@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  15:20:55 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  15:56:56 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -44,11 +44,12 @@
 #                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Projects\zstack\Samples\GwCoord\Source\cmd_map.c #
-#                           -D HAL_UART=TRUE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a #
-#                          \Projects\zstack\Samples\GwCoord\CC2530DB\Coordina #
-#                          torEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Proje #
-#                          cts\zstack\Samples\GwCoord\CC2530DB\CoordinatorEB\ #
-#                          List\ --diag_suppress Pe001,Pa010 -o               #
+#                           -D HAL_UART=TRUE -D HAL_LCD=FALSE -lC             #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\CoordinatorEB\List\ -lA        #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\GwCoord\CC2530DB\CoordinatorEB\List\            #
+#                          --diag_suppress Pe001,Pa010 -o                     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\CoordinatorEB\Obj\ -e          #
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
@@ -137,32 +138,33 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      19                  return;
      20              }
      21              zb_net_allow_join(f->payload[0]);
-     22          }
-     23          
-     24          static void do_list_nodes(const frame_t *f)
-     25          {
-     26              uint8 i;
-     27              uint8 cnt;
-     28              const zb_node_t *n;
-     29          
-     30              (void)f;
-     31              cnt = zb_net_count();
-     32              for (i = 0; i < cnt; ++i) {
-     33                  n = zb_net_at(i);
-     34                  if (n != 0) {
-     35                      GwCoord_SendNodeInfo(n);
-     36                  }
-     37              }
-     38              if (cnt == 0u) {
-     39                  GwCoord_SendNetStatus();
-     40              }
-     41          }
-     42          
+     22              GwCoord_SendNetStatus();
+     23          }
+     24          
+     25          static void do_list_nodes(const frame_t *f)
+     26          {
+     27              uint8 i;
+     28              uint8 cnt;
+     29              const zb_node_t *n;
+     30          
+     31              (void)f;
+     32              cnt = zb_net_count();
+     33              for (i = 0; i < cnt; ++i) {
+     34                  n = zb_net_at(i);
+     35                  if (n != 0) {
+     36                      GwCoord_SendNodeInfo(n);
+     37                  }
+     38              }
+     39              if (cnt == 0u) {
+     40                  GwCoord_SendNetStatus();
+     41              }
+     42          }
+     43          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     43          static void do_cmd(const frame_t *f)
+     44          static void do_cmd(const frame_t *f)
    \                     do_cmd:
-     44          {
+     45          {
    \   000000   74F1         MOV     A,#-0xf
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 15
@@ -171,14 +173,14 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000006   F8           MOV     R0,A
    \   000007   EB           MOV     A,R3
    \   000008   F9           MOV     R1,A
-     45              uint16 nodeid;
-     46              uint8 ep;
-     47              uint16 cluster;
-     48              uint8 dtype;
-     49              uint8 vlen;
-     50              const uint8 *val;
-     51          
-     52              if (f->plen < 7u) {
+     46              uint16 nodeid;
+     47              uint8 ep;
+     48              uint16 cluster;
+     49              uint8 dtype;
+     50              uint8 vlen;
+     51              const uint8 *val;
+     52          
+     53              if (f->plen < 7u) {
    \   000009   8882         MOV     DPL,R0
    \   00000B   8983         MOV     DPH,R1
    \   00000D   A3           INC     DPTR
@@ -186,16 +188,16 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00000F   C3           CLR     C
    \   000010   9407         SUBB    A,#0x7
    \   000012   5007         JNC     ??do_cmd_0
-     53                  GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
+     54                  GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
    \                     ??do_cmd_1:
    \   000014                ; Setup parameters for call to function GwCoord_SendErr
    \   000014   7A21         MOV     R2,#0x21
    \   000016   7920         MOV     R1,#0x20
    \   000018   02....       LJMP    ??do_cmd_2 & 0xFFFF
-     54                  return;
-     55              }
-     56          
-     57              nodeid  = (uint16)f->payload[0] | ((uint16)f->payload[1] << 8);
+     55                  return;
+     56              }
+     57          
+     58              nodeid  = (uint16)f->payload[0] | ((uint16)f->payload[1] << 8);
    \                     ??do_cmd_0:
    \   00001B   8882         MOV     DPL,R0
    \   00001D   8983         MOV     DPH,R1
@@ -212,7 +214,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00002B   FB           MOV     R3,A
    \   00002C   EC           MOV     A,R4
    \   00002D   FA           MOV     R2,A
-     58              ep      = f->payload[2];
+     59              ep      = f->payload[2];
    \   00002E   8882         MOV     DPL,R0
    \   000030   8983         MOV     DPH,R1
    \   000032   A3           INC     DPTR
@@ -221,8 +223,8 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000035   A3           INC     DPTR
    \   000036   E0           MOVX    A,@DPTR
    \   000037   F5..         MOV     ?V0 + 2,A
-     59              cluster = (uint16)f->payload[3] | ((uint16)f->payload[4] << 8);
-     60              dtype   = f->payload[5];
+     60              cluster = (uint16)f->payload[3] | ((uint16)f->payload[4] << 8);
+     61              dtype   = f->payload[5];
    \   000039   8882         MOV     DPL,R0
    \   00003B   8983         MOV     DPH,R1
    \   00003D   A3           INC     DPTR
@@ -234,7 +236,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000043   A3           INC     DPTR
    \   000044   E0           MOVX    A,@DPTR
    \   000045   F5..         MOV     ?V0 + 3,A
-     61              vlen    = f->payload[6];
+     62              vlen    = f->payload[6];
    \   000047   8882         MOV     DPL,R0
    \   000049   8983         MOV     DPH,R1
    \   00004B   A3           INC     DPTR
@@ -247,14 +249,14 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000052   A3           INC     DPTR
    \   000053   E0           MOVX    A,@DPTR
    \   000054   F5..         MOV     ?V0 + 6,A
-     62              val     = &f->payload[7];
+     63              val     = &f->payload[7];
    \   000056   E8           MOV     A,R0
    \   000057   2409         ADD     A,#0x9
    \   000059   FC           MOV     R4,A
    \   00005A   E9           MOV     A,R1
    \   00005B   3400         ADDC    A,#0x0
    \   00005D   FD           MOV     R5,A
-     63              if ((uint16)(7u + vlen) > f->plen) {
+     64              if ((uint16)(7u + vlen) > f->plen) {
    \   00005E   8882         MOV     DPL,R0
    \   000060   8983         MOV     DPH,R1
    \   000062   A3           INC     DPTR
@@ -272,11 +274,11 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000075   E4           CLR     A
    \   000076   9F           SUBB    A,R7
    \   000077   409B         JC      ??do_cmd_1
-     64                  GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
-     65                  return;
-     66              }
-     67          
-     68              if (cluster == ZCL_CLU_ONOFF && dtype == DTYPE_BOOL && vlen == 1u) {
+     65                  GwCoord_SendErr(ERRC_BAD_FRAME, CMD_ZB_CMD);
+     66                  return;
+     67              }
+     68          
+     69              if (cluster == ZCL_CLU_ONOFF && dtype == DTYPE_BOOL && vlen == 1u) {
    \   000079   8882         MOV     DPL,R0
    \   00007B   8983         MOV     DPH,R1
    \   00007D   A3           INC     DPTR
@@ -310,7 +312,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   0000A0   7401         MOV     A,#0x1
    \   0000A2   65..         XRL     A,?V0 + 6
    \   0000A4   7014         JNZ     ??do_cmd_4
-     69                  if (zb_net_send_onoff(nodeid, ep, val[0]) != 0) {
+     70                  if (zb_net_send_onoff(nodeid, ep, val[0]) != 0) {
    \   0000A6                ; Setup parameters for call to function zb_net_send_onoff
    \   0000A6   8C82         MOV     DPL,R4
    \   0000A8   8D83         MOV     DPH,R5
@@ -320,14 +322,14 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   0000AE   12....       LCALL   ??zb_net_send_onoff?relay
    \   0000B1   E9           MOV     A,R1
    \   0000B2   600D         JZ      ??do_cmd_5
-     70                      GwCoord_SendErr(ERRC_SEND_FAIL, CMD_ZB_CMD);
+     71                      GwCoord_SendErr(ERRC_SEND_FAIL, CMD_ZB_CMD);
    \   0000B4                ; Setup parameters for call to function GwCoord_SendErr
    \   0000B4   7A21         MOV     R2,#0x21
    \   0000B6   7910         MOV     R1,#0x10
    \   0000B8   8004         SJMP    ??do_cmd_2
-     71                  }
-     72              } else {
-     73                  GwCoord_SendErr(ERRC_UNKNOWN, CMD_ZB_CMD);
+     72                  }
+     73              } else {
+     74                  GwCoord_SendErr(ERRC_UNKNOWN, CMD_ZB_CMD);
    \                     ??do_cmd_4:
    \   0000BA                ; Setup parameters for call to function GwCoord_SendErr
    \   0000BA   7A21         MOV     R2,#0x21
@@ -337,19 +339,19 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \                     ??do_cmd_5:
    \   0000C1   7F07         MOV     R7,#0x7
    \   0000C3   02....       LJMP    ?BANKED_LEAVE_XDATA
-     74              }
-     75          }
-     76          
+     75              }
+     76          }
+     77          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     77          void cmd_map_dispatch(const frame_t *f)
+     78          void cmd_map_dispatch(const frame_t *f)
    \                     cmd_map_dispatch:
-     78          {
+     79          {
    \   000000   74F6         MOV     A,#-0xa
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 10
    \   000005                ; Auto size: 0
-     79              switch (f->cmd) {
+     80              switch (f->cmd) {
    \   000005   8A82         MOV     DPL,R2
    \   000007   8B83         MOV     DPH,R3
    \   000009   E0           MOVX    A,@DPTR
@@ -358,12 +360,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00000D   24F1         ADD     A,#-0xf
    \   00000F   6016         JZ      ??cmd_map_dispatch_1
    \   000011   14           DEC     A
-   \   000012   602A         JZ      ??cmd_map_dispatch_2
+   \   000012   602D         JZ      ??cmd_map_dispatch_2
    \   000014   24F0         ADD     A,#-0x10
    \   000016   6049         JZ      ??cmd_map_dispatch_3
    \   000018   804C         SJMP    ??cmd_map_dispatch_4
-     80              case CMD_ZB_PING:
-     81                  do_ping(f);
+     81              case CMD_ZB_PING:
+     82                  do_ping(f);
    \                     ??cmd_map_dispatch_0:
    \   00001A                ; Setup parameters for call to function GwCoord_SendFrame
    \   00001A   7C00         MOV     R4,#0x0
@@ -371,10 +373,10 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00001E   7B00         MOV     R3,#0x0
    \   000020   7901         MOV     R1,#0x1
    \   000022   12....       LCALL   ??GwCoord_SendFrame?relay
-     82                  break;
+     83                  break;
    \   000025   8046         SJMP    ??cmd_map_dispatch_5
-     83              case CMD_ZB_ALLOW_JOIN:
-     84                  do_allow_join(f);
+     84              case CMD_ZB_ALLOW_JOIN:
+     85                  do_allow_join(f);
    \                     ??cmd_map_dispatch_1:
    \   000027   A3           INC     DPTR
    \   000028   E0           MOVX    A,@DPTR
@@ -392,49 +394,51 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000037   E0           MOVX    A,@DPTR
    \   000038   F9           MOV     R1,A
    \   000039   12....       LCALL   ??zb_net_allow_join?relay
-   \   00003C   802F         SJMP    ??cmd_map_dispatch_5
-     85                  break;
-     86              case CMD_ZB_LIST_NODES:
-     87                  do_list_nodes(f);
-   \                     ??cmd_map_dispatch_2:
-   \   00003E                ; Setup parameters for call to function zb_net_count
-   \   00003E   12....       LCALL   ??zb_net_count?relay
-   \   000041   E9           MOV     A,R1
-   \   000042   FF           MOV     R7,A
-   \   000043   7E00         MOV     R6,#0x0
-   \   000045   800D         SJMP    ??cmd_map_dispatch_8
-   \                     ??cmd_map_dispatch_9:
-   \   000047                ; Setup parameters for call to function zb_net_at
-   \   000047   EE           MOV     A,R6
-   \   000048   F9           MOV     R1,A
-   \   000049   12....       LCALL   ??zb_net_at?relay
-   \   00004C   EA           MOV     A,R2
-   \   00004D   4B           ORL     A,R3
-   \   00004E   6003         JZ      ??cmd_map_dispatch_10
-   \   000050                ; Setup parameters for call to function GwCoord_SendNodeInfo
-   \   000050   12....       LCALL   ??GwCoord_SendNodeInfo?relay
-   \                     ??cmd_map_dispatch_10:
-   \   000053   0E           INC     R6
+   \   00003C                ; Setup parameters for call to function GwCoord_SendNetStatus
    \                     ??cmd_map_dispatch_8:
-   \   000054   EE           MOV     A,R6
-   \   000055   C3           CLR     C
-   \   000056   9F           SUBB    A,R7
-   \   000057   40EE         JC      ??cmd_map_dispatch_9
-   \   000059   EF           MOV     A,R7
-   \   00005A   7011         JNZ     ??cmd_map_dispatch_5
-   \   00005C                ; Setup parameters for call to function GwCoord_SendNetStatus
-   \   00005C   12....       LCALL   ??GwCoord_SendNetStatus?relay
-   \   00005F   800C         SJMP    ??cmd_map_dispatch_5
-     88                  break;
-     89              case CMD_ZB_CMD:
-     90                  do_cmd(f);
+   \   00003C   12....       LCALL   ??GwCoord_SendNetStatus?relay
+   \   00003F   802C         SJMP    ??cmd_map_dispatch_5
+     86                  break;
+     87              case CMD_ZB_LIST_NODES:
+     88                  do_list_nodes(f);
+   \                     ??cmd_map_dispatch_2:
+   \   000041                ; Setup parameters for call to function zb_net_count
+   \   000041   12....       LCALL   ??zb_net_count?relay
+   \   000044   E9           MOV     A,R1
+   \   000045   FF           MOV     R7,A
+   \   000046   7E00         MOV     R6,#0x0
+   \   000048   800D         SJMP    ??cmd_map_dispatch_9
+   \                     ??cmd_map_dispatch_10:
+   \   00004A                ; Setup parameters for call to function zb_net_at
+   \   00004A   EE           MOV     A,R6
+   \   00004B   F9           MOV     R1,A
+   \   00004C   12....       LCALL   ??zb_net_at?relay
+   \   00004F   EA           MOV     A,R2
+   \   000050   4B           ORL     A,R3
+   \   000051   6003         JZ      ??cmd_map_dispatch_11
+   \   000053                ; Setup parameters for call to function GwCoord_SendNodeInfo
+   \   000053   12....       LCALL   ??GwCoord_SendNodeInfo?relay
+   \                     ??cmd_map_dispatch_11:
+   \   000056   0E           INC     R6
+   \                     ??cmd_map_dispatch_9:
+   \   000057   EE           MOV     A,R6
+   \   000058   C3           CLR     C
+   \   000059   9F           SUBB    A,R7
+   \   00005A   40EE         JC      ??cmd_map_dispatch_10
+   \   00005C   EF           MOV     A,R7
+   \   00005D   700E         JNZ     ??cmd_map_dispatch_5
+   \   00005F                ; Setup parameters for call to function GwCoord_SendNetStatus
+   \   00005F   80DB         SJMP    ??cmd_map_dispatch_8
+     89                  break;
+     90              case CMD_ZB_CMD:
+     91                  do_cmd(f);
    \                     ??cmd_map_dispatch_3:
    \   000061                ; Setup parameters for call to function do_cmd
    \   000061   12....       LCALL   ??do_cmd?relay
-     91                  break;
+     92                  break;
    \   000064   8007         SJMP    ??cmd_map_dispatch_5
-     92              default:
-     93                  GwCoord_SendErr(ERRC_UNKNOWN, f->cmd);
+     93              default:
+     94                  GwCoord_SendErr(ERRC_UNKNOWN, f->cmd);
    \                     ??cmd_map_dispatch_4:
    \   000066                ; Setup parameters for call to function GwCoord_SendErr
    \   000066   E0           MOVX    A,@DPTR
@@ -442,9 +446,9 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000068   797F         MOV     R1,#0x7f
    \                     ??cmd_map_dispatch_7:
    \   00006A   12....       LCALL   ??GwCoord_SendErr?relay
-     94                  break;
-     95              }
-     96          }
+     95                  break;
+     96              }
+     97          }
    \                     ??cmd_map_dispatch_5:
    \   00006D   7F02         MOV     R7,#0x2
    \   00006F   02....       LJMP    ?BANKED_LEAVE_XDATA
@@ -467,6 +471,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
        -> GwCoord_SendFrame         0      0     20
        -> GwCoord_SendErr           0      0     20
        -> zb_net_allow_join         0      0     20
+       -> GwCoord_SendNetStatus     0      0     20
        -> zb_net_count              0      0     20
        -> zb_net_at                 0      0     20
        -> GwCoord_SendNodeInfo      0      0     20

@@ -23,6 +23,9 @@ static uint16 s_panid = 0xFFFF;
 static uint8  s_channel = ZB_CHANNEL_DEFAULT;
 static uint8  s_allow_join_rem_s = 0;
 static uint32 s_last_tick_ms = 0;
+/* 无子节点时每 s_reopen_window_s 秒自动再开一次 60s 入网窗。
+ * 避免 STM32 那次 ZB_ALLOW_JOIN 时序不对（例如 coord 还没 form PAN 就收到命令）导致死窗。 */
+static uint8  s_reopen_window_s = 0;
 
 static zb_node_t *find_slot(uint16 nodeid)
 {
@@ -93,6 +96,23 @@ void zb_net_tick(uint32 now_ms)
         } else {
             s_allow_join_rem_s = (uint8)(s_allow_join_rem_s - delta);
         }
+    }
+
+    /* 若网络已就绪但一个节点都没加入，每 30s 自动再开 60s 入网窗。
+     * 这样即便 STM32 侧 ZB_ALLOW_JOIN 丢帧或节点来得晚，也能一直有机会重试。 */
+    if (s_dev_state == DEV_ZB_COORD && zb_net_online_count() == 0u) {
+        if (s_reopen_window_s <= delta) {
+            s_reopen_window_s = 30u;
+            if (s_allow_join_rem_s < 60u) {
+                NLME_PermitJoiningRequest(60);
+                s_allow_join_rem_s = 60u;
+                GwCoord_SendNetStatus();
+            }
+        } else {
+            s_reopen_window_s = (uint8)(s_reopen_window_s - delta);
+        }
+    } else {
+        s_reopen_window_s = 0;
     }
 
     for (i = 0; i < s_node_cnt; ++i) {
@@ -233,6 +253,8 @@ int8 zb_net_send_onoff(uint16 nodeid, uint8 ep, uint8 onoff)
 
 void zb_net_on_state(uint8 state, uint16 panid, uint8 channel)
 {
+    uint8 prev_state = s_dev_state;
+
     s_dev_state = state;
     s_panid = panid;
     s_channel = channel;
@@ -241,6 +263,18 @@ void zb_net_on_state(uint8 state, uint16 panid, uint8 channel)
     if (state == DEV_ZB_COORD) {
         (void)nv_save_u16(NV_ID_PANID, panid);
         (void)nv_save_u8(NV_ID_CHANNEL, channel);
+
+        /* 网络首次就绪时主动开 255s 入网窗，不再等 STM32 的 ZB_ALLOW_JOIN 到达。
+         * 原先 STM32 侧会在 zb_alive 上升沿发一次 60s 窗，但：
+         *   (1) 如果 STM32 送命令时 NIB 还没齐，NLME_PermitJoiningRequest 有可能被忽略；
+         *   (2) 节点若上电慢于这 60s，就错过了窗口再也进不来。
+         * 先给 255s 缓冲让节点有更长的首次入网机会；之后 zb_net_tick 里的 30s 自动再开兜底。 */
+        if (prev_state != DEV_ZB_COORD) {
+            NLME_PermitJoiningRequest(0xFFu);      /* 注意：255 以下才是秒数，0xFF=一直开 */
+            s_allow_join_rem_s = 0xFFu;
+            s_reopen_window_s = 30u;
+            GwCoord_SendNetStatus();
+        }
     }
 }
 

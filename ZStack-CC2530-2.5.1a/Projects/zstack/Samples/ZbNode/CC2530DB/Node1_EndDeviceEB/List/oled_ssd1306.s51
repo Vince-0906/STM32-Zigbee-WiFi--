@@ -1,0 +1,3268 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:37 /
+// Copyright 2004-2011 IAR Systems AB.                                        /
+//                                                                            /
+//    Core               =  plain                                             /
+//    Code model         =  banked                                            /
+//    Data model         =  large                                             /
+//    Calling convention =  xdata reentrant                                   /
+//    Constant location  =  data_rom                                          /
+//    Dptr setup         =  1,16                                              /
+//    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\Source\oled_ssd1306.c                  /
+//    Command line       =  -f D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S /
+//                          amples\ZbNode\CC2530DB\..\..\..\Tools\CC2530DB\f8 /
+//                          wEndev.cfg (-DCPU32MHZ -DROOT=__near_func         /
+//                          -DMAC_CFG_TX_DATA_MAX=3 -DMAC_CFG_TX_MAX=6        /
+//                          -DMAC_CFG_RX_MAX=3) -f D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\ /
+//                          ..\Tools\CC2530DB\f8wConfig.cfg (-DZIGBEEPRO      /
+//                          -DSECURE=0 -DZG_SECURE_DYNAMIC=0 -DREFLECTOR      /
+//                          -DDEFAULT_CHANLIST=0x00000800                     /
+//                          -DZDAPP_CONFIG_PAN_ID=0xFFFF                      /
+//                          -DNWK_START_DELAY=100 -DEXTENDED_JOINING_RANDOM_M /
+//                          ASK=0x007F -DBEACON_REQUEST_DELAY=100             /
+//                          -DBEACON_REQ_DELAY_MASK=0x00FF                    /
+//                          -DLINK_STATUS_JITTER_MASK=0x007F                  /
+//                          -DROUTE_EXPIRY_TIME=30 -DAPSC_ACK_WAIT_DURATION_P /
+//                          OLLED=3000 -DNWK_INDIRECT_MSG_TIMEOUT=7           /
+//                          -DMAX_RREQ_ENTRIES=8 -DAPSC_MAX_FRAME_RETRIES=3   /
+//                          -DNWK_MAX_DATA_RETRIES=2                          /
+//                          -DMAX_POLL_FAILURE_RETRIES=2 -DMAX_BCAST=9        /
+//                          -DAPS_MAX_GROUPS=16 -DMAX_RTG_ENTRIES=40          /
+//                          -DNWK_MAX_BINDING_ENTRIES=4                       /
+//                          -DMAX_BINDING_CLUSTER_IDS=4                       /
+//                          "-DDEFAULT_KEY={0x01, 0x03, 0x05, 0x07, 0x09,     /
+//                          0x0B, 0x0D, 0x0F, 0x00, 0x02, 0x04, 0x06, 0x08,   /
+//                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
+//                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
+//                          __code" -DGENERIC=__generic                       /
+//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
+//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
+//                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\Source\oled_ssd /
+//                          1306.c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D         /
+//                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC               /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA   /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\       /
+//                          --diag_suppress Pe001,Pa010 -o                    /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e     /
+//                          --no_code_motion --debug --core=plain             /
+//                          --dptr=16,1 --data_model=large                    /
+//                          --code_model=banked --calling_convention=xdata_re /
+//                          entrant --place_constants=data_rom                /
+//                          --nr_virtual_regs 16 -I                           /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\ -I                           /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\Source\ -I                 /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I   /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\hal /
+//                          \include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project /
+//                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C /
+//                          omponents\hal\target\CC2530EB\ -I                 /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\mac /
+//                          \include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project /
+//                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\C /
+//                          omponents\mac\high_level\ -I                      /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\mac /
+//                          \low_level\srf04\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a /
+//                          \Projects\zstack\Samples\ZbNode\CC2530DB\..\..\.. /
+//                          \..\..\Components\mac\low_level\srf04\single_chip /
+//                          \ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack /
+//                          \Samples\ZbNode\CC2530DB\..\..\..\..\..\Component /
+//                          s\mt\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zs /
+//                          tack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo /
+//                          nents\osal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\ /
+//                          ..\..\..\Components\services\saddr\ -I            /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\ser /
+//                          vices\sdata\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Proj /
+//                          ects\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\. /
+//                          .\Components\stack\af\ -I                         /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\sta /
+//                          ck\nwk\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ /
+//                          zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com /
+//                          ponents\stack\sapi\ -I D:\ZNJJ\ZStack-CC2530-2.5. /
+//                          1a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\ /
+//                          ..\..\..\Components\stack\sec\ -I                 /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\sta /
+//                          ck\sys\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ /
+//                          zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Com /
+//                          ponents\stack\zdo\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 /
+//                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\..\. /
+//                          .\..\..\Components\zmac\ -I                       /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\..\..\..\..\..\Components\zma /
+//                          c\f8w\ -Ohz --require_prototypes                  /
+//    List file          =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\oled_s /
+//                          sd1306.s51                                        /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME oled_ssd1306
+
+        RTMODEL "__SystemLibrary", "CLib"
+        RTMODEL "__calling_convention", "xdata_reentrant"
+        RTMODEL "__code_model", "banked"
+        RTMODEL "__core", "plain"
+        RTMODEL "__data_model", "large"
+        RTMODEL "__dptr_size", "16"
+        RTMODEL "__extended_stack", "disabled"
+        RTMODEL "__location_for_constants", "data"
+        RTMODEL "__number_of_dptrs", "1"
+        RTMODEL "__rt_version", "1"
+
+        RSEG DOVERLAY:DATA:NOROOT(0)
+        RSEG IOVERLAY:IDATA:NOROOT(0)
+        RSEG ISTACK:IDATA:NOROOT(0)
+        RSEG PSTACK:XDATA:NOROOT(0)
+        RSEG XSTACK:XDATA:NOROOT(0)
+
+        EXTERN ?BANKED_ENTER_XDATA
+        EXTERN ?BANKED_LEAVE_XDATA
+        EXTERN ?BDISPATCH
+        EXTERN ?BRET
+        EXTERN ?S_SHL
+        EXTERN ?V0
+
+        FUNCTION ??oled_set_pos?relay,0203H
+        PUBLIC ??oled_ssd1306_clear?relay
+        FUNCTION ??oled_ssd1306_clear?relay,0203H
+        PUBLIC ??oled_ssd1306_draw_text?relay
+        FUNCTION ??oled_ssd1306_draw_text?relay,0203H
+        PUBLIC ??oled_ssd1306_init?relay
+        FUNCTION ??oled_ssd1306_init?relay,0203H
+        FUNCTION ??oled_wait_ms?relay,0203H
+        FUNCTION ??oled_write?relay,0203H
+        FUNCTION oled_set_pos,021203H
+        ARGFRAME XSTACK, 17, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC oled_ssd1306_clear
+        FUNCTION oled_ssd1306_clear,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 9, STACK
+        PUBLIC oled_ssd1306_draw_text
+        FUNCTION oled_ssd1306_draw_text,021203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME XSTACK, 17, STACK
+        PUBLIC oled_ssd1306_init
+        FUNCTION oled_ssd1306_init,021203H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
+        FUNCTION oled_wait_ms,021203H
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 9, STACK
+        FUNCTION oled_write,021203H
+        ARGFRAME XSTACK, 17, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 9, STACK
+        
+        CFI Names cfiNames0
+        CFI StackFrame CFA_SP SP IDATA
+        CFI StackFrame CFA_PSP16 PSP16 XDATA
+        CFI StackFrame CFA_XSP16 XSP16 XDATA
+        CFI StaticOverlayFrame CFA_IOVERLAY IOVERLAY
+        CFI StaticOverlayFrame CFA_DOVERLAY DOVERLAY
+        CFI Resource `PSW.CY`:1, `B.BR0`:1, `B.BR1`:1, `B.BR2`:1, `B.BR3`:1
+        CFI Resource `B.BR4`:1, `B.BR5`:1, `B.BR6`:1, `B.BR7`:1, `VB.BR8`:1
+        CFI Resource `VB.BR9`:1, `VB.BR10`:1, `VB.BR11`:1, `VB.BR12`:1
+        CFI Resource `VB.BR13`:1, `VB.BR14`:1, `VB.BR15`:1, VB:8, B:8, A:8
+        CFI Resource PSW:8, DPL0:8, DPH0:8, R0:8, R1:8, R2:8, R3:8, R4:8, R5:8
+        CFI Resource R6:8, R7:8, V0:8, V1:8, V2:8, V3:8, V4:8, V5:8, V6:8, V7:8
+        CFI Resource V8:8, V9:8, V10:8, V11:8, V12:8, V13:8, V14:8, V15:8, SP:8
+        CFI Resource PSPH:8, PSPL:8, PSP16:16, XSPH:8, XSPL:8, XSP16:16
+        CFI VirtualResource ?RET:24
+        CFI Resource ?BRET_EXT:8
+        CFI VirtualResource ?RET_HIGH:8, ?RET_LOW:8
+        CFI ResourceParts PSP16 PSPH, PSPL
+        CFI ResourceParts XSP16 XSPH, XSPL
+        CFI ResourceParts ?RET ?BRET_EXT, ?RET_HIGH, ?RET_LOW
+        CFI EndNames cfiNames0
+        
+        CFI Common cfiCommon0 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-3
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B Undefined
+        CFI A Undefined
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 Undefined
+        CFI R1 Undefined
+        CFI R2 Undefined
+        CFI R3 Undefined
+        CFI R4 Undefined
+        CFI R5 Undefined
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI V8 SameValue
+        CFI V9 SameValue
+        CFI V10 SameValue
+        CFI V11 SameValue
+        CFI V12 SameValue
+        CFI V13 SameValue
+        CFI V14 SameValue
+        CFI V15 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?BRET_EXT Frame(CFA_SP, 3)
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon0
+        
+        
+        CFI Common cfiCommon1 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-2
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B SameValue
+        CFI A SameValue
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 SameValue
+        CFI R1 SameValue
+        CFI R2 SameValue
+        CFI R3 SameValue
+        CFI R4 SameValue
+        CFI R5 SameValue
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI V8 SameValue
+        CFI V9 SameValue
+        CFI V10 SameValue
+        CFI V11 SameValue
+        CFI V12 SameValue
+        CFI V13 SameValue
+        CFI V14 SameValue
+        CFI V15 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?BRET_EXT SameValue
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon1
+        
+Onboard_wait        SYMBOL "Onboard_wait"
+soft_i2c_start      SYMBOL "soft_i2c_start"
+soft_i2c_write_byte SYMBOL "soft_i2c_write_byte"
+soft_i2c_stop       SYMBOL "soft_i2c_stop"
+soft_i2c_init       SYMBOL "soft_i2c_init"
+??Onboard_wait?relay SYMBOL "?relay", Onboard_wait
+??soft_i2c_init?relay SYMBOL "?relay", soft_i2c_init
+??soft_i2c_start?relay SYMBOL "?relay", soft_i2c_start
+??soft_i2c_stop?relay SYMBOL "?relay", soft_i2c_stop
+??soft_i2c_write_byte?relay SYMBOL "?relay", soft_i2c_write_byte
+oled_ssd1306_clear  SYMBOL "oled_ssd1306_clear"
+??oled_ssd1306_clear?relay SYMBOL "?relay", oled_ssd1306_clear
+oled_ssd1306_draw_text SYMBOL "oled_ssd1306_draw_text"
+??oled_ssd1306_draw_text?relay SYMBOL "?relay", oled_ssd1306_draw_text
+oled_ssd1306_init   SYMBOL "oled_ssd1306_init"
+??oled_ssd1306_init?relay SYMBOL "?relay", oled_ssd1306_init
+
+        EXTERN Onboard_wait
+        FUNCTION Onboard_wait,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN soft_i2c_start
+        FUNCTION soft_i2c_start,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN soft_i2c_write_byte
+        FUNCTION soft_i2c_write_byte,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN soft_i2c_stop
+        FUNCTION soft_i2c_stop,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN soft_i2c_init
+        FUNCTION soft_i2c_init,0202H
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN ??Onboard_wait?relay
+        FUNCTION ??Onboard_wait?relay,00H
+        EXTERN ??soft_i2c_init?relay
+        FUNCTION ??soft_i2c_init?relay,00H
+        EXTERN ??soft_i2c_start?relay
+        FUNCTION ??soft_i2c_start?relay,00H
+        EXTERN ??soft_i2c_stop?relay
+        FUNCTION ??soft_i2c_stop?relay,00H
+        EXTERN ??soft_i2c_write_byte?relay
+        FUNCTION ??soft_i2c_write_byte?relay,00H
+
+// D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\oled_ssd1306.c
+//    1 /*
+//    2  * SSD1306 128x64 OLED 驱动（节点侧）。
+//    3  * 与 GwCoord/Source/oled_ssd1306.c 同源；初始化序列与 STM32 实测可亮的版本一致。
+//    4  */
+//    5 
+//    6 #include "oled_ssd1306.h"
+//    7 
+//    8 #include "soft_i2c.h"
+//    9 #include "OnBoard.h"
+//   10 #include "../../../../../../STM32/Hardware/OLED/oledfont.h"
+
+        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        DATA8
+// static unsigned char const __xdata_rom asc2_1608[95][16]
+asc2_1608:
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 31
+        DB 204
+        DB 0
+        DB 12
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 8
+        DB 0
+        DB 48
+        DB 0
+        DB 96
+        DB 0
+        DB 8
+        DB 0
+        DB 48
+        DB 0
+        DB 96
+        DB 0
+        DB 0
+        DB 0
+        DB 2
+        DB 32
+        DB 3
+        DB 252
+        DB 30
+        DB 32
+        DB 2
+        DB 32
+        DB 3
+        DB 252
+        DB 30
+        DB 32
+        DB 2
+        DB 32
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 14
+        DB 24
+        DB 17
+        DB 4
+        DB 63
+        DB 255
+        DB 16
+        DB 132
+        DB 12
+        DB 120
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 15
+        DB 0
+        DB 16
+        DB 132
+        DB 15
+        DB 56
+        DB 0
+        DB 192
+        DB 7
+        DB 120
+        DB 24
+        DB 132
+        DB 0
+        DB 120
+        DB 0
+        DB 0
+        DB 0
+        DB 120
+        DB 15
+        DB 132
+        DB 16
+        DB 196
+        DB 17
+        DB 36
+        DB 14
+        DB 152
+        DB 0
+        DB 228
+        DB 0
+        DB 132
+        DB 0
+        DB 8
+        DB 8
+        DB 0
+        DB 104
+        DB 0
+        DB 112
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 7
+        DB 224
+        DB 24
+        DB 24
+        DB 32
+        DB 4
+        DB 64
+        DB 2
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 64
+        DB 2
+        DB 32
+        DB 4
+        DB 24
+        DB 24
+        DB 7
+        DB 224
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 2
+        DB 64
+        DB 2
+        DB 64
+        DB 1
+        DB 128
+        DB 15
+        DB 240
+        DB 1
+        DB 128
+        DB 2
+        DB 64
+        DB 2
+        DB 64
+        DB 0
+        DB 0
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 15
+        DB 248
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 0
+        DB 13
+        DB 0
+        DB 14
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 0
+        DB 0
+        DB 12
+        DB 0
+        DB 12
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 6
+        DB 0
+        DB 24
+        DB 0
+        DB 96
+        DB 1
+        DB 128
+        DB 6
+        DB 0
+        DB 24
+        DB 0
+        DB 32
+        DB 0
+        DB 0
+        DB 0
+        DB 7
+        DB 240
+        DB 8
+        DB 8
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 8
+        DB 8
+        DB 7
+        DB 240
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 8
+        DB 4
+        DB 8
+        DB 4
+        DB 31
+        DB 252
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 14
+        DB 12
+        DB 16
+        DB 20
+        DB 16
+        DB 36
+        DB 16
+        DB 68
+        DB 17
+        DB 132
+        DB 14
+        DB 12
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 12
+        DB 24
+        DB 16
+        DB 4
+        DB 17
+        DB 4
+        DB 17
+        DB 4
+        DB 18
+        DB 136
+        DB 12
+        DB 112
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 224
+        DB 3
+        DB 32
+        DB 4
+        DB 36
+        DB 8
+        DB 36
+        DB 31
+        DB 252
+        DB 0
+        DB 36
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 31
+        DB 152
+        DB 16
+        DB 132
+        DB 17
+        DB 4
+        DB 17
+        DB 4
+        DB 16
+        DB 136
+        DB 16
+        DB 112
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 7
+        DB 240
+        DB 8
+        DB 136
+        DB 17
+        DB 4
+        DB 17
+        DB 4
+        DB 24
+        DB 136
+        DB 0
+        DB 112
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 28
+        DB 0
+        DB 16
+        DB 0
+        DB 16
+        DB 252
+        DB 19
+        DB 0
+        DB 28
+        DB 0
+        DB 16
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 14
+        DB 56
+        DB 17
+        DB 68
+        DB 16
+        DB 132
+        DB 16
+        DB 132
+        DB 17
+        DB 68
+        DB 14
+        DB 56
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 7
+        DB 0
+        DB 8
+        DB 140
+        DB 16
+        DB 68
+        DB 16
+        DB 68
+        DB 8
+        DB 136
+        DB 7
+        DB 240
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 3
+        DB 12
+        DB 3
+        DB 12
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 1
+        DB 6
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 128
+        DB 1
+        DB 64
+        DB 2
+        DB 32
+        DB 4
+        DB 16
+        DB 8
+        DB 8
+        DB 16
+        DB 4
+        DB 0
+        DB 0
+        DB 2
+        DB 32
+        DB 2
+        DB 32
+        DB 2
+        DB 32
+        DB 2
+        DB 32
+        DB 2
+        DB 32
+        DB 2
+        DB 32
+        DB 2
+        DB 32
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 8
+        DB 8
+        DB 4
+        DB 16
+        DB 2
+        DB 32
+        DB 1
+        DB 64
+        DB 0
+        DB 128
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 14
+        DB 0
+        DB 18
+        DB 0
+        DB 16
+        DB 12
+        DB 16
+        DB 108
+        DB 16
+        DB 128
+        DB 15
+        DB 0
+        DB 0
+        DB 0
+        DB 3
+        DB 224
+        DB 12
+        DB 24
+        DB 19
+        DB 228
+        DB 20
+        DB 36
+        DB 23
+        DB 196
+        DB 8
+        DB 40
+        DB 7
+        DB 208
+        DB 0
+        DB 0
+        DB 0
+        DB 4
+        DB 0
+        DB 60
+        DB 3
+        DB 196
+        DB 28
+        DB 64
+        DB 7
+        DB 64
+        DB 0
+        DB 228
+        DB 0
+        DB 28
+        DB 0
+        DB 4
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 17
+        DB 4
+        DB 17
+        DB 4
+        DB 17
+        DB 4
+        DB 14
+        DB 136
+        DB 0
+        DB 112
+        DB 0
+        DB 0
+        DB 3
+        DB 224
+        DB 12
+        DB 24
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 16
+        DB 8
+        DB 28
+        DB 16
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 8
+        DB 8
+        DB 7
+        DB 240
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 17
+        DB 4
+        DB 17
+        DB 4
+        DB 23
+        DB 196
+        DB 16
+        DB 4
+        DB 8
+        DB 24
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 17
+        DB 4
+        DB 17
+        DB 0
+        DB 23
+        DB 192
+        DB 16
+        DB 0
+        DB 8
+        DB 0
+        DB 0
+        DB 0
+        DB 3
+        DB 224
+        DB 12
+        DB 24
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 16
+        DB 68
+        DB 28
+        DB 120
+        DB 0
+        DB 64
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 16
+        DB 132
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 16
+        DB 132
+        DB 31
+        DB 252
+        DB 16
+        DB 4
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 3
+        DB 0
+        DB 1
+        DB 16
+        DB 1
+        DB 16
+        DB 1
+        DB 31
+        DB 254
+        DB 16
+        DB 0
+        DB 16
+        DB 0
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 17
+        DB 4
+        DB 3
+        DB 128
+        DB 20
+        DB 100
+        DB 24
+        DB 28
+        DB 16
+        DB 4
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 16
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 12
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 31
+        DB 0
+        DB 0
+        DB 252
+        DB 31
+        DB 0
+        DB 31
+        DB 252
+        DB 16
+        DB 4
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 12
+        DB 4
+        DB 3
+        DB 0
+        DB 0
+        DB 224
+        DB 16
+        DB 24
+        DB 31
+        DB 252
+        DB 16
+        DB 0
+        DB 7
+        DB 240
+        DB 8
+        DB 8
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 8
+        DB 8
+        DB 7
+        DB 240
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 16
+        DB 132
+        DB 16
+        DB 128
+        DB 16
+        DB 128
+        DB 16
+        DB 128
+        DB 15
+        DB 0
+        DB 0
+        DB 0
+        DB 7
+        DB 240
+        DB 8
+        DB 24
+        DB 16
+        DB 36
+        DB 16
+        DB 36
+        DB 16
+        DB 28
+        DB 8
+        DB 10
+        DB 7
+        DB 242
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 17
+        DB 4
+        DB 17
+        DB 0
+        DB 17
+        DB 192
+        DB 17
+        DB 48
+        DB 14
+        DB 12
+        DB 0
+        DB 4
+        DB 0
+        DB 0
+        DB 14
+        DB 28
+        DB 17
+        DB 4
+        DB 16
+        DB 132
+        DB 16
+        DB 132
+        DB 16
+        DB 68
+        DB 28
+        DB 56
+        DB 0
+        DB 0
+        DB 24
+        DB 0
+        DB 16
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 16
+        DB 4
+        DB 16
+        DB 0
+        DB 24
+        DB 0
+        DB 0
+        DB 0
+        DB 16
+        DB 0
+        DB 31
+        DB 248
+        DB 16
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 16
+        DB 4
+        DB 31
+        DB 248
+        DB 16
+        DB 0
+        DB 16
+        DB 0
+        DB 30
+        DB 0
+        DB 17
+        DB 224
+        DB 0
+        DB 28
+        DB 0
+        DB 112
+        DB 19
+        DB 128
+        DB 28
+        DB 0
+        DB 16
+        DB 0
+        DB 31
+        DB 192
+        DB 16
+        DB 60
+        DB 0
+        DB 224
+        DB 31
+        DB 0
+        DB 0
+        DB 224
+        DB 16
+        DB 60
+        DB 31
+        DB 192
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 24
+        DB 12
+        DB 22
+        DB 52
+        DB 1
+        DB 192
+        DB 1
+        DB 192
+        DB 22
+        DB 52
+        DB 24
+        DB 12
+        DB 16
+        DB 4
+        DB 16
+        DB 0
+        DB 28
+        DB 0
+        DB 19
+        DB 4
+        DB 0
+        DB 252
+        DB 19
+        DB 4
+        DB 28
+        DB 0
+        DB 16
+        DB 0
+        DB 0
+        DB 0
+        DB 8
+        DB 4
+        DB 16
+        DB 28
+        DB 16
+        DB 100
+        DB 16
+        DB 132
+        DB 19
+        DB 4
+        DB 28
+        DB 4
+        DB 16
+        DB 24
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 127
+        DB 254
+        DB 64
+        DB 2
+        DB 64
+        DB 2
+        DB 64
+        DB 2
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 48
+        DB 0
+        DB 12
+        DB 0
+        DB 3
+        DB 128
+        DB 0
+        DB 96
+        DB 0
+        DB 28
+        DB 0
+        DB 3
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 64
+        DB 2
+        DB 64
+        DB 2
+        DB 64
+        DB 2
+        DB 127
+        DB 254
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 32
+        DB 0
+        DB 64
+        DB 0
+        DB 64
+        DB 0
+        DB 64
+        DB 0
+        DB 32
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 0
+        DB 64
+        DB 0
+        DB 64
+        DB 0
+        DB 32
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 152
+        DB 1
+        DB 36
+        DB 1
+        DB 68
+        DB 1
+        DB 68
+        DB 1
+        DB 68
+        DB 0
+        DB 252
+        DB 0
+        DB 4
+        DB 16
+        DB 0
+        DB 31
+        DB 252
+        DB 0
+        DB 136
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 0
+        DB 136
+        DB 0
+        DB 112
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 112
+        DB 0
+        DB 136
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 0
+        DB 136
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 112
+        DB 0
+        DB 136
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 17
+        DB 8
+        DB 31
+        DB 252
+        DB 0
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 248
+        DB 1
+        DB 68
+        DB 1
+        DB 68
+        DB 1
+        DB 68
+        DB 1
+        DB 68
+        DB 0
+        DB 200
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 15
+        DB 252
+        DB 17
+        DB 4
+        DB 17
+        DB 4
+        DB 17
+        DB 0
+        DB 24
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 214
+        DB 1
+        DB 41
+        DB 1
+        DB 41
+        DB 1
+        DB 41
+        DB 1
+        DB 201
+        DB 1
+        DB 6
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 0
+        DB 132
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 4
+        DB 0
+        DB 252
+        DB 0
+        DB 4
+        DB 0
+        DB 0
+        DB 1
+        DB 4
+        DB 25
+        DB 4
+        DB 25
+        DB 252
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 3
+        DB 0
+        DB 1
+        DB 1
+        DB 1
+        DB 25
+        DB 1
+        DB 25
+        DB 254
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 0
+        DB 36
+        DB 0
+        DB 64
+        DB 1
+        DB 180
+        DB 1
+        DB 12
+        DB 1
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 16
+        DB 4
+        DB 16
+        DB 4
+        DB 31
+        DB 252
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 4
+        DB 1
+        DB 252
+        DB 1
+        DB 4
+        DB 1
+        DB 0
+        DB 1
+        DB 252
+        DB 1
+        DB 4
+        DB 1
+        DB 0
+        DB 0
+        DB 252
+        DB 1
+        DB 4
+        DB 1
+        DB 252
+        DB 0
+        DB 132
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 4
+        DB 0
+        DB 252
+        DB 0
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 248
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 0
+        DB 248
+        DB 0
+        DB 0
+        DB 1
+        DB 1
+        DB 1
+        DB 255
+        DB 0
+        DB 133
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 0
+        DB 136
+        DB 0
+        DB 112
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 112
+        DB 0
+        DB 136
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 1
+        DB 5
+        DB 1
+        DB 255
+        DB 0
+        DB 1
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 1
+        DB 252
+        DB 0
+        DB 132
+        DB 1
+        DB 4
+        DB 1
+        DB 0
+        DB 1
+        DB 128
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 204
+        DB 1
+        DB 36
+        DB 1
+        DB 36
+        DB 1
+        DB 36
+        DB 1
+        DB 36
+        DB 1
+        DB 152
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 0
+        DB 7
+        DB 248
+        DB 1
+        DB 4
+        DB 1
+        DB 4
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 0
+        DB 1
+        DB 248
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 0
+        DB 4
+        DB 1
+        DB 8
+        DB 1
+        DB 252
+        DB 0
+        DB 4
+        DB 1
+        DB 0
+        DB 1
+        DB 128
+        DB 1
+        DB 112
+        DB 0
+        DB 12
+        DB 0
+        DB 16
+        DB 1
+        DB 96
+        DB 1
+        DB 128
+        DB 1
+        DB 0
+        DB 1
+        DB 240
+        DB 1
+        DB 12
+        DB 0
+        DB 48
+        DB 1
+        DB 192
+        DB 0
+        DB 48
+        DB 1
+        DB 12
+        DB 1
+        DB 240
+        DB 1
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 4
+        DB 1
+        DB 140
+        DB 0
+        DB 116
+        DB 1
+        DB 112
+        DB 1
+        DB 140
+        DB 1
+        DB 4
+        DB 0
+        DB 0
+        DB 1
+        DB 1
+        DB 1
+        DB 129
+        DB 1
+        DB 113
+        DB 0
+        DB 14
+        DB 0
+        DB 24
+        DB 1
+        DB 96
+        DB 1
+        DB 128
+        DB 1
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 132
+        DB 1
+        DB 12
+        DB 1
+        DB 52
+        DB 1
+        DB 68
+        DB 1
+        DB 132
+        DB 1
+        DB 12
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 1
+        DB 0
+        DB 62
+        DB 252
+        DB 64
+        DB 2
+        DB 64
+        DB 2
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 255
+        DB 255
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 64
+        DB 2
+        DB 64
+        DB 2
+        DB 62
+        DB 252
+        DB 1
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 0
+        DB 96
+        DB 0
+        DB 128
+        DB 0
+        DB 128
+        DB 0
+        DB 64
+        DB 0
+        DB 64
+        DB 0
+        DB 32
+        DB 0
+        DB 32
+        DB 0
+//   11 
+//   12 #define OLED_ADDR      0x78u
+//   13 #define OLED_CMD_MODE  0x00u
+//   14 #define OLED_DAT_MODE  0x40u
+//   15 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   16 static void oled_wait_ms(uint16 ms)
+oled_wait_ms:
+        CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function oled_wait_ms
+        CODE
+//   17 {
+        FUNCALL oled_wait_ms, Onboard_wait
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+        MOV     A,R2
+        MOV     R6,A
+        MOV     A,R3
+        MOV     R7,A
+        SJMP    ??oled_wait_ms_0
+//   18     while (ms-- != 0u) {
+//   19         MicroWait(4000);
+??oled_wait_ms_1:
+        ; Setup parameters for call to function Onboard_wait
+        MOV     R2,#-0x60
+        MOV     R3,#0xf
+        LCALL   ??Onboard_wait?relay
+//   20     }
+??oled_wait_ms_0:
+        MOV     A,R6
+        MOV     R0,A
+        MOV     A,R7
+        MOV     R1,A
+        MOV     A,R0
+        ADD     A,#-0x1
+        DEC     R6
+        MOV     A,R1
+        ADDC    A,#-0x1
+        MOV     R7,A
+        MOV     A,R0
+        ORL     A,R1
+        JNZ     ??oled_wait_ms_1
+//   21 }
+        SJMP    ?Subroutine0
+        CFI EndBlock cfiBlock0
+//   22 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   23 static void oled_write(uint8 mode, uint8 value)
+oled_write:
+        CFI Block cfiBlock1 Using cfiCommon0
+        CFI Function oled_write
+        CODE
+//   24 {
+        FUNCALL oled_write, soft_i2c_start
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_write, soft_i2c_write_byte
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_write, soft_i2c_write_byte
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_write, soft_i2c_write_byte
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_write, soft_i2c_stop
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+        MOV     A,R1
+        MOV     R7,A
+        MOV     A,R2
+        MOV     R6,A
+//   25     soft_i2c_start();
+        ; Setup parameters for call to function soft_i2c_start
+        LCALL   ??soft_i2c_start?relay
+//   26     (void)soft_i2c_write_byte(OLED_ADDR);
+        ; Setup parameters for call to function soft_i2c_write_byte
+        MOV     R1,#0x78
+        LCALL   ??soft_i2c_write_byte?relay
+//   27     (void)soft_i2c_write_byte(mode);
+        ; Setup parameters for call to function soft_i2c_write_byte
+        MOV     A,R7
+        MOV     R1,A
+        LCALL   ??soft_i2c_write_byte?relay
+//   28     (void)soft_i2c_write_byte(value);
+        ; Setup parameters for call to function soft_i2c_write_byte
+        MOV     A,R6
+        MOV     R1,A
+        LCALL   ??soft_i2c_write_byte?relay
+//   29     soft_i2c_stop();
+        ; Setup parameters for call to function soft_i2c_stop
+        LCALL   ??soft_i2c_stop?relay
+//   30 }
+        SJMP    ?Subroutine0
+        CFI EndBlock cfiBlock1
+//   31 
+//   32 #define WR_CMD(c)  oled_write(OLED_CMD_MODE, (uint8)(c))
+//   33 #define WR_DAT(d)  oled_write(OLED_DAT_MODE, (uint8)(d))
+//   34 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   35 static void oled_set_pos(uint8 x, uint8 page)
+oled_set_pos:
+        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Function oled_set_pos
+        CODE
+//   36 {
+        FUNCALL oled_set_pos, oled_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_set_pos, oled_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_set_pos, oled_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+        MOV     A,R1
+        MOV     R6,A
+        MOV     A,R2
+        MOV     R7,A
+//   37     WR_CMD(0xB0u | page);
+        ; Setup parameters for call to function oled_write
+        MOV     A,#-0x50
+        ORL     A,R7
+        MOV     R2,A
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   38     WR_CMD(0x10u | ((x >> 4) & 0x0Fu));
+        ; Setup parameters for call to function oled_write
+        MOV     A,R6
+        SWAP    A
+        ANL     A,#0xf
+        ORL     A,#0x10
+        MOV     R2,A
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   39     WR_CMD(0x00u | (x & 0x0Fu));
+        ; Setup parameters for call to function oled_write
+        MOV     A,#0xf
+        ANL     A,R6
+        MOV     R2,A
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        CFI EndBlock cfiBlock2
+//   40 }
+        REQUIRE ?Subroutine0
+        ; // Fall through to label ?Subroutine0
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine0:
+        CFI Block cfiBlock3 Using cfiCommon0
+        CFI NoFunction
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        MOV     R7,#0x1
+        LJMP    ?BANKED_LEAVE_XDATA
+        CFI EndBlock cfiBlock3
+//   41 
+//   42 static void oled_fill_page(uint8 page, uint8 value)
+//   43 {
+//   44     uint8 x;
+//   45 
+//   46     oled_set_pos(0, page);
+//   47     for (x = 0; x < 128u; ++x) {
+//   48         WR_DAT(value);
+//   49     }
+//   50 }
+//   51 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   52 void oled_ssd1306_init(void)
+oled_ssd1306_init:
+        CFI Block cfiBlock4 Using cfiCommon0
+        CFI Function oled_ssd1306_init
+        CODE
+//   53 {
+        FUNCALL oled_ssd1306_init, soft_i2c_init
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_wait_ms
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_write
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_wait_ms
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_init, oled_ssd1306_clear
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+//   54     soft_i2c_init();
+        ; Setup parameters for call to function soft_i2c_init
+        LCALL   ??soft_i2c_init?relay
+//   55     oled_wait_ms(120);
+        ; Setup parameters for call to function oled_wait_ms
+        MOV     R2,#0x78
+        MOV     R3,#0x0
+        LCALL   ??oled_wait_ms?relay
+//   56 
+//   57     WR_CMD(0xAE);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x52
+        LCALL   ?Subroutine2 & 0xFFFF
+//   58     WR_CMD(0x00); WR_CMD(0x10);
+??CrossCallReturnLabel_2:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x10
+        LCALL   ?Subroutine3 & 0xFFFF
+//   59     WR_CMD(0x40);
+//   60     WR_CMD(0x81); WR_CMD(0xCF);
+??CrossCallReturnLabel_4:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x7f
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x31
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   61     WR_CMD(0xA1);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x5f
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   62     WR_CMD(0xC8);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x38
+        LCALL   ?Subroutine4 & 0xFFFF
+//   63     WR_CMD(0xA6);
+//   64     WR_CMD(0xA8); WR_CMD(0x3F);
+??CrossCallReturnLabel_6:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x58
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x3f
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   65     WR_CMD(0xD3); WR_CMD(0x00);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x2d
+        LCALL   ?Subroutine2 & 0xFFFF
+//   66     WR_CMD(0xD5); WR_CMD(0x80);
+??CrossCallReturnLabel_3:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x2b
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x80
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   67     WR_CMD(0xD9); WR_CMD(0xF1);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x27
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0xf
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   68     WR_CMD(0xDA); WR_CMD(0x12);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x26
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x12
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   69     WR_CMD(0xDB); WR_CMD(0x40);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x25
+        LCALL   ?Subroutine3 & 0xFFFF
+//   70     WR_CMD(0x20); WR_CMD(0x02);
+??CrossCallReturnLabel_5:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x20
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x2
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   71     WR_CMD(0x8D); WR_CMD(0x14);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x73
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x14
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   72     WR_CMD(0xA4);
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x5c
+        LCALL   ?Subroutine4 & 0xFFFF
+//   73     WR_CMD(0xA6);
+//   74     WR_CMD(0xAF);
+??CrossCallReturnLabel_7:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x51
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+//   75 
+//   76     oled_wait_ms(20);
+        ; Setup parameters for call to function oled_wait_ms
+        MOV     R2,#0x14
+        MOV     R3,#0x0
+        LCALL   ??oled_wait_ms?relay
+//   77     oled_ssd1306_clear();
+        ; Setup parameters for call to function oled_ssd1306_clear
+        LCALL   ??oled_ssd1306_clear?relay
+//   78 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-4
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-3
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock4
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine4:
+        CFI Block cfiCond5 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_6
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        CFI Block cfiCond6 Using cfiCommon0
+        CFI (cfiCond6) NoFunction
+        CFI (cfiCond6) Conditional ??CrossCallReturnLabel_7
+        CFI (cfiCond6) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond6) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond6) CFA_SP SP+-5
+        CFI Block cfiPicker7 Using cfiCommon1
+        CFI (cfiPicker7) NoFunction
+        CFI (cfiPicker7) Picker
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#-0x5a
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        RET
+        CFI EndBlock cfiCond5
+        CFI EndBlock cfiCond6
+        CFI EndBlock cfiPicker7
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine3:
+        CFI Block cfiCond8 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_4
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        CFI Block cfiCond9 Using cfiCommon0
+        CFI (cfiCond9) NoFunction
+        CFI (cfiCond9) Conditional ??CrossCallReturnLabel_5
+        CFI (cfiCond9) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond9) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond9) CFA_SP SP+-5
+        CFI Block cfiPicker10 Using cfiCommon1
+        CFI (cfiPicker10) NoFunction
+        CFI (cfiPicker10) Picker
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x40
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        RET
+        CFI EndBlock cfiCond8
+        CFI EndBlock cfiCond9
+        CFI EndBlock cfiPicker10
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine2:
+        CFI Block cfiCond11 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_2
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        CFI Block cfiCond12 Using cfiCommon0
+        CFI (cfiCond12) NoFunction
+        CFI (cfiCond12) Conditional ??CrossCallReturnLabel_3
+        CFI (cfiCond12) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond12) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond12) CFA_SP SP+-5
+        CFI Block cfiPicker13 Using cfiCommon1
+        CFI (cfiPicker13) NoFunction
+        CFI (cfiPicker13) Picker
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        ; Setup parameters for call to function oled_write
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x0
+        MOV     R1,#0x0
+        LCALL   ??oled_write?relay
+        RET
+        CFI EndBlock cfiCond11
+        CFI EndBlock cfiCond12
+        CFI EndBlock cfiPicker13
+//   79 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   80 void oled_ssd1306_clear(void)
+oled_ssd1306_clear:
+        CFI Block cfiBlock14 Using cfiCommon0
+        CFI Function oled_ssd1306_clear
+        CODE
+//   81 {
+        FUNCALL oled_ssd1306_clear, oled_set_pos
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_clear, oled_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 9, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 9, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x9
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
+        ; Saved register size: 9
+        ; Auto size: 0
+//   82     uint8 page;
+//   83 
+//   84     for (page = 0; page < 8u; ++page) {
+        MOV     R6,#0x0
+//   85         oled_fill_page(page, 0x00u);
+??oled_ssd1306_clear_0:
+        ; Setup parameters for call to function oled_set_pos
+        MOV     A,R6
+        MOV     R2,A
+        MOV     R1,#0x0
+        LCALL   ??oled_set_pos?relay
+        MOV     R7,#-0x80
+??oled_ssd1306_clear_1:
+        ; Setup parameters for call to function oled_write
+        MOV     R2,#0x0
+        MOV     R1,#0x40
+        LCALL   ??oled_write?relay
+        DEC     R7
+        MOV     A,R7
+        JNZ     ??oled_ssd1306_clear_1
+//   86     }
+        INC     R6
+        MOV     A,R6
+        CLR     C
+        SUBB    A,#0x8
+        JC      ??oled_ssd1306_clear_0
+//   87 }
+        LJMP    ?Subroutine0 & 0xFFFF
+        CFI EndBlock cfiBlock14
+//   88 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   89 void oled_ssd1306_draw_text(uint8 row, const char *text)
+oled_ssd1306_draw_text:
+        CFI Block cfiBlock15 Using cfiCommon0
+        CFI Function oled_ssd1306_draw_text
+        CODE
+//   90 {
+        FUNCALL oled_ssd1306_draw_text, oled_set_pos
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 17, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 17, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_draw_text, oled_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 17, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 17, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_draw_text, oled_set_pos
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 17, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 17, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL oled_ssd1306_draw_text, oled_write
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 17, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 17, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        MOV     A,#-0x11
+        LCALL   ?BANKED_ENTER_XDATA
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 17)
+        ; Saved register size: 17
+        ; Auto size: 0
+        MOV     A,R2
+        MOV     R6,A
+        MOV     A,R3
+        MOV     R7,A
+//   91     uint8 i;
+//   92     uint8 ch;
+//   93     uint8 x;
+//   94     uint8 page;
+//   95     uint8 col;
+//   96     const uint8 *glyph;
+//   97 
+//   98     if (row > 3u) {
+        MOV     A,R1
+        CLR     C
+        SUBB    A,#0x4
+        JC      $+5
+        LJMP    ??oled_ssd1306_draw_text_0 & 0xFFFF
+//   99         return;
+//  100     }
+//  101 
+//  102     page = (uint8)(row * 2u);
+        MOV     A,R1
+        CLR     C
+        RLC     A
+        MOV     ?V0 + 3,A
+//  103     x = 0u;
+        MOV     ?V0 + 2,#0x0
+//  104     for (i = 0; i < 16u; ++i) {
+        MOV     ?V0 + 7,#0x0
+//  105         ch = (text != 0 && text[i] != '\0') ? (uint8)text[i] : (uint8)' ';
+??oled_ssd1306_draw_text_1:
+        MOV     A,R6
+        ORL     A,R7
+        JZ      ??oled_ssd1306_draw_text_2
+        MOV     ?V0 + 0,?V0 + 7
+        MOV     A,R6
+        ADD     A,?V0 + 0
+        MOV     DPL,A
+        MOV     A,R7
+        ADDC    A,#0x0
+        MOV     DPH,A
+        MOVX    A,@DPTR
+        JZ      ??oled_ssd1306_draw_text_2
+        MOV     ?V0 + 0,A
+        SJMP    ??oled_ssd1306_draw_text_3
+??oled_ssd1306_draw_text_2:
+        MOV     ?V0 + 0,#0x20
+//  106         if (ch < 0x20u || ch > 0x7Eu) {
+??oled_ssd1306_draw_text_3:
+        MOV     A,#-0x20
+        ADD     A,?V0 + 0
+        CLR     C
+        SUBB    A,#0x5f
+        JC      ??oled_ssd1306_draw_text_4
+//  107             ch = (uint8)'?';
+        MOV     ?V0 + 0,#0x3f
+//  108         }
+//  109         glyph = (const uint8 *)&asc2_1608[ch - 0x20u][0];
+??oled_ssd1306_draw_text_4:
+        MOV     ?V0 + 1,#0x0
+        MOV     A,#0x4
+        MOV     R0,#?V0 + 0
+        LCALL   ?S_SHL
+        MOV     A,#asc2_1608 & 0xff
+        ADD     A,?V0 + 0
+        MOV     ?V0 + 0,A
+        MOV     A,#((asc2_1608 - 512) >> 8) & 0xff
+        ADDC    A,?V0 + 1
+        MOV     ?V0 + 1,A
+//  110 
+//  111         oled_set_pos(x, page);
+        ; Setup parameters for call to function oled_set_pos
+        MOV     R2,?V0 + 3
+        MOV     R1,?V0 + 2
+        LCALL   ??oled_set_pos?relay
+//  112         for (col = 0; col < 8u; ++col) {
+        MOV     ?V0 + 8,#0x0
+//  113             WR_DAT(glyph[col]);
+??oled_ssd1306_draw_text_5:
+        ; Setup parameters for call to function oled_write
+        LCALL   ?Subroutine5 & 0xFFFF
+//  114         }
+??CrossCallReturnLabel_8:
+        LCALL   ?Subroutine1 & 0xFFFF
+??CrossCallReturnLabel_0:
+        JC      ??oled_ssd1306_draw_text_5
+//  115         oled_set_pos(x, (uint8)(page + 1u));
+        ; Setup parameters for call to function oled_set_pos
+        MOV     A,#0x1
+        ADD     A,?V0 + 3
+        MOV     R2,A
+        MOV     R1,?V0 + 2
+        LCALL   ??oled_set_pos?relay
+//  116         for (col = 0; col < 8u; ++col) {
+        MOV     ?V0 + 8,#0x0
+//  117             WR_DAT(glyph[col + 8u]);
+??oled_ssd1306_draw_text_6:
+        ; Setup parameters for call to function oled_write
+        LCALL   ?Subroutine5 & 0xFFFF
+//  118         }
+??CrossCallReturnLabel_9:
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        INC     DPTR
+        LCALL   ?Subroutine1 & 0xFFFF
+??CrossCallReturnLabel_1:
+        JC      ??oled_ssd1306_draw_text_6
+//  119 
+//  120         x = (uint8)(x + 8u);
+        MOV     A,#0x8
+        ADD     A,?V0 + 2
+        MOV     ?V0 + 2,A
+//  121     }
+        INC     ?V0 + 7
+        MOV     A,?V0 + 7
+        CLR     C
+        SUBB    A,#0x10
+        JC      ??oled_ssd1306_draw_text_1
+??oled_ssd1306_draw_text_0:
+        MOV     R7,#0x9
+        LJMP    ?BANKED_LEAVE_XDATA
+        CFI EndBlock cfiBlock15
+//  122 }
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine5:
+        CFI Block cfiCond16 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_8
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 17)
+        CFI Block cfiCond17 Using cfiCommon0
+        CFI (cfiCond17) NoFunction
+        CFI (cfiCond17) Conditional ??CrossCallReturnLabel_9
+        CFI (cfiCond17) R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI (cfiCond17) VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI (cfiCond17) V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI (cfiCond17) V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI (cfiCond17) V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI (cfiCond17) V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI (cfiCond17) V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI (cfiCond17) V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI (cfiCond17) V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI (cfiCond17) V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI (cfiCond17) V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI (cfiCond17) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI (cfiCond17) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI (cfiCond17) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI (cfiCond17) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI (cfiCond17) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI (cfiCond17) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI (cfiCond17) CFA_SP SP+0
+        CFI (cfiCond17) CFA_XSP16 add(XSP16, 17)
+        CFI Block cfiPicker18 Using cfiCommon1
+        CFI (cfiPicker18) NoFunction
+        CFI (cfiPicker18) Picker
+        MOV     ?V0 + 4,?V0 + 8
+        MOV     A,?V0 + 0
+        ADD     A,?V0 + 4
+        MOV     DPL,A
+        MOV     A,?V0 + 1
+        ADDC    A,#0x0
+        MOV     DPH,A
+        RET
+        CFI EndBlock cfiCond16
+        CFI EndBlock cfiCond17
+        CFI EndBlock cfiPicker18
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+?Subroutine1:
+        CFI Block cfiCond19 Using cfiCommon0
+        CFI NoFunction
+        CFI Conditional ??CrossCallReturnLabel_0
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 17)
+        CFI Block cfiCond20 Using cfiCommon0
+        CFI (cfiCond20) NoFunction
+        CFI (cfiCond20) Conditional ??CrossCallReturnLabel_1
+        CFI (cfiCond20) R6 load(1, XDATA, add(CFA_XSP16, literal(-17)))
+        CFI (cfiCond20) VB load(1, XDATA, add(CFA_XSP16, literal(-16)))
+        CFI (cfiCond20) V0 load(1, XDATA, add(CFA_XSP16, literal(-15)))
+        CFI (cfiCond20) V1 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI (cfiCond20) V2 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI (cfiCond20) V3 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI (cfiCond20) V4 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI (cfiCond20) V5 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI (cfiCond20) V6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI (cfiCond20) V7 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI (cfiCond20) V8 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI (cfiCond20) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI (cfiCond20) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI (cfiCond20) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI (cfiCond20) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI (cfiCond20) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI (cfiCond20) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI (cfiCond20) CFA_SP SP+0
+        CFI (cfiCond20) CFA_XSP16 add(XSP16, 17)
+        CFI Block cfiPicker21 Using cfiCommon1
+        CFI (cfiPicker21) NoFunction
+        CFI (cfiPicker21) Picker
+        MOVX    A,@DPTR
+        MOV     R2,A
+        MOV     R1,#0x40
+        LCALL   ??oled_write?relay
+        INC     ?V0 + 8
+        MOV     A,?V0 + 8
+        CLR     C
+        SUBB    A,#0x8
+        RET
+        CFI EndBlock cfiCond19
+        CFI EndBlock cfiCond20
+        CFI EndBlock cfiPicker21
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??oled_wait_ms?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    oled_wait_ms
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??oled_write?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    oled_write
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??oled_set_pos?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    oled_set_pos
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??oled_ssd1306_init?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    oled_ssd1306_init
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??oled_ssd1306_clear?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    oled_ssd1306_clear
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??oled_ssd1306_draw_text?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    oled_ssd1306_draw_text
+
+        END
+// 
+//   549 bytes in segment BANKED_CODE
+//    36 bytes in segment BANK_RELAYS
+// 1 520 bytes in segment XDATA_ROM_C
+// 
+//   585 bytes of CODE  memory
+// 1 520 bytes of CONST memory
+//
+//Errors: none
+//Warnings: 1
