@@ -410,6 +410,39 @@ static void send_ack(int32_t seq, uint8_t ok, const char *err)
     }
 }
 
+static int resolve_cmd_node(uint32_t req_node, uint16_t *resolved_nodeid,
+                            const node_state_t **resolved_ns)
+{
+    uint16_t nodeid;
+    const node_state_t *ns;
+
+    if (req_node == 1u) {
+        nodeid = router_node1_id();
+    } else if (req_node == 2u) {
+        nodeid = router_node2_id();
+    } else if (req_node <= 0xFFFFu) {
+        nodeid = (uint16_t)req_node;
+    } else {
+        return RC_ERR_PARAM;
+    }
+
+    if (nodeid == 0u) {
+        return RC_ERR_PARAM;
+    }
+
+    ns = router_node(nodeid);
+    if (ns == 0) {
+        return RC_ERR_PARAM;
+    }
+    if (!ns->online) {
+        return RC_ERR_BUSY;
+    }
+
+    *resolved_nodeid = nodeid;
+    *resolved_ns = ns;
+    return 0;
+}
+
 int router_cmd_onoff(uint16_t nodeid, uint8_t ep, uint8_t onoff)
 {
     uint8_t pl[8];
@@ -430,13 +463,15 @@ static void on_cmd_json(const char *line, uint16_t n)
     char target[16];
     char op[8];
     int32_t seq;
-    uint32_t node;
+    uint32_t node_req;
+    uint16_t nodeid;
     uint8_t ep;
     uint8_t onoff;
     const node_state_t *ns;
+    int rc;
 
     seq = 0;
-    node = 0;
+    node_req = 0;
 
     if (json_get_string(line, n, "target", target, sizeof(target)) != 0) {
         send_ack(0, 0, "bad");
@@ -447,17 +482,27 @@ static void on_cmd_json(const char *line, uint16_t n)
         return;
     }
     (void)json_get_int(line, n, "seq", &seq);
-    if (json_get_uint(line, n, "node", &node) != 0) {
+    if (json_get_uint(line, n, "node", &node_req) != 0) {
         send_ack(seq, 0, "node");
         return;
     }
 
-    if (strcmp(target, "led") == 0) {
+    if (strcmp(target, "led") == 0 || strcmp(target, "led1") == 0) {
         ep = 1u;
     } else if (strcmp(target, "buzzer") == 0) {
         ep = 2u;
     } else {
         send_ack(seq, 0, "target");
+        return;
+    }
+
+    rc = resolve_cmd_node(node_req, &nodeid, &ns);
+    if (rc == RC_ERR_PARAM) {
+        send_ack(seq, 0, "node");
+        return;
+    }
+    if (rc == RC_ERR_BUSY) {
+        send_ack(seq, 0, "offline");
         return;
     }
 
@@ -467,11 +512,6 @@ static void on_cmd_json(const char *line, uint16_t n)
         onoff = 0u;
     } else if (strcmp(op, "toggle") == 0) {
         /* 使用网关缓存的执行器状态翻转；缓存未知按关处理（上次确认为关或未知）。 */
-        ns = router_node((uint16_t)node);
-        if (ns == 0) {
-            send_ack(seq, 0, "node");
-            return;
-        }
         if (ep == 1u) {
             onoff = (uint8_t)(ns->led_state ? 0u : 1u);
         } else {
@@ -482,11 +522,11 @@ static void on_cmd_json(const char *line, uint16_t n)
         return;
     }
 
-    if (router_cmd_onoff((uint16_t)node, ep, onoff) != 0) {
+    if (router_cmd_onoff(nodeid, ep, onoff) != 0) {
         send_ack(seq, 0, "tx");
         return;
     }
-    automation_manual_override((uint16_t)node, ep, ms_now());
+    automation_manual_override(nodeid, ep, ms_now());
     send_ack(seq, 1, 0);
 }
 
@@ -553,8 +593,13 @@ static void on_allow_join(const char *line, uint16_t n)
 void router_on_json_line(const char *line, uint16_t n)
 {
     char t[16];
+    int32_t seq;
+
+    seq = 0;
+    (void)json_get_int(line, n, "seq", &seq);
 
     if (json_get_string(line, n, "t", t, sizeof(t)) != 0) {
+        send_ack(seq, 0, "json");
         return;
     }
 
@@ -577,5 +622,7 @@ void router_on_json_line(const char *line, uint16_t n)
         if (k > 0) {
             (void)wifi_link_send_line(buf, (uint16_t)k);
         }
+    } else {
+        send_ack(seq, 0, "type");
     }
 }
