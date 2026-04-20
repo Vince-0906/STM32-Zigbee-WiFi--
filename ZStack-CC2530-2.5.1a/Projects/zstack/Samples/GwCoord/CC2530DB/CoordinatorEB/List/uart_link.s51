@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        19/Apr/2026  20:43:33 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:52:52 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\Source\uart_link.c                    /
@@ -55,10 +55,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\GwCoord\CC2530DB\ -I                          /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\GwCoord\CC2530DB\ -I                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\..\Source\ -I                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -544,6 +543,13 @@ s_owner_task:
         DATA8
         DS 1
         REQUIRE `?<Initializer for s_owner_task>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_1:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_1>`
         REQUIRE __INIT_XDATA_I
 //   31 
 //   32 /* HalUART 回调：在中断/驱动层调用 */
@@ -1325,9 +1331,9 @@ uart_link_ok_cnt:
         DATA8
         DB 255
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_1>`:
         DATA32
-__Constant_1:
         DD 1
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -1376,14 +1382,12 @@ __Constant_1:
 // 
 // 598 bytes in segment BANKED_CODE
 //  42 bytes in segment BANK_RELAYS
-//   1 byte  in segment XDATA_I
-//   1 byte  in segment XDATA_ID
-//   4 bytes in segment XDATA_ROM_C
+//   5 bytes in segment XDATA_I
+//   5 bytes in segment XDATA_ID
 // 218 bytes in segment XDATA_Z
 // 
-// 641 bytes of CODE  memory
-//   0 bytes of CONST memory (+ 4 bytes shared)
-// 219 bytes of XDATA memory
+// 641 bytes of CODE  memory (+ 4 bytes shared)
+// 219 bytes of XDATA memory (+ 4 bytes shared)
 //
 //Errors: none
 //Warnings: 1

@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:25:58 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:46:03 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\commo #
 #                          n\OSAL.c                                           #
@@ -53,18 +53,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -3242,8 +3241,20 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL.c
    1183          }
 
    \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "0">>`:
+   \   000000   3000         DB "0"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for activeTaskID>`:
    \   000000   FF           DB 255
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_2710>`:
+   \   000000   10270000     DD 10000
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_5f5e100>`:
+   \   000000   00E1F505     DD 100000000
 
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??osal_strlen?relay:
@@ -3405,38 +3416,38 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL.c
    \   000000   12....       LCALL   ?BDISPATCH
    \   000003   ......       DC24    osal_self
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
    \                     `?<Constant "">`:
-   \   000000   00           DB ""
-   \   000001   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
-   \            00000000
-   \   000009   00           DB 0
+   \   000000                DS 10
+   \   00000A                REQUIRE __INIT_XDATA_Z
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
    \                     `?<Constant "">_1`:
-   \   000000   00           DB ""
-   \   000001   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
-   \            00000000
-   \   000009   00           DB 0
+   \   000000                DS 10
+   \   00000A                REQUIRE __INIT_XDATA_Z
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
    \                     `?<Constant "">_2`:
-   \   000000   00           DB ""
-   \   000001   00000000     DB 0, 0, 0, 0, 0, 0, 0, 0
-   \            00000000
-   \   000009   00           DB 0
+   \   000000                DS 10
+   \   00000A                REQUIRE __INIT_XDATA_Z
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "0">`:
-   \   000000   3000         DB "0"
+   \   000000                DS 2
+   \   000002                REQUIRE `?<Initializer for <Constant "0">>`
+   \   000002                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_2710:
-   \   000000   10270000     DD 10000
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_2710>`
+   \   000004                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_5f5e100:
-   \   000000   00E1F505     DD 100000000
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_5f5e100>`
+   \   000004                REQUIRE __INIT_XDATA_I
    1184          
    1185          /*********************************************************************
    1186           */
@@ -3520,131 +3531,132 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL.c
 
    Segment part sizes:
 
-     Function/Label                  Bytes
-     --------------                  -----
-     _A_IEN0                            1
-     osal_qHead                         2
-     activeTaskID                       1
-     osal_strlen                       10
-     ?Subroutine0                       7
-     osal_memcpy                       61
-     ?Subroutine18                     15
-     osal_revmemcpy                    65
-     ??Subroutine26_0                   5
-     ?Subroutine12                      4
-     ?Subroutine24                      6
-     osal_memdup                       57
-     osal_memcmp                      110
-     osal_memset                       33
-     ?Subroutine2                       5
-     osal_build_uint16                 23
-     osal_build_uint32                131
-     ?Subroutine14                     15
-     ?Subroutine5                       6
-     ?Subroutine22                     24
-     ??Subroutine34_0                   5
-     _ltoa                            601
-     ?Subroutine10                     10
-     ?Subroutine9                       8
-     ?Subroutine6                       6
-     ?Subroutine23                      7
-     ?Subroutine4                      28
-     ?Subroutine15                      9
-     osal_rand                          9
-     osal_msg_allocate                 83
-     osal_msg_deallocate               34
-     ?Subroutine16                     13
-     osal_msg_send                     81
-     ??Subroutine27_0                   5
-     ??Subroutine29_0                   8
-     ??Subroutine31_0                   5
-     osal_msg_receive                 145
-     osal_msg_find                     60
-     ??Subroutine28_0                   6
-     ?Subroutine1                       2
-     ??Subroutine25_0                   2
-     osal_msg_enqueue                  46
-     ?Subroutine11                     10
-     ?Subroutine7                       4
-     ?Subroutine20                      3
-     ??Subroutine30_0                   3
-     ?Subroutine19                     15
-     ?Subroutine8                       6
-     ??Subroutine32_0                   4
-     ??Subroutine33_0                   6
-     osal_msg_dequeue                  90
-     ?Subroutine21                      1
-     osal_msg_push                     44
-     osal_msg_extract                  93
-     osal_msg_enqueue_max              63
-     osal_set_event                    63
-     osal_clear_event                  53
-     ?Subroutine13                     20
-     osal_isr_register                  5
-     osal_int_enable                   18
-     osal_int_disable                  18
-     osal_init_system                  31
-     osal_start_system                  9
-     osal_run_system                  153
-     osal_buffer_uint32                46
-     ?Subroutine3                      13
-     ?Subroutine17                     10
-     osal_buffer_uint24                31
-     osal_isbufset                     46
-     osal_self                         12
-     ?<Initializer for activeTaskID>    1
-     ??osal_strlen?relay                6
-     ??osal_memcpy?relay                6
-     ??osal_revmemcpy?relay             6
-     ??osal_memdup?relay                6
-     ??osal_memcmp?relay                6
-     ??osal_memset?relay                6
-     ??osal_build_uint16?relay          6
-     ??osal_build_uint32?relay          6
-     ??_ltoa?relay                      6
-     ??osal_rand?relay                  6
-     ??osal_msg_allocate?relay          6
-     ??osal_msg_deallocate?relay        6
-     ??osal_msg_send?relay              6
-     ??osal_msg_receive?relay           6
-     ??osal_msg_find?relay              6
-     ??osal_msg_enqueue?relay           6
-     ??osal_msg_dequeue?relay           6
-     ??osal_msg_push?relay              6
-     ??osal_msg_extract?relay           6
-     ??osal_msg_enqueue_max?relay       6
-     ??osal_set_event?relay             6
-     ??osal_clear_event?relay           6
-     ??osal_isr_register?relay          6
-     ??osal_int_enable?relay            6
-     ??osal_int_disable?relay           6
-     ??osal_init_system?relay           6
-     ??osal_start_system?relay          6
-     ??osal_run_system?relay            6
-     ??osal_buffer_uint32?relay         6
-     ??osal_buffer_uint24?relay         6
-     ??osal_isbufset?relay              6
-     ??osal_self?relay                  6
-     ?<Constant "">                    10
-     ?<Constant "">_1                  10
-     ?<Constant "">_2                  10
-     ?<Constant "0">                    2
-     __Constant_2710                    4
-     __Constant_5f5e100                 4
+     Function/Label                        Bytes
+     --------------                        -----
+     _A_IEN0                                  1
+     osal_qHead                               2
+     activeTaskID                             1
+     osal_strlen                             10
+     ?Subroutine0                             7
+     osal_memcpy                             61
+     ?Subroutine18                           15
+     osal_revmemcpy                          65
+     ??Subroutine26_0                         5
+     ?Subroutine12                            4
+     ?Subroutine24                            6
+     osal_memdup                             57
+     osal_memcmp                            110
+     osal_memset                             33
+     ?Subroutine2                             5
+     osal_build_uint16                       23
+     osal_build_uint32                      131
+     ?Subroutine14                           15
+     ?Subroutine5                             6
+     ?Subroutine22                           24
+     ??Subroutine34_0                         5
+     _ltoa                                  601
+     ?Subroutine10                           10
+     ?Subroutine9                             8
+     ?Subroutine6                             6
+     ?Subroutine23                            7
+     ?Subroutine4                            28
+     ?Subroutine15                            9
+     osal_rand                                9
+     osal_msg_allocate                       83
+     osal_msg_deallocate                     34
+     ?Subroutine16                           13
+     osal_msg_send                           81
+     ??Subroutine27_0                         5
+     ??Subroutine29_0                         8
+     ??Subroutine31_0                         5
+     osal_msg_receive                       145
+     osal_msg_find                           60
+     ??Subroutine28_0                         6
+     ?Subroutine1                             2
+     ??Subroutine25_0                         2
+     osal_msg_enqueue                        46
+     ?Subroutine11                           10
+     ?Subroutine7                             4
+     ?Subroutine20                            3
+     ??Subroutine30_0                         3
+     ?Subroutine19                           15
+     ?Subroutine8                             6
+     ??Subroutine32_0                         4
+     ??Subroutine33_0                         6
+     osal_msg_dequeue                        90
+     ?Subroutine21                            1
+     osal_msg_push                           44
+     osal_msg_extract                        93
+     osal_msg_enqueue_max                    63
+     osal_set_event                          63
+     osal_clear_event                        53
+     ?Subroutine13                           20
+     osal_isr_register                        5
+     osal_int_enable                         18
+     osal_int_disable                        18
+     osal_init_system                        31
+     osal_start_system                        9
+     osal_run_system                        153
+     osal_buffer_uint32                      46
+     ?Subroutine3                            13
+     ?Subroutine17                           10
+     osal_buffer_uint24                      31
+     osal_isbufset                           46
+     osal_self                               12
+     ?<Initializer for <Constant "0">>        2
+     ?<Initializer for activeTaskID>          1
+     ?<Initializer for __Constant_2710>       4
+     ?<Initializer for __Constant_5f5e100>    4
+     ??osal_strlen?relay                      6
+     ??osal_memcpy?relay                      6
+     ??osal_revmemcpy?relay                   6
+     ??osal_memdup?relay                      6
+     ??osal_memcmp?relay                      6
+     ??osal_memset?relay                      6
+     ??osal_build_uint16?relay                6
+     ??osal_build_uint32?relay                6
+     ??_ltoa?relay                            6
+     ??osal_rand?relay                        6
+     ??osal_msg_allocate?relay                6
+     ??osal_msg_deallocate?relay              6
+     ??osal_msg_send?relay                    6
+     ??osal_msg_receive?relay                 6
+     ??osal_msg_find?relay                    6
+     ??osal_msg_enqueue?relay                 6
+     ??osal_msg_dequeue?relay                 6
+     ??osal_msg_push?relay                    6
+     ??osal_msg_extract?relay                 6
+     ??osal_msg_enqueue_max?relay             6
+     ??osal_set_event?relay                   6
+     ??osal_clear_event?relay                 6
+     ??osal_isr_register?relay                6
+     ??osal_int_enable?relay                  6
+     ??osal_int_disable?relay                 6
+     ??osal_init_system?relay                 6
+     ??osal_start_system?relay                6
+     ??osal_run_system?relay                  6
+     ??osal_buffer_uint32?relay               6
+     ??osal_buffer_uint24?relay               6
+     ??osal_isbufset?relay                    6
+     ??osal_self?relay                        6
+     ?<Constant "">                          10
+     ?<Constant "">_1                        10
+     ?<Constant "">_2                        10
+     ?<Constant "0">                          2
+     __Constant_2710                          4
+     __Constant_5f5e100                       4
 
  
  2 620 bytes in segment BANKED_CODE
    192 bytes in segment BANK_RELAYS
      1 byte  in segment SFR_AN
-     1 byte  in segment XDATA_I
-     1 byte  in segment XDATA_ID
-    40 bytes in segment XDATA_ROM_C
-     2 bytes in segment XDATA_Z
+    11 bytes in segment XDATA_I
+    11 bytes in segment XDATA_ID
+    32 bytes in segment XDATA_Z
  
- 2 813 bytes of CODE  memory
-    32 bytes of CONST memory (+ 8 bytes shared)
+ 2 815 bytes of CODE  memory (+ 8 bytes shared)
      0 bytes of DATA  memory (+ 1 byte  shared)
-     3 bytes of XDATA memory
+    35 bytes of XDATA memory (+ 8 bytes shared)
 
 Errors: none
 Warnings: none

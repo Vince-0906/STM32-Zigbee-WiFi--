@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:26:03 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:46:04 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\low_l /
 //                          evel\srf04\single_chip\mac_mcu.c                  /
@@ -54,10 +54,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -155,6 +154,7 @@
         EXTERN ?XSP
         EXTERN ?XSTACK_DISP0_8
         EXTERN ?XSTORE_R2345
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         PUBLIC ??MAC_SetRandomSeedCB?relay
@@ -3823,14 +3823,28 @@ macMcuAccumulatedOverFlow:
 `??macMcuRfIsr??INTVEC 131`:
         LJMP       (macMcuRfIsr)
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_ff000000:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_ff000000>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_ff000000>`:
+        DATA32
         DD 4278190080
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_0:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_0>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_0>`:
+        DATA32
         DD 0
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -3951,13 +3965,13 @@ __Constant_0:
 //     9 bytes in segment INTVEC
 //   242 bytes in segment NEAR_CODE
 //    22 bytes in segment SFR_AN
-//     8 bytes in segment XDATA_ROM_C
+//     8 bytes in segment XDATA_I
+//     8 bytes in segment XDATA_ID
 //    17 bytes in segment XDATA_Z
 // 
-// 1 677 bytes of CODE  memory (+  9 bytes shared)
-//     0 bytes of CONST memory (+  8 bytes shared)
+// 1 677 bytes of CODE  memory (+ 17 bytes shared)
 //     0 bytes of DATA  memory (+ 22 bytes shared)
-//    17 bytes of XDATA memory
+//    17 bytes of XDATA memory (+  8 bytes shared)
 //
 //Errors: none
 //Warnings: none

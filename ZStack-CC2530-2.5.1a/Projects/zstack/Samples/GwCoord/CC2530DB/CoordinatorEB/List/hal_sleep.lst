@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:33 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:52:59 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target #
 #                          \CC2530EB\hal_sleep.c                              #
@@ -55,18 +55,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
-#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
-#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
-#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
-#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          es\GwCoord\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\Sou #
+#                          rce\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zsta #
+#                          ck\Samples\GwCoord\CC2530DB\..\..\..\ZMain\TI2530D #
+#                          B\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\hal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\ #
+#                          ..\Components\hal\target\CC2530EB\ -I              #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
 #                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
@@ -1058,6 +1057,54 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target\CC2530EB\hal_sleep.c
    \   000019                REQUIRE _A_IEN0
    \   000019                REQUIRE _A_IRCON
 
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_fffffffe:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_fffffffe>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_64:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_64>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_1f:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_1f>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_2d:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_2d>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_185197:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_185197>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_185196:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_185196>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_29f:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_29f>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_ffffffe9:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_ffffffe9>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
    \                                 In  segment INTVEC, offset 0x2b, root
    \                     `??halSleepTimerIsr??INTVEC 43`:
    \   00002B   02....       LJMP       (halSleepTimerIsr)
@@ -1070,36 +1117,36 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target\CC2530EB\hal_sleep.c
    \                     `?<Initializer for halSleepPconValue>`:
    \   000000   01           DB 1
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_fffffffe:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_fffffffe>`:
    \   000000   FEFFFFFF     DD 4294967294
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_64:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_64>`:
    \   000000   64000000     DD 100
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_1f:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_1f>`:
    \   000000   1F000000     DD 31
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_2d:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_2d>`:
    \   000000   2D000000     DD 45
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_185197:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_185197>`:
    \   000000   97511800     DD 1593751
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_185196:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_185196>`:
    \   000000   96511800     DD 1593750
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_29f:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_29f>`:
    \   000000   9F020000     DD 671
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_ffffffe9:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_ffffffe9>`:
    \   000000   E9FFFFFF     DD 4294967273
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -1162,48 +1209,56 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target\CC2530EB\hal_sleep.c
 
    Segment part sizes:
 
-     Function/Label                       Bytes
-     --------------                       -----
-     PCON                                    1
-     ST0                                     1
-     ST1                                     1
-     ST2                                     1
-     IEN2                                    1
-     _A_IEN0                                 1
-     STLOAD                                  1
-     _A_IEN1                                 1
-     SLEEPCMD                                1
-     _A_IRCON                                1
-     maxSleepLoopTime                        4
-     halSleepPconValue                       1
-     halPwrMgtMode                           1
-     halSetSleepMode                         8
-     halSetMaxSleepLoopTime                 34
-     halSleep                              293
-     ?Subroutine0                            5
-     ?Subroutine1                            2
-     ??Subroutine2_0                         7
-     halSleepSetTimer                      132
-     TimerElapsed                           11
-     halRestoreSleepLevel                    3
-     halSleepTimerIsr                       25
-     ??halSleepTimerIsr??INTVEC 43           3
-     ?<Initializer for maxSleepLoopTime>     4
-     ?<Initializer for halSleepPconValue>    1
-     __Constant_fffffffe                     4
-     __Constant_64                           4
-     __Constant_1f                           4
-     __Constant_2d                           4
-     __Constant_185197                       4
-     __Constant_185196                       4
-     __Constant_29f                          4
-     __Constant_ffffffe9                     4
-     ??halSetSleepMode?relay                 6
-     ??halSetMaxSleepLoopTime?relay          6
-     ??halSleep?relay                        6
-     ??halSleepSetTimer?relay                6
-     ??TimerElapsed?relay                    6
-     ??halRestoreSleepLevel?relay            6
+     Function/Label                         Bytes
+     --------------                         -----
+     PCON                                      1
+     ST0                                       1
+     ST1                                       1
+     ST2                                       1
+     IEN2                                      1
+     _A_IEN0                                   1
+     STLOAD                                    1
+     _A_IEN1                                   1
+     SLEEPCMD                                  1
+     _A_IRCON                                  1
+     maxSleepLoopTime                          4
+     halSleepPconValue                         1
+     halPwrMgtMode                             1
+     halSetSleepMode                           8
+     halSetMaxSleepLoopTime                   34
+     halSleep                                293
+     ?Subroutine0                              5
+     ?Subroutine1                              2
+     ??Subroutine2_0                           7
+     halSleepSetTimer                        132
+     TimerElapsed                             11
+     halRestoreSleepLevel                      3
+     halSleepTimerIsr                         25
+     __Constant_fffffffe                       4
+     __Constant_64                             4
+     __Constant_1f                             4
+     __Constant_2d                             4
+     __Constant_185197                         4
+     __Constant_185196                         4
+     __Constant_29f                            4
+     __Constant_ffffffe9                       4
+     ??halSleepTimerIsr??INTVEC 43             3
+     ?<Initializer for maxSleepLoopTime>       4
+     ?<Initializer for halSleepPconValue>      1
+     ?<Initializer for __Constant_fffffffe>    4
+     ?<Initializer for __Constant_64>          4
+     ?<Initializer for __Constant_1f>          4
+     ?<Initializer for __Constant_2d>          4
+     ?<Initializer for __Constant_185197>      4
+     ?<Initializer for __Constant_185196>      4
+     ?<Initializer for __Constant_29f>         4
+     ?<Initializer for __Constant_ffffffe9>    4
+     ??halSetSleepMode?relay                   6
+     ??halSetMaxSleepLoopTime?relay            6
+     ??halSleep?relay                          6
+     ??halSleepSetTimer?relay                  6
+     ??TimerElapsed?relay                      6
+     ??halRestoreSleepLevel?relay              6
 
  
  487 bytes in segment BANKED_CODE
@@ -1214,15 +1269,13 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target\CC2530EB\hal_sleep.c
   25 bytes in segment NEAR_CODE
   10 bytes in segment SFR_AN
    8 bytes in segment SLEEP_CODE
-   4 bytes in segment XDATA_I
-   4 bytes in segment XDATA_ID
-  32 bytes in segment XDATA_ROM_C
+  36 bytes in segment XDATA_I
+  36 bytes in segment XDATA_ID
    1 byte  in segment XDATA_Z
  
- 561 bytes of CODE  memory (+  3 bytes shared)
-   0 bytes of CONST memory (+ 32 bytes shared)
+ 561 bytes of CODE  memory (+ 35 bytes shared)
    1 byte  of DATA  memory (+ 10 bytes shared)
-   5 bytes of XDATA memory
+   5 bytes of XDATA memory (+ 32 bytes shared)
 
 Errors: none
 Warnings: none

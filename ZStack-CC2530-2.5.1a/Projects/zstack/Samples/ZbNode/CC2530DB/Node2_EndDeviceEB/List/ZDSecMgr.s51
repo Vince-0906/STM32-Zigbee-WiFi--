@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:26:01 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:46:00 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo /
 //                          \ZDSecMgr.c                                       /
@@ -53,10 +53,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -3762,6 +3761,20 @@ ZDSecMgrAppKeyType:
         DATA8
         DS 1
         REQUIRE `?<Initializer for ZDSecMgrAppKeyType>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_0:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_0>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_1:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_1>`
         REQUIRE __INIT_XDATA_I
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
@@ -29633,14 +29646,14 @@ ZDSecMgrSaveTCLinkKey:
         DATA8
         DB 3
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_0>`:
         DATA32
-__Constant_0:
         DD 0
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_1>`:
         DATA32
-__Constant_1:
         DD 1
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -30232,14 +30245,12 @@ __Constant_1:
 // 9 729 bytes in segment BANKED_CODE
 //   522 bytes in segment BANK_RELAYS
 //    16 bytes in segment CODE_C
-//     1 byte  in segment XDATA_I
-//     1 byte  in segment XDATA_ID
-//     8 bytes in segment XDATA_ROM_C
+//     9 bytes in segment XDATA_I
+//     9 bytes in segment XDATA_ID
 //    83 bytes in segment XDATA_Z
 // 
-// 10 268 bytes of CODE  memory
-//      0 bytes of CONST memory (+ 8 bytes shared)
-//     84 bytes of XDATA memory
+// 10 268 bytes of CODE  memory (+ 8 bytes shared)
+//     84 bytes of XDATA memory (+ 8 bytes shared)
 //
 //Errors: none
 //Warnings: none

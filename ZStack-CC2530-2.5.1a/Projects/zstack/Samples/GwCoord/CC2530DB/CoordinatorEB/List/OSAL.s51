@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        19/Apr/2026  20:43:35 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:52:54 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\comm /
 //                          on\OSAL.c                                         /
@@ -55,10 +55,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\GwCoord\CC2530DB\ -I                          /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\GwCoord\CC2530DB\ -I                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\..\Source\ -I                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -820,6 +819,24 @@ osal_strlen         SYMBOL "osal_strlen"
 _A_IEN0:
         DATA8
         DS 1
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "">`:
+        DS 10
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "">_1`:
+        DS 10
+        REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_Z:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "">_2`:
+        DS 10
+        REQUIRE __INIT_XDATA_Z
 //   56 
 //   57 /* HAL */
 //   58 #include "hal_drivers.h"
@@ -853,6 +870,13 @@ _A_IEN0:
 osal_qHead:
         DS 2
         REQUIRE __INIT_XDATA_Z
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA16
+`?<Constant "0">`:
+        DS 2
+        REQUIRE `?<Initializer for <Constant "0">>`
+        REQUIRE __INIT_XDATA_I
 //   83 
 //   84 /*********************************************************************
 //   85  * EXTERNAL VARIABLES
@@ -874,6 +898,20 @@ activeTaskID:
         DATA8
         DS 1
         REQUIRE `?<Initializer for activeTaskID>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_2710:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_2710>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_5f5e100:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_5f5e100>`
         REQUIRE __INIT_XDATA_I
 //   98 
 //   99 /*********************************************************************
@@ -7041,9 +7079,23 @@ osal_self:
 // 1183 }
 
         RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "0">>`:
+        DB "0"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
 `?<Initializer for activeTaskID>`:
         DATA8
         DB 255
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_2710>`:
+        DATA32
+        DD 10000
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_5f5e100>`:
+        DATA32
+        DD 100000000
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??osal_strlen?relay:
@@ -7237,42 +7289,6 @@ osal_self:
         DATA
         DC24    osal_self
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "">`:
-        DB ""
-        DB 0, 0, 0, 0, 0, 0, 0, 0
-        DB 0
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "">_1`:
-        DB ""
-        DB 0, 0, 0, 0, 0, 0, 0, 0
-        DB 0
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "">_2`:
-        DB ""
-        DB 0, 0, 0, 0, 0, 0, 0, 0
-        DB 0
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA16
-`?<Constant "0">`:
-        DB "0"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA32
-__Constant_2710:
-        DD 10000
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA32
-__Constant_5f5e100:
-        DD 100000000
-
         END
 // 1184 
 // 1185 /*********************************************************************
@@ -7281,15 +7297,13 @@ __Constant_5f5e100:
 // 2 620 bytes in segment BANKED_CODE
 //   192 bytes in segment BANK_RELAYS
 //     1 byte  in segment SFR_AN
-//     1 byte  in segment XDATA_I
-//     1 byte  in segment XDATA_ID
-//    40 bytes in segment XDATA_ROM_C
-//     2 bytes in segment XDATA_Z
+//    11 bytes in segment XDATA_I
+//    11 bytes in segment XDATA_ID
+//    32 bytes in segment XDATA_Z
 // 
-// 2 813 bytes of CODE  memory
-//    32 bytes of CONST memory (+ 8 bytes shared)
+// 2 815 bytes of CODE  memory (+ 8 bytes shared)
 //     0 bytes of DATA  memory (+ 1 byte  shared)
-//     3 bytes of XDATA memory
+//    35 bytes of XDATA memory (+ 8 bytes shared)
 //
 //Errors: none
 //Warnings: none

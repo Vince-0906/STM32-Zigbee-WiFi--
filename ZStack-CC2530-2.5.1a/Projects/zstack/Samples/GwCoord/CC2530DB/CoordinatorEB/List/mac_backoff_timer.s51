@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        19/Apr/2026  20:43:42 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:53:00 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\low_l /
 //                          evel\srf04\mac_backoff_timer.c                    /
@@ -55,10 +55,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\GwCoord\CC2530DB\ -I                          /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\GwCoord\CC2530DB\ -I                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\..\Source\ -I                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -151,6 +150,7 @@
         EXTERN ?UL_SHR
         EXTERN ?V0
         EXTERN ?XLOAD_R2345
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         PUBLIC ??macBackoffTimerCancelTrigger?relay
@@ -2115,24 +2115,52 @@ macGetBackOffTimerRollover:
         CFI EndBlock cfiBlock24
 //  504 }
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_0:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_0>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_0>`:
+        DATA32
         DD 0
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_c0000:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_c0000>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_c0000>`:
+        DATA32
         DD 786432
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_80000000:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_80000000>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_80000000>`:
+        DATA32
         DD 2147483648
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_ffffffff:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_ffffffff>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_ffffffff>`:
+        DATA32
         DD -1
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -2221,13 +2249,13 @@ __Constant_ffffffff:
 // 634 bytes in segment BANKED_CODE
 //  78 bytes in segment BANK_RELAYS
 //   3 bytes in segment SFR_AN
-//  16 bytes in segment XDATA_ROM_C
+//  16 bytes in segment XDATA_I
+//  16 bytes in segment XDATA_ID
 //   8 bytes in segment XDATA_Z
 // 
-// 712 bytes of CODE  memory
-//   0 bytes of CONST memory (+ 16 bytes shared)
+// 712 bytes of CODE  memory (+ 16 bytes shared)
 //   0 bytes of DATA  memory (+  3 bytes shared)
-//   8 bytes of XDATA memory
+//   8 bytes of XDATA memory (+ 16 bytes shared)
 //
 //Errors: none
 //Warnings: none

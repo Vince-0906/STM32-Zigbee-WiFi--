@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:26:04 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:46:02 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\Source\zb_node.c                       /
@@ -54,10 +54,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -893,6 +892,146 @@ dbg_line:
 //   46 }
         LJMP    ?Subroutine1 & 0xFFFF
         CFI EndBlock cfiBlock2
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "\\r\\n">`:
+        DS 3
+        REQUIRE `?<Initializer for <Constant "\\r\\n">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "HOLD">`:
+        DS 5
+        REQUIRE `?<Initializer for <Constant "HOLD">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "INIT">`:
+        DS 5
+        REQUIRE `?<Initializer for <Constant "INIT">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "NWK_DISC">`:
+        DS 9
+        REQUIRE `?<Initializer for <Constant "NWK_DISC">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "NWK_JOINING">`:
+        DS 12
+        REQUIRE `?<Initializer for <Constant "NWK_JOINING">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "NWK_REJOIN">`:
+        DS 11
+        REQUIRE `?<Initializer for <Constant "NWK_REJOIN">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "END_UNAUTH">`:
+        DS 11
+        REQUIRE `?<Initializer for <Constant "END_UNAUTH">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "END_DEVICE">`:
+        DS 11
+        REQUIRE `?<Initializer for <Constant "END_DEVICE">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "ROUTER">`:
+        DS 7
+        REQUIRE `?<Initializer for <Constant "ROUTER">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "COORD_START">`:
+        DS 12
+        REQUIRE `?<Initializer for <Constant "COORD_START">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "ZB_COORD">`:
+        DS 9
+        REQUIRE `?<Initializer for <Constant "ZB_COORD">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "NWK_ORPHAN">`:
+        DS 11
+        REQUIRE `?<Initializer for <Constant "NWK_ORPHAN">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA16
+`?<Constant "?">`:
+        DS 2
+        REQUIRE `?<Initializer for <Constant "?">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "\\r\\n==== Node2 (LDR)  r...">`:
+        DS 46
+        REQUIRE `?<Initializer for <Constant "\\r\\n==== Node2 (L`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "[n2] LDR lux=%u -> ZC...">`:
+        DS 28
+        REQUIRE `?<Initializer for <Constant "[n2] LDR lux=%u -`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "[cfm] first report CO...">`:
+        DS 41
+        REQUIRE `?<Initializer for <Constant "[cfm] first repor`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "[cfm] OK">`:
+        DS 9
+        REQUIRE `?<Initializer for <Constant "[cfm] OK">>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "[cfm] FAIL status=0x%...">`:
+        DS 27
+        REQUIRE `?<Initializer for <Constant "[cfm] FAIL status`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "[zdo] state=%u (%s)\\r\\n">`:
+        DS 22
+        REQUIRE `?<Initializer for <Constant "[zdo] state=%u (%`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA8
+`?<Constant "[zdo] JOINED pan=%04X...">`:
+        DS 41
+        REQUIRE `?<Initializer for <Constant "[zdo] JOINED pan=`
+        REQUIRE __INIT_XDATA_I
 //   47 
 //   48 static const char *state_name(devStates_t st)
 //   49 {
@@ -4014,6 +4153,86 @@ ZbNode_ProcessEvent:
         CFI EndBlock cfiPicker41
 
         RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "\\r\\n">>`:
+        DB "\015\012"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "HOLD">>`:
+        DB "HOLD"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "INIT">>`:
+        DB "INIT"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "NWK_DISC">>`:
+        DB "NWK_DISC"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "NWK_JOINING">>`:
+        DB "NWK_JOINING"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "NWK_REJOIN">>`:
+        DB "NWK_REJOIN"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "END_UNAUTH">>`:
+        DB "END_UNAUTH"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "END_DEVICE">>`:
+        DB "END_DEVICE"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "ROUTER">>`:
+        DB "ROUTER"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "COORD_START">>`:
+        DB "COORD_START"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "ZB_COORD">>`:
+        DB "ZB_COORD"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "NWK_ORPHAN">>`:
+        DB "NWK_ORPHAN"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "?">>`:
+        DB "?"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "\\r\\n==== Node2 (L`:
+        DB "\015\012==== Node2 (LDR)  ready, period=500ms  ===="
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "[n2] LDR lux=%u -`:
+        DB "[n2] LDR lux=%u -> ZCL tx\015\012"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "[cfm] first repor`:
+        DB "[cfm] first report CONFIRMED, link READY"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "[cfm] OK">>`:
+        DB "[cfm] OK"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "[cfm] FAIL status`:
+        DB "[cfm] FAIL status=0x%02X\015\012"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "[zdo] state=%u (%`:
+        DB "[zdo] state=%u (%s)\015\012"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "[zdo] JOINED pan=`:
+        DB "[zdo] JOINED pan=%04X short=%04X ch=%u\015\012"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
 `?<Initializer for ZbNode_TaskID>`:
         DATA8
         DB 255
@@ -4157,120 +4376,18 @@ ZbNode_ProcessEvent:
         DATA
         DC24    ZbNode_ProcessEvent
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "\\r\\n">`:
-        DB "\015\012"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "HOLD">`:
-        DB "HOLD"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "INIT">`:
-        DB "INIT"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "NWK_DISC">`:
-        DB "NWK_DISC"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "NWK_JOINING">`:
-        DB "NWK_JOINING"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "NWK_REJOIN">`:
-        DB "NWK_REJOIN"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "END_UNAUTH">`:
-        DB "END_UNAUTH"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "END_DEVICE">`:
-        DB "END_DEVICE"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "ROUTER">`:
-        DB "ROUTER"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "COORD_START">`:
-        DB "COORD_START"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "ZB_COORD">`:
-        DB "ZB_COORD"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "NWK_ORPHAN">`:
-        DB "NWK_ORPHAN"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA16
-`?<Constant "?">`:
-        DB "?"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "\\r\\n==== Node2 (LDR)  r...">`:
-        DB "\015\012==== Node2 (LDR)  ready, period=500ms  ===="
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "[n2] LDR lux=%u -> ZC...">`:
-        DB "[n2] LDR lux=%u -> ZCL tx\015\012"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "[cfm] first report CO...">`:
-        DB "[cfm] first report CONFIRMED, link READY"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "[cfm] OK">`:
-        DB "[cfm] OK"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "[cfm] FAIL status=0x%...">`:
-        DB "[cfm] FAIL status=0x%02X\015\012"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "[zdo] state=%u (%s)\\r\\n">`:
-        DB "[zdo] state=%u (%s)\015\012"
-
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
-        DATA8
-`?<Constant "[zdo] JOINED pan=%04X...">`:
-        DB "[zdo] JOINED pan=%04X short=%04X ch=%u\015\012"
-
         END
 // 
 // 1 943 bytes in segment BANKED_CODE
 //   108 bytes in segment BANK_RELAYS
 //     3 bytes in segment SFR_AN
-//    13 bytes in segment XDATA_I
-//    13 bytes in segment XDATA_ID
-//   322 bytes in segment XDATA_ROM_C
+//   335 bytes in segment XDATA_I
+//   335 bytes in segment XDATA_ID
 //   156 bytes in segment XDATA_Z
 // 
-// 2 064 bytes of CODE  memory
-//   322 bytes of CONST memory
+// 2 386 bytes of CODE  memory
 //     0 bytes of DATA  memory (+ 3 bytes shared)
-//   169 bytes of XDATA memory
+//   491 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: 1

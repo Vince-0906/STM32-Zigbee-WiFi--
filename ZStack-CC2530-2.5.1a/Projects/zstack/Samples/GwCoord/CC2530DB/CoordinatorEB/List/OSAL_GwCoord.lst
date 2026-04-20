@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:38 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:52:54 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\Source\OSAL_GwCoord.c                   #
@@ -55,18 +55,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
-#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
-#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
-#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
-#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          es\GwCoord\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\Sou #
+#                          rce\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zsta #
+#                          ck\Samples\GwCoord\CC2530DB\..\..\..\ZMain\TI2530D #
+#                          B\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\hal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\ #
+#                          ..\Components\hal\target\CC2530EB\ -I              #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
 #                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
@@ -147,17 +146,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      26          #include "gw_coord.h"
      27          
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
      28          const pTaskEventHandlerFn tasksArr[] = {
    \                     tasksArr:
-   \   000000   ....         DW ??macEventLoop?relay
-   \   000002   ....         DW ??nwk_event_loop?relay
-   \   000004   ....         DW ??Hal_ProcessEvent?relay
-   \   000006   ....         DW ??APS_event_loop?relay
-   \   000008   ....         DW ??APSF_ProcessEvent?relay
-   \   00000A   ....         DW ??ZDApp_event_loop?relay
-   \   00000C   ....         DW ??ZDNwkMgr_event_loop?relay
-   \   00000E   ....         DW ??GwCoord_ProcessEvent?relay
+   \   000000                DS 16
+   \   000010                REQUIRE `?<Initializer for tasksArr>`
+   \   000010                REQUIRE __INIT_XDATA_I
      29            macEventLoop,
      30            nwk_event_loop,
      31            Hal_ProcessEvent,
@@ -176,10 +170,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      44          };
      45          
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
      46          const uint8 tasksCnt = sizeof( tasksArr ) / sizeof( tasksArr[0] );
    \                     tasksCnt:
-   \   000000   08           DB 8
+   \   000000                DS 1
+   \   000001                REQUIRE `?<Initializer for tasksCnt>`
+   \   000001                REQUIRE __INIT_XDATA_I
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
      47          uint16 *tasksEvents;
@@ -260,6 +256,21 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000046   D082         POP     DPL
    \   000048   02....       LJMP    ?BRET
 
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for tasksArr>`:
+   \   000000   ....         DW ??macEventLoop?relay
+   \   000002   ....         DW ??nwk_event_loop?relay
+   \   000004   ....         DW ??Hal_ProcessEvent?relay
+   \   000006   ....         DW ??APS_event_loop?relay
+   \   000008   ....         DW ??APSF_ProcessEvent?relay
+   \   00000A   ....         DW ??ZDApp_event_loop?relay
+   \   00000C   ....         DW ??ZDNwkMgr_event_loop?relay
+   \   00000E   ....         DW ??GwCoord_ProcessEvent?relay
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for tasksCnt>`:
+   \   000000   08           DB 8
+
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??osalInitTasks?relay:
    \   000000   12....       LCALL   ?BDISPATCH
@@ -284,23 +295,25 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
 
    Segment part sizes:
 
-     Function/Label        Bytes
-     --------------        -----
-     tasksArr                16
-     tasksCnt                 1
-     tasksEvents              2
-     osalInitTasks           75
-     ??osalInitTasks?relay    6
+     Function/Label              Bytes
+     --------------              -----
+     tasksArr                      16
+     tasksCnt                       1
+     tasksEvents                    2
+     osalInitTasks                 75
+     ?<Initializer for tasksArr>   16
+     ?<Initializer for tasksCnt>    1
+     ??osalInitTasks?relay          6
 
  
  75 bytes in segment BANKED_CODE
   6 bytes in segment BANK_RELAYS
- 17 bytes in segment XDATA_ROM_C
+ 17 bytes in segment XDATA_I
+ 17 bytes in segment XDATA_ID
   2 bytes in segment XDATA_Z
  
- 81 bytes of CODE  memory
- 17 bytes of CONST memory
-  2 bytes of XDATA memory
+ 98 bytes of CODE  memory
+ 19 bytes of XDATA memory
 
 Errors: none
 Warnings: 1

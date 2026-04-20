@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:26:02 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:45:57 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common #
 #                          \hal_assert.c                                      #
@@ -53,18 +53,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -721,16 +720,34 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_assert.c
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_0:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_0>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_0>`:
    \   000000   00000000     DD 0
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_1:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_1>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_1>`:
    \   000000   01000000     DD 1
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_5800:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_5800>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_5800>`:
    \   000000   00580000     DD 22528
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -772,38 +789,41 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_assert.c
 
    Segment part sizes:
 
-     Function/Label                Bytes
-     --------------                -----
-     _A_P0                            1
-     P0INP                            1
-     _A_P1                            1
-     SLEEPSTA                         1
-     CLKCONSTA                        1
-     _A_IEN0                          1
-     SLEEPCMD                         1
-     CLKCONCMD                        1
-     P1DIR                            1
-     halAssertHandler                14
-     halAssertHazardLights          405
-     ?Subroutine0                    21
-     escape                           1
-     __Constant_0                     4
-     __Constant_1                     4
-     __Constant_5800                  4
-     ??halAssertHandler?relay         6
-     ??halAssertHazardLights?relay    6
+     Function/Label                     Bytes
+     --------------                     -----
+     _A_P0                                 1
+     P0INP                                 1
+     _A_P1                                 1
+     SLEEPSTA                              1
+     CLKCONSTA                             1
+     _A_IEN0                               1
+     SLEEPCMD                              1
+     CLKCONCMD                             1
+     P1DIR                                 1
+     halAssertHandler                     14
+     halAssertHazardLights               405
+     ?Subroutine0                         21
+     escape                                1
+     __Constant_0                          4
+     ?<Initializer for __Constant_0>       4
+     __Constant_1                          4
+     ?<Initializer for __Constant_1>       4
+     __Constant_5800                       4
+     ?<Initializer for __Constant_5800>    4
+     ??halAssertHandler?relay              6
+     ??halAssertHazardLights?relay         6
 
  
  440 bytes in segment BANKED_CODE
   12 bytes in segment BANK_RELAYS
    9 bytes in segment SFR_AN
-  12 bytes in segment XDATA_ROM_C
+  12 bytes in segment XDATA_I
+  12 bytes in segment XDATA_ID
    1 byte  in segment XDATA_Z
  
- 452 bytes of CODE  memory
-   0 bytes of CONST memory (+ 12 bytes shared)
+ 452 bytes of CODE  memory (+ 12 bytes shared)
    0 bytes of DATA  memory (+  9 bytes shared)
-   1 byte  of XDATA memory
+   1 byte  of XDATA memory (+ 12 bytes shared)
 
 Errors: none
 Warnings: none

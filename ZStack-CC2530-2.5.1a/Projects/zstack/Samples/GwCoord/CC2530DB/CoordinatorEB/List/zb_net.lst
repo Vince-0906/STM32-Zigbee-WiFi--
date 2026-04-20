@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:33 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:53:02 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\Source\zb_net.c                         #
@@ -55,18 +55,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
-#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
-#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
-#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
-#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          es\GwCoord\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\Sou #
+#                          rce\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zsta #
+#                          ck\Samples\GwCoord\CC2530DB\..\..\..\ZMain\TI2530D #
+#                          B\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\hal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\ #
+#                          ..\Components\hal\target\CC2530EB\ -I              #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
 #                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
@@ -1489,6 +1488,18 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \                     ??zb_net_get_status_3:
    \   00005B   02....       LJMP    ?Subroutine2 & 0xFFFF
 
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_3e8:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_3e8>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_bf21:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_bf21>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
    \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for s_panid>`:
    \   000000   FFFF         DW 65535
@@ -1497,12 +1508,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \                     `?<Initializer for s_channel>`:
    \   000000   0F           DB 15
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_3e8:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_3e8>`:
    \   000000   E8030000     DD 1000
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_bf21:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_bf21>`:
    \   000000   21BF0000     DD 48929
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -1634,74 +1645,74 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
 
    Segment part sizes:
 
-     Function/Label               Bytes
-     --------------               -----
-     s_nodes                       216
-     s_node_cnt                      1
-     s_dev_state                     1
-     s_panid                         2
-     s_channel                       1
-     s_allow_join_rem_s              1
-     s_last_tick_ms                  4
-     s_reopen_window_s               1
-     find_slot                      55
-     ?Subroutine5                   12
-     ?Subroutine0                    7
-     alloc_slot                    139
-     ?Subroutine1                    5
-     ?Subroutine6                    4
-     ??Subroutine10_0                9
-     ?Subroutine3                    6
-     ?Subroutine8                   11
-     zb_net_init                   153
-     ?Subroutine4                    6
-     zb_net_tick                   286
-     ?Subroutine9                    7
-     zb_net_allow_join              40
-     ?Subroutine7                    8
-     zb_net_find                    10
-     zb_net_touch                  192
-     zb_net_find_by_role            50
-     zb_net_count                   11
-     zb_net_online_count            47
-     zb_net_at                      29
-     zb_net_mark_offline            36
-     ?Subroutine2                    5
-     zb_net_send_onoff             215
-     s_zcl_seq                       1
-     zb_net_on_state                87
-     zb_net_get_status              94
-     ?<Initializer for s_panid>      2
-     ?<Initializer for s_channel>    1
-     __Constant_3e8                  4
-     __Constant_bf21                 4
-     ??find_slot?relay               6
-     ??alloc_slot?relay              6
-     ??zb_net_init?relay             6
-     ??zb_net_tick?relay             6
-     ??zb_net_allow_join?relay       6
-     ??zb_net_find?relay             6
-     ??zb_net_touch?relay            6
-     ??zb_net_find_by_role?relay     6
-     ??zb_net_count?relay            6
-     ??zb_net_online_count?relay     6
-     ??zb_net_at?relay               6
-     ??zb_net_mark_offline?relay     6
-     ??zb_net_send_onoff?relay       6
-     ??zb_net_on_state?relay         6
-     ??zb_net_get_status?relay       6
+     Function/Label                     Bytes
+     --------------                     -----
+     s_nodes                             216
+     s_node_cnt                            1
+     s_dev_state                           1
+     s_panid                               2
+     s_channel                             1
+     s_allow_join_rem_s                    1
+     s_last_tick_ms                        4
+     s_reopen_window_s                     1
+     find_slot                            55
+     ?Subroutine5                         12
+     ?Subroutine0                          7
+     alloc_slot                          139
+     ?Subroutine1                          5
+     ?Subroutine6                          4
+     ??Subroutine10_0                      9
+     ?Subroutine3                          6
+     ?Subroutine8                         11
+     zb_net_init                         153
+     ?Subroutine4                          6
+     zb_net_tick                         286
+     ?Subroutine9                          7
+     zb_net_allow_join                    40
+     ?Subroutine7                          8
+     zb_net_find                          10
+     zb_net_touch                        192
+     zb_net_find_by_role                  50
+     zb_net_count                         11
+     zb_net_online_count                  47
+     zb_net_at                            29
+     zb_net_mark_offline                  36
+     ?Subroutine2                          5
+     zb_net_send_onoff                   215
+     s_zcl_seq                             1
+     zb_net_on_state                      87
+     zb_net_get_status                    94
+     __Constant_3e8                        4
+     __Constant_bf21                       4
+     ?<Initializer for s_panid>            2
+     ?<Initializer for s_channel>          1
+     ?<Initializer for __Constant_3e8>     4
+     ?<Initializer for __Constant_bf21>    4
+     ??find_slot?relay                     6
+     ??alloc_slot?relay                    6
+     ??zb_net_init?relay                   6
+     ??zb_net_tick?relay                   6
+     ??zb_net_allow_join?relay             6
+     ??zb_net_find?relay                   6
+     ??zb_net_touch?relay                  6
+     ??zb_net_find_by_role?relay           6
+     ??zb_net_count?relay                  6
+     ??zb_net_online_count?relay           6
+     ??zb_net_at?relay                     6
+     ??zb_net_mark_offline?relay           6
+     ??zb_net_send_onoff?relay             6
+     ??zb_net_on_state?relay               6
+     ??zb_net_get_status?relay             6
 
  
  1 524 bytes in segment BANKED_CODE
     90 bytes in segment BANK_RELAYS
-     3 bytes in segment XDATA_I
-     3 bytes in segment XDATA_ID
-     8 bytes in segment XDATA_ROM_C
+    11 bytes in segment XDATA_I
+    11 bytes in segment XDATA_ID
    225 bytes in segment XDATA_Z
  
- 1 617 bytes of CODE  memory
-     0 bytes of CONST memory (+ 8 bytes shared)
-   228 bytes of XDATA memory
+ 1 617 bytes of CODE  memory (+ 8 bytes shared)
+   228 bytes of XDATA memory (+ 8 bytes shared)
 
 Errors: none
 Warnings: 1

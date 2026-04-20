@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:26:00 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:45:57 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo /
 //                          \ZDNwkMgr.c                                       /
@@ -53,10 +53,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -153,6 +152,7 @@
         EXTERN ?XSP
         EXTERN ?XSTACK_DISP0_8
         EXTERN ?XSTORE_R2345
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         FUNCTION ??ZDNwkMgr_BuildAndSendUpdateNotify?relay,0203H
@@ -4612,14 +4612,28 @@ ZDNwkMgr_ProcessDataConfirm:
         CFI EndBlock cfiCond83
         CFI EndBlock cfiPicker84
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_7fff800:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_7fff800>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_7fff800>`:
+        DATA32
         DD 134215680
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_0:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_0>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_0>`:
+        DATA32
         DD 0
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -4797,12 +4811,12 @@ __Constant_0:
 // 
 // 1 860 bytes in segment BANKED_CODE
 //    60 bytes in segment BANK_RELAYS
-//     8 bytes in segment XDATA_ROM_C
+//     8 bytes in segment XDATA_I
+//     8 bytes in segment XDATA_ID
 //    39 bytes in segment XDATA_Z
 // 
-// 1 920 bytes of CODE  memory
-//     0 bytes of CONST memory (+ 8 bytes shared)
-//    39 bytes of XDATA memory
+// 1 920 bytes of CODE  memory (+ 8 bytes shared)
+//    39 bytes of XDATA memory (+ 8 bytes shared)
 //
 //Errors: none
 //Warnings: none

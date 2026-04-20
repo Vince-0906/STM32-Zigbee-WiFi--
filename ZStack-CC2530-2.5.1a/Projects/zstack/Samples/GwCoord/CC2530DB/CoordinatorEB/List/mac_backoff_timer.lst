@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:42 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:53:00 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\low_le #
 #                          vel\srf04\mac_backoff_timer.c                      #
@@ -55,18 +55,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
-#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
-#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
-#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
-#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          es\GwCoord\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\Sou #
+#                          rce\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zsta #
+#                          ck\Samples\GwCoord\CC2530DB\..\..\..\ZMain\TI2530D #
+#                          B\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\hal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\ #
+#                          ..\Components\hal\target\CC2530EB\ -I              #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
 #                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
@@ -1078,20 +1077,44 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\low_level\srf04\mac_backoff_timer.c
    \   000007   02....       LJMP    ?Subroutine0 & 0xFFFF
     504          }
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_0:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_0>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_0>`:
    \   000000   00000000     DD 0
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_c0000:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_c0000>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_c0000>`:
    \   000000   00000C00     DD 786432
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_80000000:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_80000000>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_80000000>`:
    \   000000   00000080     DD 2147483648
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_ffffffff:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_ffffffff>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_ffffffff>`:
    \   000000   FFFFFFFF     DD -1
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -1209,62 +1232,66 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\low_level\srf04\mac_backoff_timer.c
 
    Segment part sizes:
 
-     Function/Label                       Bytes
-     --------------                       -----
-     T2IRQF                                  1
-     T2IRQM                                  1
-     _A_IEN0                                 1
-     backoffTimerRollover                    4
-     backoffTimerTrigger                     4
-     macBackoffTimerInit                    36
-     ??Subroutine5_0                         7
-     macBackoffTimerReset                   15
-     macBackoffTimerSetRollover             51
-     ?Subroutine3                            8
-     ?Subroutine1                            5
-     ??Subroutine6_0                         5
-     ?Subroutine4                           12
-     macBackoffTimerSetCount                78
-     macBackoffTimerCount                   44
-     ?Subroutine2                            5
-     macBackoffTimerCapture                 46
-     ?Subroutine0                            3
-     macBackoffTimerGetTrigger              10
-     macBackoffTimerSetTrigger              80
-     macBackoffTimerCancelTrigger            3
-     macBackoffTimerRealign                193
-     macBackoffTimerCompareIsr              10
-     macBackoffTimerPeriodIsr               13
-     macGetBackOffTimerRollover             10
-     __Constant_0                            4
-     __Constant_c0000                        4
-     __Constant_80000000                     4
-     __Constant_ffffffff                     4
-     ??macBackoffTimerInit?relay             6
-     ??macBackoffTimerReset?relay            6
-     ??macBackoffTimerSetRollover?relay      6
-     ??macBackoffTimerSetCount?relay         6
-     ??macBackoffTimerCount?relay            6
-     ??macBackoffTimerCapture?relay          6
-     ??macBackoffTimerGetTrigger?relay       6
-     ??macBackoffTimerSetTrigger?relay       6
-     ??macBackoffTimerCancelTrigger?relay    6
-     ??macBackoffTimerRealign?relay          6
-     ??macBackoffTimerCompareIsr?relay       6
-     ??macBackoffTimerPeriodIsr?relay        6
-     ??macGetBackOffTimerRollover?relay      6
+     Function/Label                         Bytes
+     --------------                         -----
+     T2IRQF                                    1
+     T2IRQM                                    1
+     _A_IEN0                                   1
+     backoffTimerRollover                      4
+     backoffTimerTrigger                       4
+     macBackoffTimerInit                      36
+     ??Subroutine5_0                           7
+     macBackoffTimerReset                     15
+     macBackoffTimerSetRollover               51
+     ?Subroutine3                              8
+     ?Subroutine1                              5
+     ??Subroutine6_0                           5
+     ?Subroutine4                             12
+     macBackoffTimerSetCount                  78
+     macBackoffTimerCount                     44
+     ?Subroutine2                              5
+     macBackoffTimerCapture                   46
+     ?Subroutine0                              3
+     macBackoffTimerGetTrigger                10
+     macBackoffTimerSetTrigger                80
+     macBackoffTimerCancelTrigger              3
+     macBackoffTimerRealign                  193
+     macBackoffTimerCompareIsr                10
+     macBackoffTimerPeriodIsr                 13
+     macGetBackOffTimerRollover               10
+     __Constant_0                              4
+     ?<Initializer for __Constant_0>           4
+     __Constant_c0000                          4
+     ?<Initializer for __Constant_c0000>       4
+     __Constant_80000000                       4
+     ?<Initializer for __Constant_80000000>    4
+     __Constant_ffffffff                       4
+     ?<Initializer for __Constant_ffffffff>    4
+     ??macBackoffTimerInit?relay               6
+     ??macBackoffTimerReset?relay              6
+     ??macBackoffTimerSetRollover?relay        6
+     ??macBackoffTimerSetCount?relay           6
+     ??macBackoffTimerCount?relay              6
+     ??macBackoffTimerCapture?relay            6
+     ??macBackoffTimerGetTrigger?relay         6
+     ??macBackoffTimerSetTrigger?relay         6
+     ??macBackoffTimerCancelTrigger?relay      6
+     ??macBackoffTimerRealign?relay            6
+     ??macBackoffTimerCompareIsr?relay         6
+     ??macBackoffTimerPeriodIsr?relay          6
+     ??macGetBackOffTimerRollover?relay        6
 
  
  634 bytes in segment BANKED_CODE
   78 bytes in segment BANK_RELAYS
    3 bytes in segment SFR_AN
-  16 bytes in segment XDATA_ROM_C
+  16 bytes in segment XDATA_I
+  16 bytes in segment XDATA_ID
    8 bytes in segment XDATA_Z
  
- 712 bytes of CODE  memory
-   0 bytes of CONST memory (+ 16 bytes shared)
+ 712 bytes of CODE  memory (+ 16 bytes shared)
    0 bytes of DATA  memory (+  3 bytes shared)
-   8 bytes of XDATA memory
+   8 bytes of XDATA memory (+ 16 bytes shared)
 
 Errors: none
 Warnings: none

@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:39 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:52:52 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ #
 #                          ZDNwkMgr.c                                         #
@@ -55,18 +55,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
-#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
-#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
-#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
-#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          es\GwCoord\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\Sou #
+#                          rce\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zsta #
+#                          ck\Samples\GwCoord\CC2530DB\..\..\..\ZMain\TI2530D #
+#                          B\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\hal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\ #
+#                          ..\Components\hal\target\CC2530EB\ -I              #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
 #                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
@@ -2341,12 +2340,24 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDNwkMgr.c
    \                     ??ZDNwkMgr_ProcessDataConfirm_0:
    \   000024   02....       LJMP    ?Subroutine2 & 0xFFFF
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_7fff800:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_7fff800>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_7fff800>`:
    \   000000   00F8FF07     DD 134215680
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_0:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_0>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_0>`:
    \   000000   00000000     DD 0
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -2635,7 +2646,9 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDNwkMgr.c
      ZDNwkMgr_EDScanConfirmCB                      127
      ZDNwkMgr_ProcessDataConfirm                    39
      __Constant_7fff800                              4
+     ?<Initializer for __Constant_7fff800>           4
      __Constant_0                                    4
+     ?<Initializer for __Constant_0>                 4
      ??ZDNwkMgr_Init?relay                           6
      ??ZDNwkMgr_event_loop?relay                     6
      ??ZDNwkMgr_ProcessMgmtNwkUpdateReq?relay        6
@@ -2650,12 +2663,12 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDNwkMgr.c
  
  1 860 bytes in segment BANKED_CODE
     60 bytes in segment BANK_RELAYS
-     8 bytes in segment XDATA_ROM_C
+     8 bytes in segment XDATA_I
+     8 bytes in segment XDATA_ID
     39 bytes in segment XDATA_Z
  
- 1 920 bytes of CODE  memory
-     0 bytes of CONST memory (+ 8 bytes shared)
-    39 bytes of XDATA memory
+ 1 920 bytes of CODE  memory (+ 8 bytes shared)
+    39 bytes of XDATA memory (+ 8 bytes shared)
 
 Errors: none
 Warnings: none

@@ -1843,7 +1843,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>D:\IAR\8051\config\devices\Texas Instruments\lnk51ew_cc2530F256_banked.xcl</state>
+          <state>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8w2530.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -4268,6 +4268,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\oled_ssd1306.c</name>
+      <excluded>
+        <configuration>CoordinatorEB</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\oled_ssd1306.h</name>
@@ -4277,6 +4280,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\soft_i2c.c</name>
+      <excluded>
+        <configuration>CoordinatorEB</configuration>
+      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\soft_i2c.h</name>

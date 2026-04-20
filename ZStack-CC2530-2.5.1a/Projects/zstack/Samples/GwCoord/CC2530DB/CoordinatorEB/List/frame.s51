@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        19/Apr/2026  20:43:42 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:52:59 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\Source\frame.c                        /
@@ -55,10 +55,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\GwCoord\CC2530DB\ -I                          /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\GwCoord\CC2530DB\ -I                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\..\Source\ -I                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -150,6 +149,7 @@
         EXTERN ?XSP
         EXTERN ?XSTACK_DISP0_8
         EXTERN ?XSTORE_R2345
+        EXTERN __INIT_XDATA_I
 
         PUBLIC ??crc8_itu?relay
         FUNCTION ??crc8_itu?relay,0203H
@@ -2442,19 +2442,40 @@ frame_encode:
         CFI EndBlock cfiCond49
         CFI EndBlock cfiPicker50
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_0:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_0>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_0>`:
+        DATA32
         DD 0
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_15:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_15>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_15>`:
+        DATA32
         DD 21
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 __Constant_1:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_1>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_1>`:
+        DATA32
         DD 1
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -2492,10 +2513,11 @@ __Constant_1:
 // 1 016 bytes in segment BANKED_CODE
 //    30 bytes in segment BANK_RELAYS
 //   256 bytes in segment CODE_C
-//    12 bytes in segment XDATA_ROM_C
+//    12 bytes in segment XDATA_I
+//    12 bytes in segment XDATA_ID
 // 
-// 1 302 bytes of CODE  memory
-//     0 bytes of CONST memory (+ 12 bytes shared)
+// 1 302 bytes of CODE  memory (+ 12 bytes shared)
+//     0 bytes of XDATA memory (+ 12 bytes shared)
 //
 //Errors: none
 //Warnings: 1

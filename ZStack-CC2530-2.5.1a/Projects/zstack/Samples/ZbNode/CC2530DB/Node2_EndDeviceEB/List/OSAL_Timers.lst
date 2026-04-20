@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:25:57 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:46:01 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\commo #
 #                          n\OSAL_Timers.c                                    #
@@ -53,18 +53,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -1398,8 +1397,14 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL_Timers.c
    \   00000A   02....       LJMP    ?Subroutine0 & 0xFFFF
     563          }
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_0:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_0>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_0>`:
    \   000000   00000000     DD 0
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -1515,6 +1520,7 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL_Timers.c
      ??Subroutine7_0                    2
      osal_GetSystemClock               13
      __Constant_0                       4
+     ?<Initializer for __Constant_0>    4
      ??osalTimerInit?relay              6
      ??osalAddTimer?relay               6
      ??osalFindTimer?relay              6
@@ -1531,13 +1537,13 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL_Timers.c
  911 bytes in segment BANKED_CODE
   66 bytes in segment BANK_RELAYS
    1 byte  in segment SFR_AN
-   4 bytes in segment XDATA_ROM_C
+   4 bytes in segment XDATA_I
+   4 bytes in segment XDATA_ID
    6 bytes in segment XDATA_Z
  
- 977 bytes of CODE  memory
-   0 bytes of CONST memory (+ 4 bytes shared)
+ 977 bytes of CODE  memory (+ 4 bytes shared)
    0 bytes of DATA  memory (+ 1 byte  shared)
-   6 bytes of XDATA memory
+   6 bytes of XDATA memory (+ 4 bytes shared)
 
 Errors: none
 Warnings: none

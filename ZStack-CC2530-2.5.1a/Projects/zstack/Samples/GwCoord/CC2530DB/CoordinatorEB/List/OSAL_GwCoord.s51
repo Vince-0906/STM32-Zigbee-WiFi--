@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        19/Apr/2026  20:43:38 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:52:54 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\Source\OSAL_GwCoord.c                 /
@@ -55,10 +55,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\GwCoord\CC2530DB\ -I                          /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\GwCoord\CC2530DB\ -I                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\..\Source\ -I                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -136,6 +135,7 @@
 
         EXTERN ?BDISPATCH
         EXTERN ?BRET
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         PUBLIC ??osalInitTasks?relay
@@ -411,19 +411,13 @@ osalInitTasks       SYMBOL "osalInitTasks"
 //   26 #include "gw_coord.h"
 //   27 
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 //   28 const pTaskEventHandlerFn tasksArr[] = {
 tasksArr:
-        DATA16
-        DW ??macEventLoop?relay
-        DW ??nwk_event_loop?relay
-        DW ??Hal_ProcessEvent?relay
-        DW ??APS_event_loop?relay
-        DW ??APSF_ProcessEvent?relay
-        DW ??ZDApp_event_loop?relay
-        DW ??ZDNwkMgr_event_loop?relay
-        DW ??GwCoord_ProcessEvent?relay
+        DS 16
+        REQUIRE `?<Initializer for tasksArr>`
+        REQUIRE __INIT_XDATA_I
 //   29   macEventLoop,
 //   30   nwk_event_loop,
 //   31   Hal_ProcessEvent,
@@ -442,11 +436,13 @@ tasksArr:
 //   44 };
 //   45 
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 //   46 const uint8 tasksCnt = sizeof( tasksArr ) / sizeof( tasksArr[0] );
 tasksCnt:
-        DB 8
+        DS 1
+        REQUIRE `?<Initializer for tasksCnt>`
+        REQUIRE __INIT_XDATA_I
 
         RSEG XDATA_Z:XDATA:NOROOT(0)
         DATA16
@@ -650,6 +646,23 @@ osalInitTasks:
         LJMP    ?BRET
         CFI EndBlock cfiBlock0
 
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for tasksArr>`:
+        DATA16
+        DW ??macEventLoop?relay
+        DW ??nwk_event_loop?relay
+        DW ??Hal_ProcessEvent?relay
+        DW ??APS_event_loop?relay
+        DW ??APSF_ProcessEvent?relay
+        DW ??ZDApp_event_loop?relay
+        DW ??ZDNwkMgr_event_loop?relay
+        DW ??GwCoord_ProcessEvent?relay
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for tasksCnt>`:
+        DATA8
+        DB 8
+
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??osalInitTasks?relay:
         LCALL   ?BDISPATCH
@@ -660,12 +673,12 @@ osalInitTasks:
 // 
 // 75 bytes in segment BANKED_CODE
 //  6 bytes in segment BANK_RELAYS
-// 17 bytes in segment XDATA_ROM_C
+// 17 bytes in segment XDATA_I
+// 17 bytes in segment XDATA_ID
 //  2 bytes in segment XDATA_Z
 // 
-// 81 bytes of CODE  memory
-// 17 bytes of CONST memory
-//  2 bytes of XDATA memory
+// 98 bytes of CODE  memory
+// 19 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: 1

@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        19/Apr/2026  20:43:42 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:53:01 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\low_l /
 //                          evel\srf04\mac_tx.c                               /
@@ -55,10 +55,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\GwCoord\CC2530DB\ -I                          /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\GwCoord\CC2530DB\ -I                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\GwCoord\CC2530DB\..\Source\ -I                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -141,6 +140,7 @@
         EXTERN ?L_MOV_TO_X
         EXTERN ?S_SHL
         EXTERN ?V0
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         PUBLIC ??macTxAckNotReceivedCallback?relay
@@ -747,11 +747,13 @@ RFST:
 //   95 #define HAL_MAC_TX_SLOTTED_DELAY    3
 //   96 #endif
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 //   97 uint8 const macTxSlottedDelay = HAL_MAC_TX_SLOTTED_DELAY;
 macTxSlottedDelay:
-        DB 3
+        DS 1
+        REQUIRE `?<Initializer for macTxSlottedDelay>`
+        REQUIRE __INIT_XDATA_I
 //   98 
 //   99 
 //  100 /* ------------------------------------------------------------------------------------------------
@@ -2916,6 +2918,11 @@ macTxCollisionWithRxCallback:
         LJMP    ??Subroutine7_0 & 0xFFFF
         CFI EndBlock cfiBlock35
 
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for macTxSlottedDelay>`:
+        DATA8
+        DB 3
+
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??macTxInit?relay:
         LCALL   ?BDISPATCH
@@ -3024,13 +3031,13 @@ macTxCollisionWithRxCallback:
 // 916 bytes in segment BANKED_CODE
 //  90 bytes in segment BANK_RELAYS
 //   2 bytes in segment SFR_AN
-//   1 byte  in segment XDATA_ROM_C
+//   1 byte  in segment XDATA_I
+//   1 byte  in segment XDATA_ID
 //   8 bytes in segment XDATA_Z
 // 
-// 1 006 bytes of CODE  memory
-//     1 byte  of CONST memory
+// 1 007 bytes of CODE  memory
 //     0 bytes of DATA  memory (+ 2 bytes shared)
-//     8 bytes of XDATA memory
+//     9 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: none

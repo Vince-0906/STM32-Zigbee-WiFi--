@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:26:04 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:46:02 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\Source\zb_node.c                         #
@@ -53,18 +53,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -2040,6 +2039,155 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
     537          }
 
    \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "\\r\\n">>`:
+   \   000000   0D0A00       DB "\015\012"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "HOLD">>`:
+   \   000000   484F4C44     DB "HOLD"
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "INIT">>`:
+   \   000000   494E4954     DB "INIT"
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "NWK_DISC">>`:
+   \   000000   4E574B5F     DB "NWK_DISC"
+   \            44495343
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "NWK_JOINING">>`:
+   \   000000   4E574B5F     DB "NWK_JOINING"
+   \            4A4F494E
+   \            494E4700
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "NWK_REJOIN">>`:
+   \   000000   4E574B5F     DB "NWK_REJOIN"
+   \            52454A4F
+   \            494E00  
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "END_UNAUTH">>`:
+   \   000000   454E445F     DB "END_UNAUTH"
+   \            554E4155
+   \            544800  
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "END_DEVICE">>`:
+   \   000000   454E445F     DB "END_DEVICE"
+   \            44455649
+   \            434500  
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "ROUTER">>`:
+   \   000000   524F5554     DB "ROUTER"
+   \            455200  
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "COORD_START">>`:
+   \   000000   434F4F52     DB "COORD_START"
+   \            445F5354
+   \            41525400
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "ZB_COORD">>`:
+   \   000000   5A425F43     DB "ZB_COORD"
+   \            4F4F5244
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "NWK_ORPHAN">>`:
+   \   000000   4E574B5F     DB "NWK_ORPHAN"
+   \            4F525048
+   \            414E00  
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "?">>`:
+   \   000000   3F00         DB "?"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "\\r\\n==== Node2 (L`:
+   \   000000   0D0A3D3D     DB "\015\012==== Node2 (LDR)  ready, period=500ms  ===="
+   \            3D3D204E
+   \            6F646532
+   \            20284C44
+   \            52292020
+   \            72656164
+   \            792C2070
+   \            6572696F
+   \            643D3530
+   \            306D7320
+   \            203D3D3D
+   \            3D00    
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "[n2] LDR lux=%u -`:
+   \   000000   5B6E325D     DB "[n2] LDR lux=%u -> ZCL tx\015\012"
+   \            204C4452
+   \            206C7578
+   \            3D257520
+   \            2D3E205A
+   \            434C2074
+   \            780D0A00
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "[cfm] first repor`:
+   \   000000   5B63666D     DB "[cfm] first report CONFIRMED, link READY"
+   \            5D206669
+   \            72737420
+   \            7265706F
+   \            72742043
+   \            4F4E4649
+   \            524D4544
+   \            2C206C69
+   \            6E6B2052
+   \            45414459
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "[cfm] OK">>`:
+   \   000000   5B63666D     DB "[cfm] OK"
+   \            5D204F4B
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "[cfm] FAIL status`:
+   \   000000   5B63666D     DB "[cfm] FAIL status=0x%02X\015\012"
+   \            5D204641
+   \            494C2073
+   \            74617475
+   \            733D3078
+   \            25303258
+   \            0D0A00  
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "[zdo] state=%u (%`:
+   \   000000   5B7A646F     DB "[zdo] state=%u (%s)\015\012"
+   \            5D207374
+   \            6174653D
+   \            25752028
+   \            2573290D
+   \            0A00    
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "[zdo] JOINED pan=`:
+   \   000000   5B7A646F     DB "[zdo] JOINED pan=%04X short=%04X ch=%u\015\012"
+   \            5D204A4F
+   \            494E4544
+   \            2070616E
+   \            3D253034
+   \            58207368
+   \            6F72743D
+   \            25303458
+   \            2063683D
+   \            25750D0A
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for ZbNode_TaskID>`:
    \   000000   FF           DB 255
 
@@ -2158,154 +2306,125 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000000   12....       LCALL   ?BDISPATCH
    \   000003   ......       DC24    ZbNode_ProcessEvent
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "\\r\\n">`:
-   \   000000   0D0A00       DB "\015\012"
+   \   000000                DS 3
+   \   000003                REQUIRE `?<Initializer for <Constant "\\r\\n">>`
+   \   000003                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "HOLD">`:
-   \   000000   484F4C44     DB "HOLD"
-   \            00      
+   \   000000                DS 5
+   \   000005                REQUIRE `?<Initializer for <Constant "HOLD">>`
+   \   000005                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "INIT">`:
-   \   000000   494E4954     DB "INIT"
-   \            00      
+   \   000000                DS 5
+   \   000005                REQUIRE `?<Initializer for <Constant "INIT">>`
+   \   000005                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "NWK_DISC">`:
-   \   000000   4E574B5F     DB "NWK_DISC"
-   \            44495343
-   \            00      
+   \   000000                DS 9
+   \   000009                REQUIRE `?<Initializer for <Constant "NWK_DISC">>`
+   \   000009                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "NWK_JOINING">`:
-   \   000000   4E574B5F     DB "NWK_JOINING"
-   \            4A4F494E
-   \            494E4700
+   \   000000                DS 12
+   \   00000C                REQUIRE `?<Initializer for <Constant "NWK_JOINING">>`
+   \   00000C                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "NWK_REJOIN">`:
-   \   000000   4E574B5F     DB "NWK_REJOIN"
-   \            52454A4F
-   \            494E00  
+   \   000000                DS 11
+   \   00000B                REQUIRE `?<Initializer for <Constant "NWK_REJOIN">>`
+   \   00000B                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "END_UNAUTH">`:
-   \   000000   454E445F     DB "END_UNAUTH"
-   \            554E4155
-   \            544800  
+   \   000000                DS 11
+   \   00000B                REQUIRE `?<Initializer for <Constant "END_UNAUTH">>`
+   \   00000B                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "END_DEVICE">`:
-   \   000000   454E445F     DB "END_DEVICE"
-   \            44455649
-   \            434500  
+   \   000000                DS 11
+   \   00000B                REQUIRE `?<Initializer for <Constant "END_DEVICE">>`
+   \   00000B                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "ROUTER">`:
-   \   000000   524F5554     DB "ROUTER"
-   \            455200  
+   \   000000                DS 7
+   \   000007                REQUIRE `?<Initializer for <Constant "ROUTER">>`
+   \   000007                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "COORD_START">`:
-   \   000000   434F4F52     DB "COORD_START"
-   \            445F5354
-   \            41525400
+   \   000000                DS 12
+   \   00000C                REQUIRE `?<Initializer for <Constant "COORD_START">>`
+   \   00000C                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "ZB_COORD">`:
-   \   000000   5A425F43     DB "ZB_COORD"
-   \            4F4F5244
-   \            00      
+   \   000000                DS 9
+   \   000009                REQUIRE `?<Initializer for <Constant "ZB_COORD">>`
+   \   000009                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "NWK_ORPHAN">`:
-   \   000000   4E574B5F     DB "NWK_ORPHAN"
-   \            4F525048
-   \            414E00  
+   \   000000                DS 11
+   \   00000B                REQUIRE `?<Initializer for <Constant "NWK_ORPHAN">>`
+   \   00000B                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "?">`:
-   \   000000   3F00         DB "?"
+   \   000000                DS 2
+   \   000002                REQUIRE `?<Initializer for <Constant "?">>`
+   \   000002                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "\\r\\n==== Node2 (LDR)  r...">`:
-   \   000000   0D0A3D3D     DB "\015\012==== Node2 (LDR)  ready, period=500ms  ===="
-   \            3D3D204E
-   \            6F646532
-   \            20284C44
-   \            52292020
-   \            72656164
-   \            792C2070
-   \            6572696F
-   \            643D3530
-   \            306D7320
-   \            203D3D3D
-   \            3D00    
+   \   000000                DS 46
+   \   00002E                REQUIRE `?<Initializer for <Constant "\\r\\n==== Node2 (L`
+   \   00002E                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "[n2] LDR lux=%u -> ZC...">`:
-   \   000000   5B6E325D     DB "[n2] LDR lux=%u -> ZCL tx\015\012"
-   \            204C4452
-   \            206C7578
-   \            3D257520
-   \            2D3E205A
-   \            434C2074
-   \            780D0A00
+   \   000000                DS 28
+   \   00001C                REQUIRE `?<Initializer for <Constant "[n2] LDR lux=%u -`
+   \   00001C                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "[cfm] first report CO...">`:
-   \   000000   5B63666D     DB "[cfm] first report CONFIRMED, link READY"
-   \            5D206669
-   \            72737420
-   \            7265706F
-   \            72742043
-   \            4F4E4649
-   \            524D4544
-   \            2C206C69
-   \            6E6B2052
-   \            45414459
-   \            00      
+   \   000000                DS 41
+   \   000029                REQUIRE `?<Initializer for <Constant "[cfm] first repor`
+   \   000029                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "[cfm] OK">`:
-   \   000000   5B63666D     DB "[cfm] OK"
-   \            5D204F4B
-   \            00      
+   \   000000                DS 9
+   \   000009                REQUIRE `?<Initializer for <Constant "[cfm] OK">>`
+   \   000009                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "[cfm] FAIL status=0x%...">`:
-   \   000000   5B63666D     DB "[cfm] FAIL status=0x%02X\015\012"
-   \            5D204641
-   \            494C2073
-   \            74617475
-   \            733D3078
-   \            25303258
-   \            0D0A00  
+   \   000000                DS 27
+   \   00001B                REQUIRE `?<Initializer for <Constant "[cfm] FAIL status`
+   \   00001B                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "[zdo] state=%u (%s)\\r\\n">`:
-   \   000000   5B7A646F     DB "[zdo] state=%u (%s)\015\012"
-   \            5D207374
-   \            6174653D
-   \            25752028
-   \            2573290D
-   \            0A00    
+   \   000000                DS 22
+   \   000016                REQUIRE `?<Initializer for <Constant "[zdo] state=%u (%`
+   \   000016                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "[zdo] JOINED pan=%04X...">`:
-   \   000000   5B7A646F     DB "[zdo] JOINED pan=%04X short=%04X ch=%u\015\012"
-   \            5D204A4F
-   \            494E4544
-   \            2070616E
-   \            3D253034
-   \            58207368
-   \            6F72743D
-   \            25303458
-   \            2063683D
-   \            25750D0A
-   \            00      
+   \   000000                DS 41
+   \   000029                REQUIRE `?<Initializer for <Constant "[zdo] JOINED pan=`
+   \   000029                REQUIRE __INIT_XDATA_I
 
    Maximum stack usage in bytes:
 
@@ -2413,116 +2532,134 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
 
    Segment part sizes:
 
-     Function/Label                           Bytes
-     --------------                           -----
-     _A_P1                                       1
-     P1SEL                                       1
-     P1DIR                                       1
-     s_dbg_buf                                  96
-     dbg_puts                                   33
-     ?Subroutine0                                5
-     dbg_line                                   17
-     ?Subroutine1                                7
-     ZbNode_TaskID                               1
-     s_ep1                                       6
-     s_ep2                                       6
-     s_sd1                                      12
-     s_sd2                                      12
-     s_in_sensor                                 2
-     s_out_sensor                                4
-     s_in_buzzer                                 2
-     s_out_buzzer                                2
-     s_nwk_joined                                1
-     s_link_ready                                1
-     s_wait_first_report_cfm                     1
-     s_nwk_state                                 1
-     s_report_diag                               6
-     s_status_led_phase                          1
-     s_startup_leds_owned                        1
-     s_oled_model                               14
-     oled_publish                               64
-     indicator_pin_init                         25
-     ?Subroutine2                                7
-     indicator_pin_set                          32
-     startup_pattern_set                        20
-     ?Subroutine3                                5
-     network_joined                             31
-     status_led_refresh                        129
-     ZbNode_PreInit                             43
-     ?Subroutine5                               10
-     ?Subroutine9                               14
-     network_ready                              24
-     note_local_report_failure                  45
-     send_attr_report                           88
-     register_endpoints                        111
-     ?Subroutine7                               11
-     ?Subroutine4                               21
-     ZbNode_Init                               217
-     ?Subroutine6                                8
-     do_report                                 140
-     on_incoming                               259
-     ?Subroutine8                               14
-     on_data_confirm                           143
-     ZbNode_ProcessEvent                       420
-     ?<Initializer for ZbNode_TaskID>            1
-     ?<Initializer for s_in_sensor>              2
-     ?<Initializer for s_out_sensor>             4
-     ?<Initializer for s_in_buzzer>              2
-     ?<Initializer for s_out_buzzer>             2
-     ?<Initializer for s_nwk_state>              1
-     ?<Initializer for s_startup_leds_owned>     1
-     ??dbg_puts?relay                            6
-     ??dbg_line?relay                            6
-     ??oled_publish?relay                        6
-     ??indicator_pin_init?relay                  6
-     ??indicator_pin_set?relay                   6
-     ??startup_pattern_set?relay                 6
-     ??network_joined?relay                      6
-     ??status_led_refresh?relay                  6
-     ??ZbNode_PreInit?relay                      6
-     ??network_ready?relay                       6
-     ??note_local_report_failure?relay           6
-     ??send_attr_report?relay                    6
-     ??register_endpoints?relay                  6
-     ??ZbNode_Init?relay                         6
-     ??do_report?relay                           6
-     ??on_incoming?relay                         6
-     ??on_data_confirm?relay                     6
-     ??ZbNode_ProcessEvent?relay                 6
-     ?<Constant "\r\n">                          3
-     ?<Constant "HOLD">                          5
-     ?<Constant "INIT">                          5
-     ?<Constant "NWK_DISC">                      9
-     ?<Constant "NWK_JOINING">                  12
-     ?<Constant "NWK_REJOIN">                   11
-     ?<Constant "END_UNAUTH">                   11
-     ?<Constant "END_DEVICE">                   11
-     ?<Constant "ROUTER">                        7
-     ?<Constant "COORD_START">                  12
-     ?<Constant "ZB_COORD">                      9
-     ?<Constant "NWK_ORPHAN">                   11
-     ?<Constant "?">                             2
-     ?<Constant "\r\n==== Node2 (LDR)  r...">   46
-     ?<Constant "[n2] LDR lux=%u -> ZC...">     28
-     ?<Constant "[cfm] first report CO...">     41
-     ?<Constant "[cfm] OK">                      9
-     ?<Constant "[cfm] FAIL status=0x%...">     27
-     ?<Constant "[zdo] state=%u (%s)\r\n">      22
-     ?<Constant "[zdo] JOINED pan=%04X...">     41
+     Function/Label                                 Bytes
+     --------------                                 -----
+     _A_P1                                             1
+     P1SEL                                             1
+     P1DIR                                             1
+     s_dbg_buf                                        96
+     dbg_puts                                         33
+     ?Subroutine0                                      5
+     dbg_line                                         17
+     ?Subroutine1                                      7
+     ZbNode_TaskID                                     1
+     s_ep1                                             6
+     s_ep2                                             6
+     s_sd1                                            12
+     s_sd2                                            12
+     s_in_sensor                                       2
+     s_out_sensor                                      4
+     s_in_buzzer                                       2
+     s_out_buzzer                                      2
+     s_nwk_joined                                      1
+     s_link_ready                                      1
+     s_wait_first_report_cfm                           1
+     s_nwk_state                                       1
+     s_report_diag                                     6
+     s_status_led_phase                                1
+     s_startup_leds_owned                              1
+     s_oled_model                                     14
+     oled_publish                                     64
+     indicator_pin_init                               25
+     ?Subroutine2                                      7
+     indicator_pin_set                                32
+     startup_pattern_set                              20
+     ?Subroutine3                                      5
+     network_joined                                   31
+     status_led_refresh                              129
+     ZbNode_PreInit                                   43
+     ?Subroutine5                                     10
+     ?Subroutine9                                     14
+     network_ready                                    24
+     note_local_report_failure                        45
+     send_attr_report                                 88
+     register_endpoints                              111
+     ?Subroutine7                                     11
+     ?Subroutine4                                     21
+     ZbNode_Init                                     217
+     ?Subroutine6                                      8
+     do_report                                       140
+     on_incoming                                     259
+     ?Subroutine8                                     14
+     on_data_confirm                                 143
+     ZbNode_ProcessEvent                             420
+     ?<Initializer for <Constant "\r\n">>              3
+     ?<Initializer for <Constant "HOLD">>              5
+     ?<Initializer for <Constant "INIT">>              5
+     ?<Initializer for <Constant "NWK_DISC">>          9
+     ?<Initializer for <Constant "NWK_JOINING">>      12
+     ?<Initializer for <Constant "NWK_REJOIN">>       11
+     ?<Initializer for <Constant "END_UNAUTH">>       11
+     ?<Initializer for <Constant "END_DEVICE">>       11
+     ?<Initializer for <Constant "ROUTER">>            7
+     ?<Initializer for <Constant "COORD_START">>      12
+     ?<Initializer for <Constant "ZB_COORD">>          9
+     ?<Initializer for <Constant "NWK_ORPHAN">>       11
+     ?<Initializer for <Constant "?">>                 2
+     ?<Initializer for <Constant "\r\n==== Node2 (L   46
+     ?<Initializer for <Constant "[n2] LDR lux=%u -   28
+     ?<Initializer for <Constant "[cfm] first repor   41
+     ?<Initializer for <Constant "[cfm] OK">>          9
+     ?<Initializer for <Constant "[cfm] FAIL status   27
+     ?<Initializer for <Constant "[zdo] state=%u (%   22
+     ?<Initializer for <Constant "[zdo] JOINED pan=   41
+     ?<Initializer for ZbNode_TaskID>                  1
+     ?<Initializer for s_in_sensor>                    2
+     ?<Initializer for s_out_sensor>                   4
+     ?<Initializer for s_in_buzzer>                    2
+     ?<Initializer for s_out_buzzer>                   2
+     ?<Initializer for s_nwk_state>                    1
+     ?<Initializer for s_startup_leds_owned>           1
+     ??dbg_puts?relay                                  6
+     ??dbg_line?relay                                  6
+     ??oled_publish?relay                              6
+     ??indicator_pin_init?relay                        6
+     ??indicator_pin_set?relay                         6
+     ??startup_pattern_set?relay                       6
+     ??network_joined?relay                            6
+     ??status_led_refresh?relay                        6
+     ??ZbNode_PreInit?relay                            6
+     ??network_ready?relay                             6
+     ??note_local_report_failure?relay                 6
+     ??send_attr_report?relay                          6
+     ??register_endpoints?relay                        6
+     ??ZbNode_Init?relay                               6
+     ??do_report?relay                                 6
+     ??on_incoming?relay                               6
+     ??on_data_confirm?relay                           6
+     ??ZbNode_ProcessEvent?relay                       6
+     ?<Constant "\r\n">                                3
+     ?<Constant "HOLD">                                5
+     ?<Constant "INIT">                                5
+     ?<Constant "NWK_DISC">                            9
+     ?<Constant "NWK_JOINING">                        12
+     ?<Constant "NWK_REJOIN">                         11
+     ?<Constant "END_UNAUTH">                         11
+     ?<Constant "END_DEVICE">                         11
+     ?<Constant "ROUTER">                              7
+     ?<Constant "COORD_START">                        12
+     ?<Constant "ZB_COORD">                            9
+     ?<Constant "NWK_ORPHAN">                         11
+     ?<Constant "?">                                   2
+     ?<Constant "\r\n==== Node2 (LDR)  r...">         46
+     ?<Constant "[n2] LDR lux=%u -> ZC...">           28
+     ?<Constant "[cfm] first report CO...">           41
+     ?<Constant "[cfm] OK">                            9
+     ?<Constant "[cfm] FAIL status=0x%...">           27
+     ?<Constant "[zdo] state=%u (%s)\r\n">            22
+     ?<Constant "[zdo] JOINED pan=%04X...">           41
 
  
  1 943 bytes in segment BANKED_CODE
    108 bytes in segment BANK_RELAYS
      3 bytes in segment SFR_AN
-    13 bytes in segment XDATA_I
-    13 bytes in segment XDATA_ID
-   322 bytes in segment XDATA_ROM_C
+   335 bytes in segment XDATA_I
+   335 bytes in segment XDATA_ID
    156 bytes in segment XDATA_Z
  
- 2 064 bytes of CODE  memory
-   322 bytes of CONST memory
+ 2 386 bytes of CODE  memory
      0 bytes of DATA  memory (+ 3 bytes shared)
-   169 bytes of XDATA memory
+   491 bytes of XDATA memory
 
 Errors: none
 Warnings: 1

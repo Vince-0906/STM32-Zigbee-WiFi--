@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:25:59 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:45:58 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\mcu\ /
 //                          cc2530\OSAL_Nv.c                                  /
@@ -53,10 +53,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -145,6 +144,7 @@
         EXTERN ?V0
         EXTERN ?XSP
         EXTERN ?XSTACK_DISP0_8
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         FUNCTION ??calcChkF?relay,0203H
@@ -591,14 +591,13 @@ osal_nv_write       SYMBOL "osal_nv_write"
 //   81 
 //   82 #define OSAL_NV_MAX_HOT         3
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 //   83 static const uint16 hotIds[OSAL_NV_MAX_HOT] = {
 hotIds:
-        DATA16
-        DW 130
-        DW 58
-        DW 59
+        DS 6
+        REQUIRE `?<Initializer for hotIds>`
+        REQUIRE __INIT_XDATA_I
 //   84   ZCD_NV_NWKKEY,
 //   85   ZCD_NV_NWK_ACTIVE_KEY_INFO,
 //   86   ZCD_NV_NWK_ALTERN_KEY_INFO,
@@ -11777,6 +11776,13 @@ osal_nv_delete:
         CFI EndBlock cfiBlock262
 // 1496 }
 
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for hotIds>`:
+        DATA16
+        DW 130
+        DW 58
+        DW 59
+
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??initNV?relay:
         LCALL   ?BDISPATCH
@@ -11922,13 +11928,13 @@ osal_nv_delete:
 // 
 //  5 198 bytes in segment BANKED_CODE
 //    138 bytes in segment BANK_RELAYS
-//      6 bytes in segment XDATA_ROM_C
+//      6 bytes in segment XDATA_I
+//      6 bytes in segment XDATA_ID
 //     35 bytes in segment XDATA_Z
 // 12 288 bytes in segment ZIGNV_ADDRESS_SPACE
 // 
-//  5 336 bytes of CODE  memory
-//      6 bytes of CONST memory
-// 12 323 bytes of XDATA memory
+//  5 342 bytes of CODE  memory
+// 12 329 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: none

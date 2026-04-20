@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:26:03 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:46:05 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\Source\node_oled_view.c                  #
@@ -54,18 +54,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -1225,6 +1224,77 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00000E   7401         MOV     A,#0x1
    \   000010   22           RET
 
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "N2 Lux ">>`:
+   \   000000   4E32204C     DB "N2 Lux "
+   \            75782000
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "N1 TempHum ">>`:
+   \   000000   4E312054     DB "N1 TempHum "
+   \            656D7048
+   \            756D2000
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "OK">>`:
+   \   000000   4F4B00       DB "OK"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "..">>`:
+   \   000000   2E2E00       DB ".."
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "ID:">>`:
+   \   000000   49443A00     DB "ID:"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant " CH:">>`:
+   \   000000   2043483A     DB " CH:"
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "----">>`:
+   \   000000   2D2D2D2D     DB "----"
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "L:">>`:
+   \   000000   4C3A00       DB "L:"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant " lx">>`:
+   \   000000   206C7800     DB " lx"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "T:">>`:
+   \   000000   543A00       DB "T:"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant " H:">>`:
+   \   000000   20483A00     DB " H:"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "LED:">>`:
+   \   000000   4C45443A     DB "LED:"
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "ON ">>`:
+   \   000000   4F4E2000     DB "ON "
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "OFF">>`:
+   \   000000   4F464600     DB "OFF"
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant " BZ:">>`:
+   \   000000   20425A3A     DB " BZ:"
+   \            00      
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for <Constant "ON">>`:
+   \   000000   4F4E00       DB "ON"
+
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??line_clear?relay:
    \   000000   12....       LCALL   ?BDISPATCH
@@ -1265,76 +1335,101 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000000   12....       LCALL   ?BDISPATCH
    \   000003   ......       DC24    node_oled_view_refresh
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "N2 Lux ">`:
-   \   000000   4E32204C     DB "N2 Lux "
-   \            75782000
+   \   000000                DS 8
+   \   000008                REQUIRE `?<Initializer for <Constant "N2 Lux ">>`
+   \   000008                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "N1 TempHum ">`:
-   \   000000   4E312054     DB "N1 TempHum "
-   \            656D7048
-   \            756D2000
+   \   000000                DS 12
+   \   00000C                REQUIRE `?<Initializer for <Constant "N1 TempHum ">>`
+   \   00000C                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "OK">`:
-   \   000000   4F4B00       DB "OK"
+   \   000000                DS 3
+   \   000003                REQUIRE `?<Initializer for <Constant "OK">>`
+   \   000003                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "..">`:
-   \   000000   2E2E00       DB ".."
+   \   000000                DS 3
+   \   000003                REQUIRE `?<Initializer for <Constant "..">>`
+   \   000003                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "ID:">`:
-   \   000000   49443A00     DB "ID:"
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for <Constant "ID:">>`
+   \   000004                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant " CH:">`:
-   \   000000   2043483A     DB " CH:"
-   \            00      
+   \   000000                DS 5
+   \   000005                REQUIRE `?<Initializer for <Constant " CH:">>`
+   \   000005                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "----">`:
-   \   000000   2D2D2D2D     DB "----"
-   \            00      
+   \   000000                DS 5
+   \   000005                REQUIRE `?<Initializer for <Constant "----">>`
+   \   000005                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "L:">`:
-   \   000000   4C3A00       DB "L:"
+   \   000000                DS 3
+   \   000003                REQUIRE `?<Initializer for <Constant "L:">>`
+   \   000003                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant " lx">`:
-   \   000000   206C7800     DB " lx"
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for <Constant " lx">>`
+   \   000004                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "T:">`:
-   \   000000   543A00       DB "T:"
+   \   000000                DS 3
+   \   000003                REQUIRE `?<Initializer for <Constant "T:">>`
+   \   000003                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant " H:">`:
-   \   000000   20483A00     DB " H:"
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for <Constant " H:">>`
+   \   000004                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "LED:">`:
-   \   000000   4C45443A     DB "LED:"
-   \            00      
+   \   000000                DS 5
+   \   000005                REQUIRE `?<Initializer for <Constant "LED:">>`
+   \   000005                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "ON ">`:
-   \   000000   4F4E2000     DB "ON "
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for <Constant "ON ">>`
+   \   000004                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "OFF">`:
-   \   000000   4F464600     DB "OFF"
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for <Constant "OFF">>`
+   \   000004                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant " BZ:">`:
-   \   000000   20425A3A     DB " BZ:"
-   \            00      
+   \   000000                DS 5
+   \   000005                REQUIRE `?<Initializer for <Constant " BZ:">>`
+   \   000005                REQUIRE __INIT_XDATA_I
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     `?<Constant "ON">`:
-   \   000000   4F4E00       DB "ON"
+   \   000000                DS 3
+   \   000003                REQUIRE `?<Initializer for <Constant "ON">>`
+   \   000003                REQUIRE __INIT_XDATA_I
 
    Maximum stack usage in bytes:
 
@@ -1387,65 +1482,81 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
 
    Segment part sizes:
 
-     Function/Label                 Bytes
-     --------------                 -----
-     s_model                          14
-     s_last                           14
-     s_initialized                     1
-     line_clear                       28
-     ?Subroutine0                      7
-     put_char                         22
-     ?Subroutine1                      5
-     ?Subroutine7                      9
-     ?Subroutine4                     12
-     put_str                          62
-     ??Subroutine11_0                  6
-     put_u16                         118
-     ?Subroutine6                     22
-     render                          919
-     ?Subroutine9                     10
-     ?Subroutine8                     16
-     ?Subroutine3                      3
-     node_oled_view_init              51
-     ?Subroutine10                    13
-     node_oled_view_set               34
-     node_oled_view_refresh          166
-     ?Subroutine5                     16
-     ?Subroutine2                     17
-     ??line_clear?relay                6
-     ??put_char?relay                  6
-     ??put_str?relay                   6
-     ??put_u16?relay                   6
-     ??render?relay                    6
-     ??node_oled_view_init?relay       6
-     ??node_oled_view_set?relay        6
-     ??node_oled_view_refresh?relay    6
-     ?<Constant "N2 Lux ">             8
-     ?<Constant "N1 TempHum ">        12
-     ?<Constant "OK">                  3
-     ?<Constant "..">                  3
-     ?<Constant "ID:">                 4
-     ?<Constant " CH:">                5
-     ?<Constant "----">                5
-     ?<Constant "L:">                  3
-     ?<Constant " lx">                 4
-     ?<Constant "T:">                  3
-     ?<Constant " H:">                 4
-     ?<Constant "LED:">                5
-     ?<Constant "ON ">                 4
-     ?<Constant "OFF">                 4
-     ?<Constant " BZ:">                5
-     ?<Constant "ON">                  3
+     Function/Label                              Bytes
+     --------------                              -----
+     s_model                                       14
+     s_last                                        14
+     s_initialized                                  1
+     line_clear                                    28
+     ?Subroutine0                                   7
+     put_char                                      22
+     ?Subroutine1                                   5
+     ?Subroutine7                                   9
+     ?Subroutine4                                  12
+     put_str                                       62
+     ??Subroutine11_0                               6
+     put_u16                                      118
+     ?Subroutine6                                  22
+     render                                       919
+     ?Subroutine9                                  10
+     ?Subroutine8                                  16
+     ?Subroutine3                                   3
+     node_oled_view_init                           51
+     ?Subroutine10                                 13
+     node_oled_view_set                            34
+     node_oled_view_refresh                       166
+     ?Subroutine5                                  16
+     ?Subroutine2                                  17
+     ?<Initializer for <Constant "N2 Lux ">>        8
+     ?<Initializer for <Constant "N1 TempHum ">>   12
+     ?<Initializer for <Constant "OK">>             3
+     ?<Initializer for <Constant "..">>             3
+     ?<Initializer for <Constant "ID:">>            4
+     ?<Initializer for <Constant " CH:">>           5
+     ?<Initializer for <Constant "----">>           5
+     ?<Initializer for <Constant "L:">>             3
+     ?<Initializer for <Constant " lx">>            4
+     ?<Initializer for <Constant "T:">>             3
+     ?<Initializer for <Constant " H:">>            4
+     ?<Initializer for <Constant "LED:">>           5
+     ?<Initializer for <Constant "ON ">>            4
+     ?<Initializer for <Constant "OFF">>            4
+     ?<Initializer for <Constant " BZ:">>           5
+     ?<Initializer for <Constant "ON">>             3
+     ??line_clear?relay                             6
+     ??put_char?relay                               6
+     ??put_str?relay                                6
+     ??put_u16?relay                                6
+     ??render?relay                                 6
+     ??node_oled_view_init?relay                    6
+     ??node_oled_view_set?relay                     6
+     ??node_oled_view_refresh?relay                 6
+     ?<Constant "N2 Lux ">                          8
+     ?<Constant "N1 TempHum ">                     12
+     ?<Constant "OK">                               3
+     ?<Constant "..">                               3
+     ?<Constant "ID:">                              4
+     ?<Constant " CH:">                             5
+     ?<Constant "----">                             5
+     ?<Constant "L:">                               3
+     ?<Constant " lx">                              4
+     ?<Constant "T:">                               3
+     ?<Constant " H:">                              4
+     ?<Constant "LED:">                             5
+     ?<Constant "ON ">                              4
+     ?<Constant "OFF">                              4
+     ?<Constant " BZ:">                             5
+     ?<Constant "ON">                               3
 
  
  1 536 bytes in segment BANKED_CODE
     48 bytes in segment BANK_RELAYS
-    75 bytes in segment XDATA_ROM_C
+    75 bytes in segment XDATA_I
+    75 bytes in segment XDATA_ID
     29 bytes in segment XDATA_Z
  
- 1 584 bytes of CODE  memory
-    75 bytes of CONST memory
-    29 bytes of XDATA memory
+ 1 659 bytes of CODE  memory
+   104 bytes of XDATA memory
 
 Errors: none
 Warnings: 1

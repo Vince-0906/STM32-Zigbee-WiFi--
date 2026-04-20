@@ -3254,7 +3254,7 @@
         </option>
         <option>
           <name>Constant Placement</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>Datapointer Size</name>
@@ -3361,7 +3361,7 @@
         </option>
         <option>
           <name>General Xdata Stack Size</name>
-          <state>0x300</state>
+          <state>0x1FF</state>
         </option>
         <option>
           <name>General Ext Stack Size</name>
@@ -3891,7 +3891,7 @@
         </option>
         <option>
           <name>XOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>OutputFile</name>
@@ -4081,15 +4081,15 @@
         </option>
         <option>
           <name>AllowExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenerateExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XExtraOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ExtraOutputFile</name>
@@ -4098,7 +4098,7 @@
         <option>
           <name>ExtraOutputFormat</name>
           <version>11</version>
-          <state>60</state>
+          <state>23</state>
         </option>
         <option>
           <name>ExtraFormatVariant</name>

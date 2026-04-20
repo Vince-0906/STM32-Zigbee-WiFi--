@@ -32,6 +32,14 @@ static void oled_write(uint8 mode, uint8 value)
 #define WR_CMD(c)  oled_write(OLED_CMD_MODE, (uint8)(c))
 #define WR_DAT(d)  oled_write(OLED_DAT_MODE, (uint8)(d))
 
+static uint8 reverse_bits8(uint8 value)
+{
+    value = (uint8)(((value & 0xF0u) >> 4) | ((value & 0x0Fu) << 4));
+    value = (uint8)(((value & 0xCCu) >> 2) | ((value & 0x33u) << 2));
+    value = (uint8)(((value & 0xAAu) >> 1) | ((value & 0x55u) << 1));
+    return value;
+}
+
 static void oled_set_pos(uint8 x, uint8 page)
 {
     WR_CMD(0xB0u | page);
@@ -55,11 +63,12 @@ void oled_ssd1306_init(void)
     oled_wait_ms(120);
 
     WR_CMD(0xAE);
+    WR_CMD(0x20); WR_CMD(0x02);
+    WR_CMD(0xB0); WR_CMD(0xC8);
     WR_CMD(0x00); WR_CMD(0x10);
     WR_CMD(0x40);
-    WR_CMD(0x81); WR_CMD(0xCF);
+    WR_CMD(0x81); WR_CMD(0x7F);
     WR_CMD(0xA1);
-    WR_CMD(0xC8);
     WR_CMD(0xA6);
     WR_CMD(0xA8); WR_CMD(0x3F);
     WR_CMD(0xD3); WR_CMD(0x00);
@@ -67,10 +76,7 @@ void oled_ssd1306_init(void)
     WR_CMD(0xD9); WR_CMD(0xF1);
     WR_CMD(0xDA); WR_CMD(0x12);
     WR_CMD(0xDB); WR_CMD(0x40);
-    WR_CMD(0x20); WR_CMD(0x02);
     WR_CMD(0x8D); WR_CMD(0x14);
-    WR_CMD(0xA4);
-    WR_CMD(0xA6);
     WR_CMD(0xAF);
 
     oled_wait_ms(20);
@@ -108,13 +114,19 @@ void oled_ssd1306_draw_text(uint8 row, const char *text)
         }
         glyph = (const uint8 *)&asc2_1608[ch - 0x20u][0];
 
+        /* asc2_1608 is stored interleaved by column:
+         *   byte 0 = col0 upper 8 rows, byte 1 = col0 lower 8 rows,
+         *   byte 2 = col1 upper 8 rows, byte 3 = col1 lower 8 rows, ...
+         * Also note the font declares bit7 as the top pixel, while SSD1306
+         * page RAM expects bit0 to be the top row inside a page. Each byte
+         * must therefore be bit-reversed before it is sent to the panel. */
         oled_set_pos(x, page);
         for (col = 0; col < 8u; ++col) {
-            WR_DAT(glyph[col]);
+            WR_DAT(reverse_bits8(glyph[(uint8)(col << 1)]));
         }
         oled_set_pos(x, (uint8)(page + 1u));
         for (col = 0; col < 8u; ++col) {
-            WR_DAT(glyph[col + 8u]);
+            WR_DAT(reverse_bits8(glyph[(uint8)((col << 1) + 1u)]));
         }
 
         x = (uint8)(x + 8u);

@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:25:59 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:46:03 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\commo #
 #                          n\OSAL_Clock.c                                     #
@@ -53,18 +53,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -1244,16 +1243,34 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL_Clock.c
    \   00000A   7B03         MOV     R3,#0x3
    \   00000C   22           RET
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_15180:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_15180>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_15180>`:
    \   000000   80510100     DD 86400
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_3c:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_3c>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_3c>`:
    \   000000   3C000000     DD 60
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_e10:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_e10>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_e10>`:
    \   000000   100E0000     DD 3600
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -1306,47 +1323,50 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\osal\common\OSAL_Clock.c
 
    Segment part sizes:
 
-     Function/Label              Bytes
-     --------------              -----
-     _A_IEN0                        1
-     previousMacTimerTick           4
-     remUsTicks                     2
-     timeMSec                       2
-     OSAL_timeSeconds               4
-     osalTimeUpdate               198
-     osal_setClock                 26
-     osal_getClock                 17
-     osal_ConvertUTCTime          501
-     ?Subroutine3                  12
-     ?Subroutine1                   8
-     ??Subroutine5_0                1
-     ??Subroutine6_0               11
-     ?Subroutine0                  19
-     monthLength                   31
-     osal_ConvertUTCSecs          311
-     ?Subroutine2                  15
-     ?Subroutine4                  13
-     __Constant_15180               4
-     __Constant_3c                  4
-     __Constant_e10                 4
-     ??osalTimeUpdate?relay         6
-     ??osal_setClock?relay          6
-     ??osal_getClock?relay          6
-     ??osal_ConvertUTCTime?relay    6
-     ??monthLength?relay            6
-     ??osal_ConvertUTCSecs?relay    6
+     Function/Label                      Bytes
+     --------------                      -----
+     _A_IEN0                                1
+     previousMacTimerTick                   4
+     remUsTicks                             2
+     timeMSec                               2
+     OSAL_timeSeconds                       4
+     osalTimeUpdate                       198
+     osal_setClock                         26
+     osal_getClock                         17
+     osal_ConvertUTCTime                  501
+     ?Subroutine3                          12
+     ?Subroutine1                           8
+     ??Subroutine5_0                        1
+     ??Subroutine6_0                       11
+     ?Subroutine0                          19
+     monthLength                           31
+     osal_ConvertUTCSecs                  311
+     ?Subroutine2                          15
+     ?Subroutine4                          13
+     __Constant_15180                       4
+     ?<Initializer for __Constant_15180>    4
+     __Constant_3c                          4
+     ?<Initializer for __Constant_3c>       4
+     __Constant_e10                         4
+     ?<Initializer for __Constant_e10>      4
+     ??osalTimeUpdate?relay                 6
+     ??osal_setClock?relay                  6
+     ??osal_getClock?relay                  6
+     ??osal_ConvertUTCTime?relay            6
+     ??monthLength?relay                    6
+     ??osal_ConvertUTCSecs?relay            6
 
  
  1 163 bytes in segment BANKED_CODE
     36 bytes in segment BANK_RELAYS
      1 byte  in segment SFR_AN
-    12 bytes in segment XDATA_ROM_C
+    12 bytes in segment XDATA_I
+    12 bytes in segment XDATA_ID
     12 bytes in segment XDATA_Z
  
- 1 199 bytes of CODE  memory
-     0 bytes of CONST memory (+ 12 bytes shared)
+ 1 199 bytes of CODE  memory (+ 12 bytes shared)
      0 bytes of DATA  memory (+  1 byte  shared)
-    12 bytes of XDATA memory
+    12 bytes of XDATA memory (+ 12 bytes shared)
 
 Errors: none
 Warnings: none

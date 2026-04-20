@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:33 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:52:52 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\Source\uart_link.c                      #
@@ -55,18 +55,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
-#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
-#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
-#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
-#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          es\GwCoord\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\Sou #
+#                          rce\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zsta #
+#                          ck\Samples\GwCoord\CC2530DB\..\..\..\ZMain\TI2530D #
+#                          B\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\hal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\ #
+#                          ..\Components\hal\target\CC2530EB\ -I              #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
 #                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
@@ -658,12 +657,18 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000004   90....       MOV     DPTR,#s_parser + 82
    \   000007   80..         SJMP    ?Subroutine0
 
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_1:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_1>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
    \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for s_owner_task>`:
    \   000000   FF           DB 255
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_1:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_1>`:
    \   000000   01000000     DD 1
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -744,8 +749,9 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      ?Subroutine0                      10
      uart_link_crc_err                  9
      uart_link_ok_cnt                   9
-     ?<Initializer for s_owner_task>    1
      __Constant_1                       4
+     ?<Initializer for s_owner_task>    1
+     ?<Initializer for __Constant_1>    4
      ??uart_rx_cb?relay                 6
      ??uart_link_init?relay             6
      ??uart_link_drain?relay            6
@@ -757,14 +763,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
  
  598 bytes in segment BANKED_CODE
   42 bytes in segment BANK_RELAYS
-   1 byte  in segment XDATA_I
-   1 byte  in segment XDATA_ID
-   4 bytes in segment XDATA_ROM_C
+   5 bytes in segment XDATA_I
+   5 bytes in segment XDATA_ID
  218 bytes in segment XDATA_Z
  
- 641 bytes of CODE  memory
-   0 bytes of CONST memory (+ 4 bytes shared)
- 219 bytes of XDATA memory
+ 641 bytes of CODE  memory (+ 4 bytes shared)
+ 219 bytes of XDATA memory (+ 4 bytes shared)
 
 Errors: none
 Warnings: 1

@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:33 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:52:59 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target #
 #                          \CC2530EB\hal_led.c                                #
@@ -55,18 +55,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
-#                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\GwCoord\CC2530DB\ -I                         #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\Source\ -I                  #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\ZMain\TI2530DB\ -I    #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\hal\ #
-#                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
-#                          zstack\Samples\GwCoord\CC2530DB\..\..\..\..\..\Com #
-#                          ponents\hal\target\CC2530EB\ -I                    #
+#                          es\GwCoord\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Projects\zstack\Samples\GwCoord\CC2530DB\..\Sou #
+#                          rce\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zsta #
+#                          ck\Samples\GwCoord\CC2530DB\..\..\..\ZMain\TI2530D #
+#                          B\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\GwCoord\CC2530DB\..\..\..\..\..\Component #
+#                          s\hal\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
+#                          jects\zstack\Samples\GwCoord\CC2530DB\..\..\..\..\ #
+#                          ..\Components\hal\target\CC2530EB\ -I              #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\GwCoord\CC2530DB\..\..\..\..\..\Components\mac\ #
 #                          include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\ #
@@ -1333,8 +1332,14 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target\CC2530EB\hal_led.c
     510          #endif /* BLINK_LEDS */
     511          }
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_64:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_64>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_64>`:
    \   000000   64000000     DD 100
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -1417,46 +1422,47 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target\CC2530EB\hal_led.c
 
    Segment part sizes:
 
-     Function/Label           Bytes
-     --------------           -----
-     _A_P1                       1
-     HalLedState                 1
-     HalSleepLedState            1
-     preBlinkState               1
-     HalLedStatusControl        37
-     HalLedInit                 14
-     ?Subroutine0                4
-     ??Subroutine2_0             1
-     ??Subroutine3_0             7
-     HalLedSet                 122
-     HalLedBlink               219
-     ?Subroutine1                9
-     HalLedUpdate              441
-     HalLedOnOff                89
-     HalLedGetState             11
-     HalLedEnterSleep           87
-     HalLedExitSleep            20
-     __Constant_64               4
-     ??HalLedInit?relay          6
-     ??HalLedSet?relay           6
-     ??HalLedBlink?relay         6
-     ??HalLedUpdate?relay        6
-     ??HalLedOnOff?relay         6
-     ??HalLedGetState?relay      6
-     ??HalLedEnterSleep?relay    6
-     ??HalLedExitSleep?relay     6
+     Function/Label                   Bytes
+     --------------                   -----
+     _A_P1                               1
+     HalLedState                         1
+     HalSleepLedState                    1
+     preBlinkState                       1
+     HalLedStatusControl                37
+     HalLedInit                         14
+     ?Subroutine0                        4
+     ??Subroutine2_0                     1
+     ??Subroutine3_0                     7
+     HalLedSet                         122
+     HalLedBlink                       219
+     ?Subroutine1                        9
+     HalLedUpdate                      441
+     HalLedOnOff                        89
+     HalLedGetState                     11
+     HalLedEnterSleep                   87
+     HalLedExitSleep                    20
+     __Constant_64                       4
+     ?<Initializer for __Constant_64>    4
+     ??HalLedInit?relay                  6
+     ??HalLedSet?relay                   6
+     ??HalLedBlink?relay                 6
+     ??HalLedUpdate?relay                6
+     ??HalLedOnOff?relay                 6
+     ??HalLedGetState?relay              6
+     ??HalLedEnterSleep?relay            6
+     ??HalLedExitSleep?relay             6
 
  
  1 024 bytes in segment BANKED_CODE
     48 bytes in segment BANK_RELAYS
      1 byte  in segment SFR_AN
-     4 bytes in segment XDATA_ROM_C
+     4 bytes in segment XDATA_I
+     4 bytes in segment XDATA_ID
     40 bytes in segment XDATA_Z
  
- 1 072 bytes of CODE  memory
-     0 bytes of CONST memory (+ 4 bytes shared)
+ 1 072 bytes of CODE  memory (+ 4 bytes shared)
      0 bytes of DATA  memory (+ 1 byte  shared)
-    40 bytes of XDATA memory
+    40 bytes of XDATA memory (+ 4 bytes shared)
 
 Errors: none
 Warnings: none
