@@ -29,7 +29,7 @@
 /* ---- 节点侧串口调试：打到 UART0(P0.2/P0.3) → CH340G → Micro-USB → PC 串口助手 115200
  * 参考 references/ZStack-CC2530-main/.../SampleApp.c 的 HalUARTWrite(0,...) 套路。
  * 不用 OLED 就能知道节点是否在跑、是否入网、是否采到数据、是否 confirm 成功。 */
-static char s_dbg_buf[96];
+static char s_dbg_buf[32];
 
 static void dbg_puts(const char *s)
 {
@@ -44,25 +44,6 @@ static void dbg_line(const char *s)
     dbg_puts(s);
     dbg_puts("\r\n");
 }
-
-static const char *state_name(devStates_t st)
-{
-    switch (st) {
-    case DEV_HOLD:               return "HOLD";
-    case DEV_INIT:               return "INIT";
-    case DEV_NWK_DISC:           return "NWK_DISC";
-    case DEV_NWK_JOINING:        return "NWK_JOINING";
-    case DEV_NWK_REJOIN:         return "NWK_REJOIN";
-    case DEV_END_DEVICE_UNAUTH:  return "END_UNAUTH";
-    case DEV_END_DEVICE:         return "END_DEVICE";
-    case DEV_ROUTER:             return "ROUTER";
-    case DEV_COORD_STARTING:     return "COORD_START";
-    case DEV_ZB_COORD:           return "ZB_COORD";
-    case DEV_NWK_ORPHAN:         return "NWK_ORPHAN";
-    default:                     return "?";
-    }
-}
-
 
 uint8 ZbNode_TaskID = 0xFF;
 
@@ -128,7 +109,7 @@ static void indicator_pin_init(uint8 pin)
 static void indicator_pin_set(uint8 pin, uint8 on)
 {
     uint8 mask = (uint8)(1u << pin);
-    uint8 level = on ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+    uint8 level = on ? NODE_STATUS_LED_ACTIVE_HIGH : (uint8)(!NODE_STATUS_LED_ACTIVE_HIGH);
 
     if (level) {
         P1 |= mask;
@@ -156,7 +137,6 @@ static void alive_led_set(uint8 on)
 
 static void startup_pattern_set(uint8 on)
 {
-    indicator_pin_set(NODE_LED_PIN, on);
     startup_led_set(on);
 }
 
@@ -184,7 +164,7 @@ static void status_led_refresh(void)
 
     if (s_link_ready) {
         if (s_startup_leds_owned) {
-            startup_pattern_set(0u);
+            startup_led_set(0u);
             actuator_led_set(0u);
             s_startup_leds_owned = 0u;
         } else {
@@ -194,6 +174,7 @@ static void status_led_refresh(void)
         s_startup_leds_owned = 1u;
         blink_on = (uint8)((s_status_led_phase % STATUS_LED_FAST_TICKS) <
                            (STATUS_LED_FAST_TICKS / 2u));
+        actuator_led_set(0u);
         startup_pattern_set(blink_on);
     } else if (network_joined()) {
         s_startup_leds_owned = 1u;
@@ -203,6 +184,7 @@ static void status_led_refresh(void)
         s_startup_leds_owned = 1u;
         blink_on = (uint8)((s_status_led_phase % STATUS_LED_SLOW_TICKS) <
                            (STATUS_LED_SLOW_TICKS / 2u));
+        actuator_led_set(0u);
         startup_pattern_set(blink_on);
     }
 }
@@ -217,12 +199,7 @@ void ZbNode_PreInit(void)
     s_wait_first_report_cfm = 0;
     s_nwk_state = DEV_INIT;
     status_led_refresh();
-    /* 每次上电都强制清掉 NV 的网络 + 配置状态，让端节点以"首次加入"方式走发现 → 加入流程。
-     * 只设 NETWORK_STATE 时，如果上次保留了 PANID/信道偏好，偶尔会卡在旧 PAN。
-     * 同时清 CONFIG_STATE 可以连 TCLK / NIB 参数一起清零。 */
-    (void)zgWriteStartupOptions(ZG_STARTUP_SET,
-                                (uint8)(ZCD_STARTOPT_DEFAULT_NETWORK_STATE |
-                                        ZCD_STARTOPT_DEFAULT_CONFIG_STATE));
+    dbg_line("[boot] keep NV network state, try restore existing PAN");
 }
 
 static uint8 network_ready(void)
@@ -368,14 +345,14 @@ static void do_report(void)
             s_oled_model.temp_x100 = t;
             s_oled_model.hum_x100  = h;
             s_oled_model.has_sample = 1u;
-            (void)sprintf(s_dbg_buf, "[n1] DHT11 OK t=%s%d.%02d h=%u.%02u -> ZCL tx\r\n",
+            (void)sprintf(s_dbg_buf, "[n1] T=%s%d.%02d H=%u.%02u\r\n",
                           (t < 0) ? "-" : "", (int)(tabs / 100), (int)(tabs % 100),
                           (unsigned)(h / 100u), (unsigned)(h % 100u));
             dbg_puts(s_dbg_buf);
             (void)send_attr_report(ZBNODE_EP_SENSOR, CLU_TEMP, 0x0000, 0x10, &t, 2);
             (void)send_attr_report(ZBNODE_EP_SENSOR, CLU_HUM,  0x0000, 0x11, &h, 2);
         } else {
-            (void)sprintf(s_dbg_buf, "[n1] DHT11 FAIL rc=%d\r\n", (int)rc);
+            (void)sprintf(s_dbg_buf, "[n1] DHT rc=%d\r\n", (int)rc);
             dbg_puts(s_dbg_buf);
             note_local_sample_failure(rc);
         }
@@ -386,7 +363,7 @@ static void do_report(void)
 
         s_oled_model.lux = lux;
         s_oled_model.has_sample = 1u;
-        (void)sprintf(s_dbg_buf, "[n2] LDR lux=%u -> ZCL tx\r\n", (unsigned)lux);
+        (void)sprintf(s_dbg_buf, "[n2] lux=%u\r\n", (unsigned)lux);
         dbg_puts(s_dbg_buf);
         (void)send_attr_report(ZBNODE_EP_SENSOR, CLU_LUX, 0x0000, 0x11, &lux, 2);
     }
@@ -465,7 +442,7 @@ static void on_data_confirm(afDataConfirm_t *cfm)
             dbg_line("[cfm] OK");
         }
     } else {
-        (void)sprintf(s_dbg_buf, "[cfm] FAIL status=0x%02X\r\n", (unsigned)cfm->hdr.status);
+        (void)sprintf(s_dbg_buf, "[cfm] fail=0x%02X\r\n", (unsigned)cfm->hdr.status);
         dbg_puts(s_dbg_buf);
         note_transport_failure((int8)cfm->hdr.status);
     }
@@ -489,12 +466,32 @@ UINT16 ZbNode_ProcessEvent(uint8 task_id, uint16 events)
                 break;
 
             case ZDO_STATE_CHANGE:
+            {
+                devStates_t prev_state = s_nwk_state;
+
                 s_nwk_state = (devStates_t)MSGpkt->hdr.status;
-                (void)sprintf(s_dbg_buf, "[zdo] state=%u (%s)\r\n",
-                              (unsigned)s_nwk_state, state_name(s_nwk_state));
+                (void)sprintf(s_dbg_buf, "[zdo] st=%u\r\n",
+                              (unsigned)s_nwk_state);
                 dbg_puts(s_dbg_buf);
+                if (!s_nwk_joined &&
+                    prev_state == DEV_INIT &&
+                    (s_nwk_state == DEV_NWK_DISC ||
+                     s_nwk_state == DEV_NWK_JOINING ||
+                     s_nwk_state == DEV_END_DEVICE_UNAUTH)) {
+                    dbg_line("[boot] restore unavailable, fall back to join flow");
+                }
                 if (network_joined()) {
-                    (void)sprintf(s_dbg_buf, "[zdo] JOINED pan=%04X short=%04X ch=%u\r\n",
+                    if (!s_nwk_joined &&
+                        (prev_state == DEV_NWK_DISC ||
+                         prev_state == DEV_NWK_JOINING ||
+                         prev_state == DEV_END_DEVICE_UNAUTH ||
+                         prev_state == DEV_NWK_REJOIN ||
+                         prev_state == DEV_NWK_ORPHAN)) {
+                        dbg_line("[zdo] FRESH-JOIN");
+                    } else {
+                        dbg_line("[zdo] RESTORED");
+                    }
+                    (void)sprintf(s_dbg_buf, "[zdo] pan=%04X sa=%04X c=%u\r\n",
                                   (unsigned)_NIB.nwkPanId,
                                   (unsigned)NLME_GetShortAddr(),
                                   (unsigned)_NIB.nwkLogicalChannel);
@@ -513,6 +510,7 @@ UINT16 ZbNode_ProcessEvent(uint8 task_id, uint16 events)
                 status_led_refresh();
                 oled_publish();
                 break;
+            }
 
             default:
                 break;

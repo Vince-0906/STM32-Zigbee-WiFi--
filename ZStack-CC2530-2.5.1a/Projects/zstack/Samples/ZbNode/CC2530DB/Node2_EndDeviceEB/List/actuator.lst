@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  15:52:34 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  19:38:26 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -371,25 +371,30 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000005                ; Saved register size: 9
    \   000005                ; Auto size: 0
    \   000005   E9           MOV     A,R1
-     41              uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
-   \   000006   6004         JZ      ??actuator_led_set_0
-   \   000008   7F01         MOV     R7,#0x1
-   \   00000A   8002         SJMP    ??actuator_led_set_1
+   \   000006   FE           MOV     R6,A
+     41              uint8 level = onoff ? NODE_LED_ACTIVE_HIGH : (uint8)(!NODE_LED_ACTIVE_HIGH);
+   \   000007   6004         JZ      ??actuator_led_set_0
+   \   000009   7B00         MOV     R3,#0x0
+   \   00000B   8002         SJMP    ??actuator_led_set_1
    \                     ??actuator_led_set_0:
-   \   00000C   7F00         MOV     R7,#0x0
+   \   00000D   7B01         MOV     R3,#0x1
      42              pin_write(NODE_LED_PORT, NODE_LED_PIN, level);
    \                     ??actuator_led_set_1:
-   \   00000E                ; Setup parameters for call to function pin_write
-   \   00000E   EF           MOV     A,R7
-   \   00000F   FB           MOV     R3,A
-   \   000010   7A04         MOV     R2,#0x4
-   \   000012   7901         MOV     R1,#0x1
-   \   000014   12....       LCALL   ??pin_write?relay
+   \   00000F                ; Setup parameters for call to function pin_write
+   \   00000F   7A04         MOV     R2,#0x4
+   \   000011   7901         MOV     R1,#0x1
+   \   000013   12....       LCALL   ??pin_write?relay
      43              s_led = onoff ? 1 : 0;
-   \   000017   EF           MOV     A,R7
-   \   000018   90....       MOV     DPTR,#s_led
-   \   00001B                REQUIRE ?Subroutine2
-   \   00001B                ; // Fall through to label ?Subroutine2
+   \   000016   EE           MOV     A,R6
+   \   000017   90....       MOV     DPTR,#s_led
+   \   00001A   6004         JZ      ??actuator_led_set_2
+   \   00001C   7401         MOV     A,#0x1
+   \   00001E   8001         SJMP    ??actuator_led_set_3
+   \                     ??actuator_led_set_2:
+   \   000020   E4           CLR     A
+   \                     ??actuator_led_set_3:
+   \   000021                REQUIRE ?Subroutine2
+   \   000021                ; // Fall through to label ?Subroutine2
      44          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
@@ -408,7 +413,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000005                ; Saved register size: 9
    \   000005                ; Auto size: 0
    \   000005   E9           MOV     A,R1
-     48              uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+     48              uint8 level = onoff ? NODE_BUZZER_ACTIVE_HIGH : (uint8)(!NODE_BUZZER_ACTIVE_HIGH);
    \   000006   6004         JZ      ??actuator_buzzer_set_0
    \   000008   7F01         MOV     R7,#0x1
    \   00000A   8002         SJMP    ??actuator_buzzer_set_1
@@ -531,7 +536,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      pin_write                       73
      actuator_init                   30
      ??Subroutine3_0                  7
-     actuator_led_set                27
+     actuator_led_set                33
      ?Subroutine2                     6
      actuator_buzzer_set             29
      actuator_led_state               7
@@ -546,12 +551,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      ??actuator_buzzer_state?relay    6
 
  
- 281 bytes in segment BANKED_CODE
+ 287 bytes in segment BANKED_CODE
   42 bytes in segment BANK_RELAYS
    9 bytes in segment SFR_AN
    2 bytes in segment XDATA_Z
  
- 323 bytes of CODE  memory
+ 329 bytes of CODE  memory
    0 bytes of DATA  memory (+ 9 bytes shared)
    2 bytes of XDATA memory
 

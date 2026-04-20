@@ -76,8 +76,8 @@
 #define ZB_ALLOW_JOIN_SEC   60u
 #define ZB_BRINGUP_RETRY_MS 5000u
 #define ZB_BRINGUP_WINDOW_MS 70000u
-#define NODE1_STALE_MS      6000u
-#define NODE2_STALE_MS      1500u
+#define NODE1_STALE_MS      4000u
+#define NODE2_STALE_MS      4000u
 #define OLED_REFRESH_MS     500u
 #define IWDG_TIMEOUT_MS     2000u
 #define JSON_LINE_MAX       512u
@@ -98,13 +98,13 @@
  * 不要将此默认值推送到公共仓库。
  */
 #ifndef WIFI_SSID
-#define WIFI_SSID "611-2"
+#define WIFI_SSID "CMCC-701"
 #endif
 #ifndef WIFI_PWD
-#define WIFI_PWD  "hdsx61#203"
+#define WIFI_PWD  "88888888"
 #endif
 #ifndef SERVER_IP
-#define SERVER_IP "192.168.62.107"
+#define SERVER_IP "192.168.1.85"
 #endif
 #ifndef SERVER_PORT
 #define SERVER_PORT 23333u

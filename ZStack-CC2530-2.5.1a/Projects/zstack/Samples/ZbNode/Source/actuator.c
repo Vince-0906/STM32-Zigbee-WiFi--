@@ -38,14 +38,14 @@ void actuator_init(void)
 
 void actuator_led_set(uint8 onoff)
 {
-    uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+    uint8 level = onoff ? NODE_LED_ACTIVE_HIGH : (uint8)(!NODE_LED_ACTIVE_HIGH);
     pin_write(NODE_LED_PORT, NODE_LED_PIN, level);
     s_led = onoff ? 1 : 0;
 }
 
 void actuator_buzzer_set(uint8 onoff)
 {
-    uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+    uint8 level = onoff ? NODE_BUZZER_ACTIVE_HIGH : (uint8)(!NODE_BUZZER_ACTIVE_HIGH);
     pin_write(NODE_BUZZER_PORT, NODE_BUZZER_PIN, level);
     s_buz = onoff ? 1 : 0;
 }

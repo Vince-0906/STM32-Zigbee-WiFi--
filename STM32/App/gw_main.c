@@ -29,6 +29,9 @@ static uint8_t s_n1_oled_cache_valid = 0;
 static uint32_t s_n1_oled_cache_update_ms = 0;
 static int16_t s_n1_oled_temp_x100 = 0;
 static uint16_t s_n1_oled_hum_x100 = 0;
+static uint8_t s_n2_oled_cache_valid = 0;
+static uint32_t s_n2_oled_cache_update_ms = 0;
+static uint16_t s_n2_oled_lux = 0;
 
 static void on_zb_frame(const frame_t *f) { router_on_zb_frame(f); }
 static void on_wifi_line(const char *line, uint16_t n)
@@ -113,6 +116,9 @@ void gw_main_init(void)
     s_n1_oled_cache_update_ms = 0;
     s_n1_oled_temp_x100 = 0;
     s_n1_oled_hum_x100 = 0;
+    s_n2_oled_cache_valid = 0;
+    s_n2_oled_cache_update_ms = 0;
+    s_n2_oled_lux = 0;
 
     zb_link_init(on_zb_frame);
     wifi_link_init(on_wifi_line);
@@ -198,14 +204,27 @@ void gw_main_run(void)
                     s_n1_oled_hum_x100 = n1->hum_x100;
                 }
             }
-            if (n1 && n1->online && s_n1_oled_cache_valid) {
+            if (n2) {
+                if (!n2->online) {
+                    s_n2_oled_cache_valid = 0u;
+                    s_n2_oled_cache_update_ms = 0u;
+                } else if (n2->last_update_ms != 0u &&
+                           n2->last_update_ms != s_n2_oled_cache_update_ms) {
+                    s_n2_oled_cache_valid = 1u;
+                    s_n2_oled_cache_update_ms = n2->last_update_ms;
+                    s_n2_oled_lux = n2->lux;
+                }
+            }
+            if (n1 && n1->online && s_n1_oled_cache_valid &&
+                (now - n1->last_update_ms) <= NODE1_STALE_MS) {
                 om.n1_online = 1u;
                 om.n1_temp_x100 = s_n1_oled_temp_x100;
                 om.n1_hum_x100 = s_n1_oled_hum_x100;
             }
-            if (n2) {
-                om.n2_online = (n2->online && (now - n2->last_update_ms) <= NODE2_STALE_MS) ? 1u : 0u;
-                om.n2_lux = n2->lux;
+            if (n2 && n2->online && s_n2_oled_cache_valid &&
+                (now - n2->last_update_ms) <= NODE2_STALE_MS) {
+                om.n2_online = 1u;
+                om.n2_lux = s_n2_oled_lux;
             }
             strncpy(om.alm, automation_alarm_text(), sizeof(om.alm) - 1);
             oled_view_update(&om);

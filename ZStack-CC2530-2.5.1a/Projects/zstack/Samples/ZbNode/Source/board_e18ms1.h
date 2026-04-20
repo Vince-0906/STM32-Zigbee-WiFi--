@@ -40,7 +40,9 @@
 #define NODE_LDR_ADC_CH         7       /* AIN7 = P0.7 */
 
 /* 执行器电平极性（实测若反向改为 0） */
-#define ACT_ACTIVE_HIGH         1
+#define NODE_LED_ACTIVE_HIGH         0
+#define NODE_STATUS_LED_ACTIVE_HIGH  0
+#define NODE_BUZZER_ACTIVE_HIGH      1
 
 /* Node 角色宏（工程 CCFLAGS 传入 -DNODE_ROLE=1 / =2） */
 #ifndef NODE_ROLE

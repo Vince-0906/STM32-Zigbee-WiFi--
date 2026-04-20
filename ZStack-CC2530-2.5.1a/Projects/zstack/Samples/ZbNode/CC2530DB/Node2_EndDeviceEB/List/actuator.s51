@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  15:52:34 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  19:38:26 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -658,24 +658,29 @@ actuator_led_set:
         ; Saved register size: 9
         ; Auto size: 0
         MOV     A,R1
-//   41     uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+        MOV     R6,A
+//   41     uint8 level = onoff ? NODE_LED_ACTIVE_HIGH : (uint8)(!NODE_LED_ACTIVE_HIGH);
         JZ      ??actuator_led_set_0
-        MOV     R7,#0x1
+        MOV     R3,#0x0
         SJMP    ??actuator_led_set_1
 ??actuator_led_set_0:
-        MOV     R7,#0x0
+        MOV     R3,#0x1
 //   42     pin_write(NODE_LED_PORT, NODE_LED_PIN, level);
 ??actuator_led_set_1:
         ; Setup parameters for call to function pin_write
-        MOV     A,R7
-        MOV     R3,A
         MOV     R2,#0x4
         MOV     R1,#0x1
         LCALL   ??pin_write?relay
 //   43     s_led = onoff ? 1 : 0;
-        MOV     A,R7
+        MOV     A,R6
         MOV     DPTR,#s_led
+        JZ      ??actuator_led_set_2
+        MOV     A,#0x1
+        SJMP    ??actuator_led_set_3
+??actuator_led_set_2:
+        CLR     A
         CFI EndBlock cfiBlock4
+??actuator_led_set_3:
         REQUIRE ?Subroutine2
         ; // Fall through to label ?Subroutine2
 //   44 }
@@ -735,7 +740,7 @@ actuator_buzzer_set:
         ; Saved register size: 9
         ; Auto size: 0
         MOV     A,R1
-//   48     uint8 level = onoff ? ACT_ACTIVE_HIGH : (uint8)(!ACT_ACTIVE_HIGH);
+//   48     uint8 level = onoff ? NODE_BUZZER_ACTIVE_HIGH : (uint8)(!NODE_BUZZER_ACTIVE_HIGH);
         JZ      ??actuator_buzzer_set_0
         MOV     R7,#0x1
         SJMP    ??actuator_buzzer_set_1
@@ -867,12 +872,12 @@ actuator_buzzer_state:
 
         END
 // 
-// 281 bytes in segment BANKED_CODE
+// 287 bytes in segment BANKED_CODE
 //  42 bytes in segment BANK_RELAYS
 //   9 bytes in segment SFR_AN
 //   2 bytes in segment XDATA_Z
 // 
-// 323 bytes of CODE  memory
+// 329 bytes of CODE  memory
 //   0 bytes of DATA  memory (+ 9 bytes shared)
 //   2 bytes of XDATA memory
 //
