@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:36 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:28:24 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common #
 #                          \hal_drivers.c                                     #
@@ -42,7 +42,7 @@
 #                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Components\hal\common\hal_drivers.c -D           #
-#                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=FALSE -D  #
+#                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=TRUE -D   #
 #                          HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro #
 #                          jects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDevi #
 #                          ceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
@@ -53,18 +53,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -314,13 +313,15 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     160            /* UART */
     161          #if (defined HAL_UART) && (HAL_UART == TRUE)
     162            HalUARTInit();
+   \   000010                ; Setup parameters for call to function HalUARTInit
+   \   000010   12....       LCALL   ??HalUARTInit?relay
     163          #endif
     164          
     165            /* KEY */
     166          #if (defined HAL_KEY) && (HAL_KEY == TRUE)
     167            HalKeyInit();
-   \   000010                ; Setup parameters for call to function HalKeyInit
-   \   000010   12....       LCALL   ??HalKeyInit?relay
+   \   000013                ; Setup parameters for call to function HalKeyInit
+   \   000013   12....       LCALL   ??HalKeyInit?relay
     168          #endif
     169          
     170            /* SPI */
@@ -333,7 +334,7 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     177            usbHidInit();
     178          #endif
     179          }
-   \   000013   80..         SJMP    ?Subroutine0
+   \   000016   80..         SJMP    ?Subroutine0
     180          
     181          
     182          /**************************************************************************************************
@@ -502,8 +503,10 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     269          void Hal_ProcessPoll ()
    \                     Hal_ProcessPoll:
     270          {
-   \   000000                ; Saved register size: 0
-   \   000000                ; Auto size: 0
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
     271          
     272            /* Timer Poll */
     273          #if (defined HAL_TIMER) && (HAL_TIMER == TRUE)
@@ -513,6 +516,8 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     277            /* UART Poll */
     278          #if (defined HAL_UART) && (HAL_UART == TRUE)
     279            HalUARTPoll();
+   \   000004                ; Setup parameters for call to function HalUARTPoll
+   \   000004   12....       LCALL   ??HalUARTPoll?relay
     280          #endif  
     281          
     282            /* SPI Poll */
@@ -531,7 +536,7 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
     295          #endif
     296          
     297          }
-   \   000000   02....       LJMP    ?BRET
+   \   000007   02....       LJMP    ?Subroutine0 & 0xFFFF
 
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??Hal_Init?relay:
@@ -567,6 +572,7 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
        -> HalDmaInit              4      0      0
        -> HalAesInit              4      0      0
        -> HalLedInit              4      0      0
+       -> HalUARTInit             4      0      0
        -> HalKeyInit              4      0      0
      Hal_Init                     2      0      0
      Hal_ProcessEvent             0      0     10
@@ -576,7 +582,8 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
        -> HalLedUpdate            0      0     20
        -> HalKeyPoll              0      0     20
        -> osal_start_timerEx      0      0     20
-     Hal_ProcessPoll              0      0      0
+     Hal_ProcessPoll              2      0      0
+       -> HalUARTPoll             4      0      0
 
 
    Segment part sizes:
@@ -586,20 +593,20 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\common\hal_drivers.c
      Hal_TaskID                  1
      Hal_Init                    9
      ?Subroutine0                7
-     HalDriverInit              21
+     HalDriverInit              24
      Hal_ProcessEvent           97
-     Hal_ProcessPoll             3
+     Hal_ProcessPoll            10
      ??Hal_Init?relay            6
      ??HalDriverInit?relay       6
      ??Hal_ProcessEvent?relay    6
      ??Hal_ProcessPoll?relay     6
 
  
- 137 bytes in segment BANKED_CODE
+ 147 bytes in segment BANKED_CODE
   24 bytes in segment BANK_RELAYS
    1 byte  in segment XDATA_Z
  
- 161 bytes of CODE  memory
+ 171 bytes of CODE  memory
    1 byte  of XDATA memory
 
 Errors: none

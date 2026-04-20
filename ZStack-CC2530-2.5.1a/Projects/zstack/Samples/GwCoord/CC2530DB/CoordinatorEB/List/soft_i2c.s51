@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  21:05:35 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        19/Apr/2026  20:43:32 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -154,6 +154,7 @@
         PUBLIC ??soft_i2c_write_byte?relay
         FUNCTION ??soft_i2c_write_byte?relay,0203H
         PUBWEAK P1DIR
+        PUBWEAK P1INP
         PUBWEAK P1SEL
         PUBWEAK P2INP
         PUBWEAK _A_P1
@@ -172,9 +173,8 @@
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         PUBLIC soft_i2c_init
-        FUNCTION soft_i2c_init,021203H
+        FUNCTION soft_i2c_init,0203H
         ARGFRAME XSTACK, 0, STACK
-        LOCFRAME ISTACK, 2, STACK
         PUBLIC soft_i2c_start
         FUNCTION soft_i2c_start,021203H
         ARGFRAME XSTACK, 0, STACK
@@ -353,9 +353,23 @@ soft_i2c_write_byte SYMBOL "soft_i2c_write_byte"
 ??soft_i2c_write_byte?relay SYMBOL "?relay", soft_i2c_write_byte
 
 // D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\GwCoord\Source\soft_i2c.c
-//    1 #include "soft_i2c.h"
-//    2 
-//    3 #include "ioCC2530.h"
+//    1 /*
+//    2  * CC2530 协调器板载 OLED 软件 I2C：与 ZbNode/Source/soft_i2c.c 完全同源。
+//    3  * cc2530_board.md §4.8 / 原理图 U10：
+//    4  *   U10.3 = SCL → P1.2  → OLED_SCL_BM = 0x04
+//    5  *   U10.4 = SDA → P1.3  → OLED_SDA_BM = 0x08
+//    6  *
+//    7  * 用 "开漏模拟 + CC2530 内部上拉" 做主控：
+//    8  *   - 释放（线为高）= 切回输入，内部 ~35 kΩ 上拉把 SCL/SDA 拉到 VCC；
+//    9  *   - 驱动低         = 切成输出（ODR 位一直保持 0）拉到 GND。
+//   10  * 这样即使板上没有外部上拉电阻总线也能工作；如有外部上拉则并联后上升沿更锐。
+//   11  *
+//   12  * 延时：内部上拉 + ~50 pF 总线电容上升时间 ~4 µs，i2c_delay 取 ~5 µs。
+//   13  */
+//   14 
+//   15 #include "soft_i2c.h"
+//   16 
+//   17 #include "ioCC2530.h"
 
         ASEGN SFR_AN:DATA:NOROOT,090H
 // union <unnamed> volatile __sfr _A_P1
@@ -366,6 +380,12 @@ _A_P1:
         ASEGN SFR_AN:DATA:NOROOT,0f4H
 // unsigned char volatile __sfr P1SEL
 P1SEL:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0f6H
+// unsigned char volatile __sfr P1INP
+P1INP:
         DATA8
         DS 1
 
@@ -380,27 +400,19 @@ P2INP:
 P1DIR:
         DATA8
         DS 1
-//    4 #include "OnBoard.h"
-//    5 
-//    6 /* cc2530_board.md §4.8 / 原理图 U10：
-//    7  *   U10.3 = SCL → P1.2  → OLED_SCL_BM = 0x04
-//    8  *   U10.4 = SDA → P1.3  → OLED_SDA_BM = 0x08
-//    9  * 如果后续排线改布请同步改这两行。
-//   10  */
-//   11 #define OLED_SCL_BM  ((uint8)0x04u)   /* P1.2 */
-//   12 #define OLED_SDA_BM  ((uint8)0x08u)   /* P1.3 */
-//   13 
-//   14 /* 32 MHz CC2530 下每个 NOP ≈ 31 ns，20~40 个 NOP ≈ 1 µs，
-//   15  * 对应 100~400 kHz I2C 的最低半周期要求。
-//   16  * MicroWait(1) 调用开销已 >200 ns，直接用 NOP 节流更稳。 */
+//   18 #include "OnBoard.h"
+//   19 
+//   20 #define OLED_SCL_BM  ((uint8)0x04u)   /* P1.2 */
+//   21 #define OLED_SDA_BM  ((uint8)0x08u)   /* P1.3 */
+//   22 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   17 static void i2c_delay(void)
+//   23 static void i2c_delay(void)
 i2c_delay:
         CFI Block cfiBlock0 Using cfiCommon0
         CFI Function i2c_delay
         CODE
-//   18 {
+//   24 {
         PUSH    DPL
         CFI DPL0 Frame(CFA_SP, 4)
         CFI CFA_SP SP+-4
@@ -412,46 +424,250 @@ i2c_delay:
         MOV     A,#-0x1
         LCALL   ?ALLOC_XSTACK8
         CFI CFA_XSP16 add(XSP16, 1)
-//   19     volatile uint8 i;
-//   20     for (i = 0; i < 20u; ++i) {
+//   25     /* ~5 µs @ 32 MHz；for 循环每迭代 ~4 cycle = 125 ns，40 迭代 ≈ 5 µs。 */
+//   26     volatile uint8 i;
+//   27     for (i = 0; i < 40u; ++i) {
         MOV     DPL,?XSP + 0
         MOV     DPH,?XSP + 1
         CLR     A
         SJMP    ??i2c_delay_0
-//   21         asm("NOP");
+//   28         asm("NOP");
 ??i2c_delay_1:
         NOP
-//   22     }
+//   29     }
         MOVX    A,@DPTR
         INC     A
 ??i2c_delay_0:
         MOVX    @DPTR,A
         MOVX    A,@DPTR
         CLR     C
-        SUBB    A,#0x14
+        SUBB    A,#0x28
         JC      ??i2c_delay_1
-//   23 }
+//   30 }
         MOV     A,#0x1
         LCALL   ?DEALLOC_XSTACK8
         CFI CFA_XSP16 XSP16+0
         SJMP    ??Subroutine5_0
         CFI EndBlock cfiBlock0
+//   31 
+//   32 static void sda_release(void)   { P1DIR &= (uint8)~OLED_SDA_BM; }
+//   33 static void scl_release(void)   { P1DIR &= (uint8)~OLED_SCL_BM; }
+//   34 static void sda_drive_low(void) { P1DIR |= OLED_SDA_BM; }
+//   35 static void scl_drive_low(void) { P1DIR |= OLED_SCL_BM; }
+//   36 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   37 static void sda_set(uint8 high) { if (high) sda_release(); else sda_drive_low(); }
+sda_set:
+        CFI Block cfiBlock1 Using cfiCommon0
+        CFI Function sda_set
+        CODE
+        ; Saved register size: 0
+        ; Auto size: 0
+        MOV     A,R1
+        JZ      ??sda_set_0
+        ANL     0xfe,#0xf7
+        SJMP    ??sda_set_1
+??sda_set_0:
+        ORL     0xfe,#0x8
+??sda_set_1:
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock1
+        REQUIRE P1DIR
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   38 static void scl_set(uint8 high) { if (high) scl_release(); else scl_drive_low(); }
+scl_set:
+        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Function scl_set
+        CODE
+        ; Saved register size: 0
+        ; Auto size: 0
+        MOV     A,R1
+        JZ      ??scl_set_0
+        ANL     0xfe,#0xfb
+        SJMP    ??scl_set_1
+??scl_set_0:
+        ORL     0xfe,#0x4
+??scl_set_1:
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock2
+        REQUIRE P1DIR
+//   39 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   40 void soft_i2c_init(void)
+soft_i2c_init:
+        CFI Block cfiBlock3 Using cfiCommon0
+        CFI Function soft_i2c_init
+        CODE
+//   41 {
+        ; Saved register size: 0
+        ; Auto size: 0
+//   42     /* GPIO 功能，不走 Timer/USART 复用 */
+//   43     P1SEL &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
+        ANL     0xf4,#0xf3
+//   44 
+//   45     /* P1.2 / P1.3 输入模式取"上拉/下拉" 而非高阻 */
+//   46     P1INP &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
+        ANL     0xf6,#0xf3
+//   47 
+//   48     /* P1 port 的上拉方向 = 上（PDUP1 = 0，P2INP bit6） */
+//   49     P2INP &= (uint8)~0x40u;
+        ANL     0xf7,#0xbf
+//   50 
+//   51     /* ODR 位预清 0，后续 P1DIR |= mask 立刻驱动低电平 */
+//   52     P1 &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
+        ANL     0x90,#0xf3
+//   53 
+//   54     /* 初态释放 */
+//   55     sda_release();
+        ANL     0xfe,#0xf7
+//   56     scl_release();
+        ANL     0xfe,#0xfb
+//   57 }
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock3
+        REQUIRE P1SEL
+        REQUIRE P1INP
+        REQUIRE P2INP
+        REQUIRE _A_P1
+        REQUIRE P1DIR
+//   58 
+
+        RSEG BANKED_CODE:CODE:NOROOT(0)
+//   59 void soft_i2c_start(void)
+soft_i2c_start:
+        CFI Block cfiBlock4 Using cfiCommon0
+        CFI Function soft_i2c_start
+        CODE
+//   60 {
+        FUNCALL soft_i2c_start, sda_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_start, scl_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_start, i2c_delay
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_start, sda_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_start, i2c_delay
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_start, scl_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_start, i2c_delay
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
+        ; Auto size: 0
+//   61     sda_set(1);
+        ; Setup parameters for call to function sda_set
+        MOV     R1,#0x1
+        LCALL   ??sda_set?relay
+//   62     scl_set(1);
+        ; Setup parameters for call to function scl_set
+        MOV     R1,#0x1
+        LCALL   ?Subroutine2 & 0xFFFF
+//   63     i2c_delay();
+//   64     sda_set(0);
+??CrossCallReturnLabel_3:
+        LCALL   ??sda_set?relay
+//   65     i2c_delay();
+        ; Setup parameters for call to function i2c_delay
+        LCALL   ??i2c_delay?relay
+//   66     scl_set(0);
+        ; Setup parameters for call to function scl_set
+        MOV     R1,#0x0
+        LCALL   ??scl_set?relay
+        CFI EndBlock cfiBlock4
+//   67     i2c_delay();
+        ; Setup parameters for call to function i2c_delay
+        REQUIRE ?Subroutine0
+        ; // Fall through to label ?Subroutine0
+//   68 }
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
 ?Subroutine0:
-        CFI Block cfiBlock1 Using cfiCommon0
+        CFI Block cfiBlock5 Using cfiCommon0
         CFI NoFunction
         CFI CFA_SP SP+-5
         CFI DPL0 Frame(CFA_SP, 4)
         CFI DPH0 Frame(CFA_SP, 5)
         LCALL   ??i2c_delay?relay
-        CFI EndBlock cfiBlock1
+        CFI EndBlock cfiBlock5
         REQUIRE ??Subroutine5_0
         ; // Fall through to label ??Subroutine5_0
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
 ??Subroutine5_0:
-        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Block cfiBlock6 Using cfiCommon0
         CFI NoFunction
         CFI CFA_SP SP+-5
         CFI DPL0 Frame(CFA_SP, 4)
@@ -463,71 +679,17 @@ i2c_delay:
         CFI CFA_SP SP+-3
         CFI DPL0 SameValue
         LJMP    ?BRET
-        CFI EndBlock cfiBlock2
-//   24 
+        CFI EndBlock cfiBlock6
+//   69 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   25 static void sda_set(uint8 high)
-sda_set:
-        CFI Block cfiBlock3 Using cfiCommon0
-        CFI Function sda_set
+//   70 void soft_i2c_stop(void)
+soft_i2c_stop:
+        CFI Block cfiBlock7 Using cfiCommon0
+        CFI Function soft_i2c_stop
         CODE
-//   26 {
-        ; Saved register size: 0
-        ; Auto size: 0
-//   27     if (high) {
-        MOV     A,R1
-        JZ      ??sda_set_0
-//   28         P1 |= OLED_SDA_BM;
-        SETB    0x90.3
-        SJMP    ??sda_set_1
-//   29     } else {
-//   30         P1 &= (uint8)~OLED_SDA_BM;
-??sda_set_0:
-        CLR     0x90.3
-//   31     }
-//   32 }
-??sda_set_1:
-        LJMP    ?BRET
-        CFI EndBlock cfiBlock3
-        REQUIRE _A_P1
-//   33 
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-//   34 static void scl_set(uint8 high)
-scl_set:
-        CFI Block cfiBlock4 Using cfiCommon0
-        CFI Function scl_set
-        CODE
-//   35 {
-        ; Saved register size: 0
-        ; Auto size: 0
-//   36     if (high) {
-        MOV     A,R1
-        JZ      ??scl_set_0
-//   37         P1 |= OLED_SCL_BM;
-        SETB    0x90.2
-        SJMP    ??scl_set_1
-//   38     } else {
-//   39         P1 &= (uint8)~OLED_SCL_BM;
-??scl_set_0:
-        CLR     0x90.2
-//   40     }
-//   41 }
-??scl_set_1:
-        LJMP    ?BRET
-        CFI EndBlock cfiBlock4
-        REQUIRE _A_P1
-//   42 
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-//   43 void soft_i2c_init(void)
-soft_i2c_init:
-        CFI Block cfiBlock5 Using cfiCommon0
-        CFI Function soft_i2c_init
-        CODE
-//   44 {
-        FUNCALL soft_i2c_init, sda_set
+//   71 {
+        FUNCALL soft_i2c_stop, scl_set
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
         LOCFRAME XSTACK, 0, STACK
@@ -538,7 +700,73 @@ soft_i2c_init:
         ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_init, scl_set
+        FUNCALL soft_i2c_stop, i2c_delay
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_stop, sda_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_stop, i2c_delay
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_stop, scl_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_stop, i2c_delay
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_stop, sda_set
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL soft_i2c_stop, i2c_delay
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
         LOCFRAME XSTACK, 0, STACK
@@ -557,307 +785,63 @@ soft_i2c_init:
         CFI CFA_SP SP+-5
         ; Saved register size: 2
         ; Auto size: 0
-//   45     /* 保证 P1.2/P1.3 以 GPIO 输出使用，不被 USART0-Alt2 等外设挂走。 */
-//   46     P1SEL &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
-        ANL     0xf4,#0xf3
-//   47     P1DIR |= (OLED_SDA_BM | OLED_SCL_BM);
-        ORL     0xfe,#0xc
-//   48     /* 关闭 P1 的内部下拉（默认可能是输入下拉状态），避免推挽前瞬间被拉低。 */
-//   49     P2INP &= (uint8)~0x40u;     /* P1 pull select: 0 = pull-up */
-        ANL     0xf7,#0xbf
-//   50     sda_set(1);
-        ; Setup parameters for call to function sda_set
-        LCALL   ?Subroutine2 & 0xFFFF
-//   51     scl_set(1);
-//   52 }
-??CrossCallReturnLabel_3:
-        SJMP    ??Subroutine5_0
-        CFI EndBlock cfiBlock5
-        REQUIRE P1SEL
-        REQUIRE P1DIR
-        REQUIRE P2INP
-//   53 
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-//   54 void soft_i2c_start(void)
-soft_i2c_start:
-        CFI Block cfiBlock6 Using cfiCommon0
-        CFI Function soft_i2c_start
-        CODE
-//   55 {
-        FUNCALL soft_i2c_start, sda_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_start, scl_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_start, i2c_delay
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_start, sda_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_start, i2c_delay
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_start, scl_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_start, i2c_delay
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        PUSH    DPL
-        CFI DPL0 Frame(CFA_SP, 4)
-        CFI CFA_SP SP+-4
-        PUSH    DPH
-        CFI DPH0 Frame(CFA_SP, 5)
-        CFI CFA_SP SP+-5
-        ; Saved register size: 2
-        ; Auto size: 0
-//   56     sda_set(1);
-        ; Setup parameters for call to function sda_set
-        LCALL   ?Subroutine2 & 0xFFFF
-//   57     scl_set(1);
-//   58     i2c_delay();
-??CrossCallReturnLabel_4:
-        ; Setup parameters for call to function i2c_delay
-        LCALL   ??i2c_delay?relay
-//   59     sda_set(0);
-        ; Setup parameters for call to function sda_set
-        MOV     R1,#0x0
-        LCALL   ??sda_set?relay
-//   60     i2c_delay();
-        ; Setup parameters for call to function i2c_delay
-        LCALL   ??i2c_delay?relay
-//   61     scl_set(0);
+//   72     scl_set(0);
         ; Setup parameters for call to function scl_set
         MOV     R1,#0x0
-        LCALL   ??scl_set?relay
-//   62     i2c_delay();
+        LCALL   ?Subroutine2 & 0xFFFF
+//   73     i2c_delay();
+//   74     sda_set(0);
+??CrossCallReturnLabel_4:
+        LCALL   ?Subroutine1 & 0xFFFF
+//   75     i2c_delay();
+//   76     scl_set(1);
+//   77     i2c_delay();
+//   78     sda_set(1);
+??CrossCallReturnLabel_0:
+        ; Setup parameters for call to function sda_set
+        MOV     R1,#0x1
+        LCALL   ??sda_set?relay
+//   79     i2c_delay();
         ; Setup parameters for call to function i2c_delay
         SJMP    ?Subroutine0
-        CFI EndBlock cfiBlock6
-//   63 }
+        CFI EndBlock cfiBlock7
+//   80 }
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
 ?Subroutine2:
-        CFI Block cfiCond7 Using cfiCommon0
+        CFI Block cfiCond8 Using cfiCommon0
         CFI NoFunction
         CFI Conditional ??CrossCallReturnLabel_3
         CFI DPL0 Frame(CFA_SP, 4)
         CFI DPH0 Frame(CFA_SP, 5)
         CFI CFA_SP SP+-5
-        CFI Block cfiCond8 Using cfiCommon0
-        CFI (cfiCond8) NoFunction
-        CFI (cfiCond8) Conditional ??CrossCallReturnLabel_4
-        CFI (cfiCond8) DPL0 Frame(CFA_SP, 4)
-        CFI (cfiCond8) DPH0 Frame(CFA_SP, 5)
-        CFI (cfiCond8) CFA_SP SP+-5
-        CFI Block cfiPicker9 Using cfiCommon1
-        CFI (cfiPicker9) NoFunction
-        CFI (cfiPicker9) Picker
-        MOV     R1,#0x1
-        LCALL   ??sda_set?relay
-        ; Setup parameters for call to function scl_set
-        ; Setup parameters for call to function scl_set
-        MOV     R1,#0x1
-        LCALL   ??scl_set?relay
-        RET
-        CFI EndBlock cfiCond7
-        CFI EndBlock cfiCond8
-        CFI EndBlock cfiPicker9
-//   64 
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-//   65 void soft_i2c_stop(void)
-soft_i2c_stop:
-        CFI Block cfiBlock10 Using cfiCommon0
-        CFI Function soft_i2c_stop
-        CODE
-//   66 {
-        FUNCALL soft_i2c_stop, scl_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_stop, i2c_delay
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_stop, sda_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_stop, i2c_delay
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_stop, scl_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_stop, i2c_delay
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_stop, sda_set
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL soft_i2c_stop, i2c_delay
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        PUSH    DPL
-        CFI DPL0 Frame(CFA_SP, 4)
-        CFI CFA_SP SP+-4
-        PUSH    DPH
-        CFI DPH0 Frame(CFA_SP, 5)
-        CFI CFA_SP SP+-5
-        ; Saved register size: 2
-        ; Auto size: 0
-//   67     scl_set(0);
-        ; Setup parameters for call to function scl_set
-        LCALL   ?Subroutine4 & 0xFFFF
-//   68     i2c_delay();
-//   69     sda_set(0);
-??CrossCallReturnLabel_7:
+        CFI Block cfiCond9 Using cfiCommon0
+        CFI (cfiCond9) NoFunction
+        CFI (cfiCond9) Conditional ??CrossCallReturnLabel_4
+        CFI (cfiCond9) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond9) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond9) CFA_SP SP+-5
+        CFI Block cfiPicker10 Using cfiCommon1
+        CFI (cfiPicker10) NoFunction
+        CFI (cfiPicker10) Picker
+        LCALL   ??Subroutine6_0 & 0xFFFF
+??CrossCallReturnLabel_9:
+        ; Setup parameters for call to function sda_set
         ; Setup parameters for call to function sda_set
         MOV     R1,#0x0
-        LCALL   ?Subroutine1 & 0xFFFF
-//   70     i2c_delay();
-//   71     scl_set(1);
-//   72     i2c_delay();
-//   73     sda_set(1);
-??CrossCallReturnLabel_0:
-        ; Setup parameters for call to function sda_set
-        MOV     R1,#0x1
-        LCALL   ??sda_set?relay
-//   74     i2c_delay();
-        ; Setup parameters for call to function i2c_delay
-        SJMP    ?Subroutine0
-        CFI EndBlock cfiBlock10
-//   75 }
-//   76 
+        RET
+        CFI EndBlock cfiCond8
+        CFI EndBlock cfiCond9
+        CFI EndBlock cfiPicker10
+//   81 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   77 uint8 soft_i2c_write_byte(uint8 data)
+//   82 uint8 soft_i2c_write_byte(uint8 data)
 soft_i2c_write_byte:
         CFI Block cfiBlock11 Using cfiCommon0
         CFI Function soft_i2c_write_byte
         CODE
-//   78 {
+//   83 {
         FUNCALL soft_i2c_write_byte, scl_set
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -1029,17 +1013,17 @@ soft_i2c_write_byte:
         ; Auto size: 0
         MOV     A,R1
         MOV     R7,A
-//   79     uint8 i;
-//   80 
-//   81     for (i = 0; i < 8u; ++i) {
+//   84     uint8 i;
+//   85 
+//   86     for (i = 0; i < 8u; ++i) {
         MOV     R6,#0x8
-//   82         scl_set(0);
+//   87         scl_set(0);
 ??soft_i2c_write_byte_0:
         ; Setup parameters for call to function scl_set
         LCALL   ?Subroutine4 & 0xFFFF
-//   83         i2c_delay();
-//   84         sda_set((data & 0x80u) ? 1u : 0u);
-??CrossCallReturnLabel_8:
+//   88         i2c_delay();
+//   89         sda_set((data & 0x80u) ? 1u : 0u);
+??CrossCallReturnLabel_7:
         ; Setup parameters for call to function sda_set
         MOV     A,R7
         MOV     C,0xE0 /* A   */.7
@@ -1047,54 +1031,62 @@ soft_i2c_write_byte:
         RLC     A
         MOV     R1,A
         LCALL   ?Subroutine1 & 0xFFFF
-//   85         i2c_delay();
-//   86         scl_set(1);
-//   87         i2c_delay();
-//   88         data <<= 1;
+//   90         i2c_delay();
+//   91         scl_set(1);
+//   92         i2c_delay();
+//   93         data <<= 1;
 ??CrossCallReturnLabel_1:
         MOV     A,R7
         CLR     C
         RLC     A
         MOV     R7,A
-//   89     }
+//   94     }
         DEC     R6
         MOV     A,R6
         JNZ     ??soft_i2c_write_byte_0
-//   90 
-//   91     /* 释放 SDA 让从机 ACK；本工程为单主 + 无 ACK 检测，保持与 STM32 侧一致。 */
-//   92     scl_set(0);
+//   95 
+//   96     /* 释放 SDA 让从机 ACK；本工程为单主 + 无 ACK 检测，保持与 STM32 侧一致。 */
+//   97     scl_set(0);
         ; Setup parameters for call to function scl_set
         LCALL   ?Subroutine3 & 0xFFFF
-//   93     i2c_delay();
-//   94     sda_set(1);
+//   98     i2c_delay();
+//   99     sda_set(1);
 ??CrossCallReturnLabel_5:
         LCALL   ?Subroutine1 & 0xFFFF
-//   95     i2c_delay();
-//   96     scl_set(1);
-//   97     i2c_delay();
-//   98     scl_set(0);
+//  100     i2c_delay();
+//  101     scl_set(1);
+//  102     i2c_delay();
+//  103     scl_set(0);
 ??CrossCallReturnLabel_2:
         ; Setup parameters for call to function scl_set
         LCALL   ?Subroutine3 & 0xFFFF
-//   99     i2c_delay();
-//  100     return 1;
+//  104     i2c_delay();
+//  105     return 1;
 ??CrossCallReturnLabel_6:
         MOV     R7,#0x1
         LJMP    ?BANKED_LEAVE_XDATA
         CFI EndBlock cfiBlock11
-//  101 }
+//  106 }
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
 ?Subroutine4:
         CFI Block cfiCond12 Using cfiCommon0
         CFI NoFunction
         CFI Conditional ??CrossCallReturnLabel_7
-        CFI DPL0 Frame(CFA_SP, 4)
-        CFI DPH0 Frame(CFA_SP, 5)
-        CFI CFA_SP SP+-5
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI CFA_SP SP+0
+        CFI CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond13 Using cfiCommon0
         CFI (cfiCond13) NoFunction
-        CFI (cfiCond13) Conditional ??CrossCallReturnLabel_8
+        CFI (cfiCond13) Conditional ??CrossCallReturnLabel_8, ??CrossCallReturnLabel_5
         CFI (cfiCond13) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond13) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond13) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -1108,7 +1100,7 @@ soft_i2c_write_byte:
         CFI (cfiCond13) CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond14 Using cfiCommon0
         CFI (cfiCond14) NoFunction
-        CFI (cfiCond14) Conditional ??CrossCallReturnLabel_9, ??CrossCallReturnLabel_5
+        CFI (cfiCond14) Conditional ??CrossCallReturnLabel_8, ??CrossCallReturnLabel_6
         CFI (cfiCond14) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond14) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond14) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -1120,57 +1112,40 @@ soft_i2c_write_byte:
         CFI (cfiCond14) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
         CFI (cfiCond14) CFA_SP SP+0
         CFI (cfiCond14) CFA_XSP16 add(XSP16, 9)
-        CFI Block cfiCond15 Using cfiCommon0
-        CFI (cfiCond15) NoFunction
-        CFI (cfiCond15) Conditional ??CrossCallReturnLabel_9, ??CrossCallReturnLabel_6
-        CFI (cfiCond15) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond15) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond15) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond15) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond15) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond15) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond15) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond15) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond15) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond15) CFA_SP SP+0
-        CFI (cfiCond15) CFA_XSP16 add(XSP16, 9)
-        CFI Block cfiPicker16 Using cfiCommon1
-        CFI (cfiPicker16) NoFunction
-        CFI (cfiPicker16) Picker
+        CFI Block cfiPicker15 Using cfiCommon1
+        CFI (cfiPicker15) NoFunction
+        CFI (cfiPicker15) Picker
         MOV     R1,#0x0
         CFI EndBlock cfiCond12
         CFI EndBlock cfiCond13
         CFI EndBlock cfiCond14
-        CFI EndBlock cfiCond15
-        CFI EndBlock cfiPicker16
+        CFI EndBlock cfiPicker15
         REQUIRE ??Subroutine6_0
         ; // Fall through to label ??Subroutine6_0
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
 ??Subroutine6_0:
-        CFI Block cfiCond17 Using cfiCommon0
+        CFI Block cfiCond16 Using cfiCommon0
         CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_10, ??CrossCallReturnLabel_0
+        CFI Conditional ??CrossCallReturnLabel_9, ??CrossCallReturnLabel_3
         CFI DPL0 Frame(CFA_SP, 4)
         CFI DPH0 Frame(CFA_SP, 5)
         CFI CFA_SP SP+-5
+        CFI Block cfiCond17 Using cfiCommon0
+        CFI (cfiCond17) NoFunction
+        CFI (cfiCond17) Conditional ??CrossCallReturnLabel_9, ??CrossCallReturnLabel_4
+        CFI (cfiCond17) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond17) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond17) CFA_SP SP+-5
         CFI Block cfiCond18 Using cfiCommon0
         CFI (cfiCond18) NoFunction
-        CFI (cfiCond18) Conditional ??CrossCallReturnLabel_10, ??CrossCallReturnLabel_1
-        CFI (cfiCond18) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond18) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond18) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond18) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond18) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond18) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond18) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond18) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond18) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond18) CFA_SP SP+0
-        CFI (cfiCond18) CFA_XSP16 add(XSP16, 9)
+        CFI (cfiCond18) Conditional ??CrossCallReturnLabel_10, ??CrossCallReturnLabel_0
+        CFI (cfiCond18) DPL0 Frame(CFA_SP, 4)
+        CFI (cfiCond18) DPH0 Frame(CFA_SP, 5)
+        CFI (cfiCond18) CFA_SP SP+-5
         CFI Block cfiCond19 Using cfiCommon0
         CFI (cfiCond19) NoFunction
-        CFI (cfiCond19) Conditional ??CrossCallReturnLabel_10, ??CrossCallReturnLabel_2
+        CFI (cfiCond19) Conditional ??CrossCallReturnLabel_10, ??CrossCallReturnLabel_1
         CFI (cfiCond19) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond19) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond19) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -1184,13 +1159,21 @@ soft_i2c_write_byte:
         CFI (cfiCond19) CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond20 Using cfiCommon0
         CFI (cfiCond20) NoFunction
-        CFI (cfiCond20) Conditional ??CrossCallReturnLabel_7
-        CFI (cfiCond20) DPL0 Frame(CFA_SP, 4)
-        CFI (cfiCond20) DPH0 Frame(CFA_SP, 5)
-        CFI (cfiCond20) CFA_SP SP+-5
+        CFI (cfiCond20) Conditional ??CrossCallReturnLabel_10, ??CrossCallReturnLabel_2
+        CFI (cfiCond20) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI (cfiCond20) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI (cfiCond20) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI (cfiCond20) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI (cfiCond20) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI (cfiCond20) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI (cfiCond20) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI (cfiCond20) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI (cfiCond20) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI (cfiCond20) CFA_SP SP+0
+        CFI (cfiCond20) CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond21 Using cfiCommon0
         CFI (cfiCond21) NoFunction
-        CFI (cfiCond21) Conditional ??CrossCallReturnLabel_8
+        CFI (cfiCond21) Conditional ??CrossCallReturnLabel_7
         CFI (cfiCond21) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond21) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond21) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -1204,7 +1187,7 @@ soft_i2c_write_byte:
         CFI (cfiCond21) CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond22 Using cfiCommon0
         CFI (cfiCond22) NoFunction
-        CFI (cfiCond22) Conditional ??CrossCallReturnLabel_9, ??CrossCallReturnLabel_5
+        CFI (cfiCond22) Conditional ??CrossCallReturnLabel_8, ??CrossCallReturnLabel_5
         CFI (cfiCond22) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond22) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond22) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -1218,7 +1201,7 @@ soft_i2c_write_byte:
         CFI (cfiCond22) CFA_XSP16 add(XSP16, 9)
         CFI Block cfiCond23 Using cfiCommon0
         CFI (cfiCond23) NoFunction
-        CFI (cfiCond23) Conditional ??CrossCallReturnLabel_9, ??CrossCallReturnLabel_6
+        CFI (cfiCond23) Conditional ??CrossCallReturnLabel_8, ??CrossCallReturnLabel_6
         CFI (cfiCond23) R6 load(1, XDATA, add(CFA_XSP16, literal(-9)))
         CFI (cfiCond23) VB load(1, XDATA, add(CFA_XSP16, literal(-8)))
         CFI (cfiCond23) V0 load(1, XDATA, add(CFA_XSP16, literal(-7)))
@@ -1241,8 +1224,10 @@ soft_i2c_write_byte:
         ; Setup parameters for call to function i2c_delay
         ; Setup parameters for call to function i2c_delay
         ; Setup parameters for call to function i2c_delay
+        ; Setup parameters for call to function i2c_delay
         LCALL   ??i2c_delay?relay
         RET
+        CFI EndBlock cfiCond16
         CFI EndBlock cfiCond17
         CFI EndBlock cfiCond18
         CFI EndBlock cfiCond19
@@ -1286,7 +1271,7 @@ soft_i2c_write_byte:
         CFI (cfiPicker27) NoFunction
         CFI (cfiPicker27) Picker
         LCALL   ?Subroutine4 & 0xFFFF
-??CrossCallReturnLabel_9:
+??CrossCallReturnLabel_8:
         ; Setup parameters for call to function sda_set
         MOV     R1,#0x1
         RET
@@ -1394,12 +1379,12 @@ soft_i2c_write_byte:
 
         END
 // 
-// 212 bytes in segment BANKED_CODE
+// 214 bytes in segment BANKED_CODE
 //  42 bytes in segment BANK_RELAYS
-//   4 bytes in segment SFR_AN
+//   5 bytes in segment SFR_AN
 // 
-// 254 bytes of CODE memory
-//   0 bytes of DATA memory (+ 4 bytes shared)
+// 256 bytes of CODE memory
+//   0 bytes of DATA memory (+ 5 bytes shared)
 //
 //Errors: none
 //Warnings: 1

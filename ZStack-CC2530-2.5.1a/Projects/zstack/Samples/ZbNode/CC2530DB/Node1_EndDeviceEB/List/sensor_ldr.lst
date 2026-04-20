@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:32 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:28:23 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\Source\sensor_ldr.c                      #
@@ -43,7 +43,7 @@
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Projects\zstack\Samples\ZbNode\Source\sensor_ldr #
 #                          .c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D              #
-#                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC                #
+#                          HAL_UART=TRUE -D HAL_LCD=FALSE -lC                 #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
@@ -54,18 +54,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -217,20 +216,44 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00004B   02....       LJMP    ?BANKED_LEAVE_XDATA
      31          }
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_7d0:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_7d0>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_7d0>`:
    \   000000   D0070000     DD 2000
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_7ff:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_7ff>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_7ff>`:
    \   000000   FF070000     DD 2047
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_10000:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_10000>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_10000>`:
    \   000000   00000100     DD 65536
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
    \                     __Constant_ffff:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_ffff>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_ffff>`:
    \   000000   FFFF0000     DD 65535
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -254,29 +277,34 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
 
    Segment part sizes:
 
-     Function/Label       Bytes
-     --------------       -----
-     APCFG                   1
-     P0SEL                   1
-     P0DIR                   1
-     ldr_init               12
-     ldr_read_lux           78
-     __Constant_7d0          4
-     __Constant_7ff          4
-     __Constant_10000        4
-     __Constant_ffff         4
-     ??ldr_init?relay        6
-     ??ldr_read_lux?relay    6
+     Function/Label                      Bytes
+     --------------                      -----
+     APCFG                                  1
+     P0SEL                                  1
+     P0DIR                                  1
+     ldr_init                              12
+     ldr_read_lux                          78
+     __Constant_7d0                         4
+     ?<Initializer for __Constant_7d0>      4
+     __Constant_7ff                         4
+     ?<Initializer for __Constant_7ff>      4
+     __Constant_10000                       4
+     ?<Initializer for __Constant_10000>    4
+     __Constant_ffff                        4
+     ?<Initializer for __Constant_ffff>     4
+     ??ldr_init?relay                       6
+     ??ldr_read_lux?relay                   6
 
  
  90 bytes in segment BANKED_CODE
  12 bytes in segment BANK_RELAYS
   3 bytes in segment SFR_AN
- 16 bytes in segment XDATA_ROM_C
+ 16 bytes in segment XDATA_I
+ 16 bytes in segment XDATA_ID
  
- 102 bytes of CODE  memory
-   0 bytes of CONST memory (+ 16 bytes shared)
+ 102 bytes of CODE  memory (+ 16 bytes shared)
    0 bytes of DATA  memory (+  3 bytes shared)
+   0 bytes of XDATA memory (+ 16 bytes shared)
 
 Errors: none
 Warnings: 1

@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:37 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:28:28 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\Source\node_oled_view.c                /
@@ -43,7 +43,7 @@
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Projects\zstack\Samples\ZbNode\Source\node_ole /
 //                          d_view.c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D       /
-//                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC               /
+//                          HAL_UART=TRUE -D HAL_LCD=FALSE -lC                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA   /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -54,10 +54,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -146,6 +145,7 @@
         EXTERN ?V0
         EXTERN ?XSP
         EXTERN ?XSTACK_DISP0_8
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         FUNCTION ??line_clear?relay,0203H
@@ -2642,6 +2642,70 @@ node_oled_view_refresh:
         CFI EndBlock cfiCond53
         CFI EndBlock cfiPicker54
 
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "N2 Lux ">>`:
+        DB "N2 Lux "
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "N1 TempHum ">>`:
+        DB "N1 TempHum "
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "OK">>`:
+        DB "OK"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "..">>`:
+        DB ".."
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "ID:">>`:
+        DB "ID:"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant " CH:">>`:
+        DB " CH:"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "----">>`:
+        DB "----"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "L:">>`:
+        DB "L:"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant " lx">>`:
+        DB " lx"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "T:">>`:
+        DB "T:"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant " H:">>`:
+        DB " H:"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "LED:">>`:
+        DB "LED:"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "ON ">>`:
+        DB "ON "
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "OFF">>`:
+        DB "OFF"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant " BZ:">>`:
+        DB " BZ:"
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for <Constant "ON">>`:
+        DB "ON"
+
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??line_clear?relay:
         LCALL   ?BDISPATCH
@@ -2690,96 +2754,128 @@ node_oled_view_refresh:
         DATA
         DC24    node_oled_view_refresh
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "N2 Lux ">`:
-        DB "N2 Lux "
+        DS 8
+        REQUIRE `?<Initializer for <Constant "N2 Lux ">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "N1 TempHum ">`:
-        DB "N1 TempHum "
+        DS 12
+        REQUIRE `?<Initializer for <Constant "N1 TempHum ">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "OK">`:
-        DB "OK"
+        DS 3
+        REQUIRE `?<Initializer for <Constant "OK">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "..">`:
-        DB ".."
+        DS 3
+        REQUIRE `?<Initializer for <Constant "..">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 `?<Constant "ID:">`:
-        DB "ID:"
+        DS 4
+        REQUIRE `?<Initializer for <Constant "ID:">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant " CH:">`:
-        DB " CH:"
+        DS 5
+        REQUIRE `?<Initializer for <Constant " CH:">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "----">`:
-        DB "----"
+        DS 5
+        REQUIRE `?<Initializer for <Constant "----">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "L:">`:
-        DB "L:"
+        DS 3
+        REQUIRE `?<Initializer for <Constant "L:">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 `?<Constant " lx">`:
-        DB " lx"
+        DS 4
+        REQUIRE `?<Initializer for <Constant " lx">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "T:">`:
-        DB "T:"
+        DS 3
+        REQUIRE `?<Initializer for <Constant "T:">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 `?<Constant " H:">`:
-        DB " H:"
+        DS 4
+        REQUIRE `?<Initializer for <Constant " H:">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "LED:">`:
-        DB "LED:"
+        DS 5
+        REQUIRE `?<Initializer for <Constant "LED:">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 `?<Constant "ON ">`:
-        DB "ON "
+        DS 4
+        REQUIRE `?<Initializer for <Constant "ON ">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
 `?<Constant "OFF">`:
-        DB "OFF"
+        DS 4
+        REQUIRE `?<Initializer for <Constant "OFF">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant " BZ:">`:
-        DB " BZ:"
+        DS 5
+        REQUIRE `?<Initializer for <Constant " BZ:">>`
+        REQUIRE __INIT_XDATA_I
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 `?<Constant "ON">`:
-        DB "ON"
+        DS 3
+        REQUIRE `?<Initializer for <Constant "ON">>`
+        REQUIRE __INIT_XDATA_I
 
         END
 // 
 // 1 536 bytes in segment BANKED_CODE
 //    48 bytes in segment BANK_RELAYS
-//    75 bytes in segment XDATA_ROM_C
+//    75 bytes in segment XDATA_I
+//    75 bytes in segment XDATA_ID
 //    29 bytes in segment XDATA_Z
 // 
-// 1 584 bytes of CODE  memory
-//    75 bytes of CONST memory
-//    29 bytes of XDATA memory
+// 1 659 bytes of CODE  memory
+//   104 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: 1

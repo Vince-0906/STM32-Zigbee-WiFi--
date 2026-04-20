@@ -2197,7 +2197,7 @@
         </option>
         <option>
           <name>Constant Placement</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>Datapointer Size</name>
@@ -2304,7 +2304,7 @@
         </option>
         <option>
           <name>General Xdata Stack Size</name>
-          <state>0x300</state>
+          <state>0x1FF</state>
         </option>
         <option>
           <name>General Ext Stack Size</name>
@@ -2392,7 +2392,7 @@
           <name>CCDefines</name>
           <state>NWK_AUTO_POLL</state>
           <state>NODE_ROLE=1</state>
-          <state>HAL_UART=FALSE</state>
+          <state>HAL_UART=TRUE</state>
           <state>HAL_LCD=FALSE</state>
         </option>
         <option>
@@ -3024,15 +3024,15 @@
         </option>
         <option>
           <name>AllowExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenerateExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XExtraOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ExtraOutputFile</name>
@@ -3041,7 +3041,7 @@
         <option>
           <name>ExtraOutputFormat</name>
           <version>11</version>
-          <state>60</state>
+          <state>23</state>
         </option>
         <option>
           <name>ExtraFormatVariant</name>
@@ -3449,7 +3449,7 @@
           <name>CCDefines</name>
           <state>NWK_AUTO_POLL</state>
           <state>NODE_ROLE=2</state>
-          <state>HAL_UART=FALSE</state>
+          <state>HAL_UART=TRUE</state>
           <state>HAL_LCD=FALSE</state>
         </option>
         <option>
@@ -4235,28 +4235,28 @@
   <group>
     <name>App</name>
     <file>
-      <name>$PROJ_DIR$\..\Source\OSAL_ZbNode.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\zb_node.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\zb_node.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\board_e18ms1.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\Source\actuator.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\actuator.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\zcl_report.c</name>
+      <name>$PROJ_DIR$\..\Source\board_e18ms1.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\zcl_report.h</name>
+      <name>$PROJ_DIR$\..\Source\node_oled_view.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\node_oled_view.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\OSAL_ZbNode.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\sensor_dht11.c</name>
@@ -4277,16 +4277,16 @@
       <name>$PROJ_DIR$\..\Source\soft_i2c.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\oled_ssd1306.c</name>
+      <name>$PROJ_DIR$\..\Source\zb_node.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\oled_ssd1306.h</name>
+      <name>$PROJ_DIR$\..\Source\zb_node.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\node_oled_view.c</name>
+      <name>$PROJ_DIR$\..\Source\zcl_report.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\node_oled_view.h</name>
+      <name>$PROJ_DIR$\..\Source\zcl_report.h</name>
     </file>
   </group>
   <group>
@@ -4755,17 +4755,12 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wCoord.cfg</name>
-      <excluded>
-        <configuration>RouterEB</configuration>
-        <configuration>EndDeviceEB</configuration>
-      </excluded>
     </file>
     <file>
       <name>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8wEndev.cfg</name>
       <excluded>
         <configuration>DemoEB</configuration>
         <configuration>CoordinatorEB</configuration>
-        <configuration>RouterEB</configuration>
       </excluded>
     </file>
     <file>
@@ -4773,7 +4768,6 @@
       <excluded>
         <configuration>DemoEB</configuration>
         <configuration>CoordinatorEB</configuration>
-        <configuration>EndDeviceEB</configuration>
       </excluded>
     </file>
   </group>
@@ -4847,3 +4841,5 @@
     </file>
   </group>
 </project>
+
+

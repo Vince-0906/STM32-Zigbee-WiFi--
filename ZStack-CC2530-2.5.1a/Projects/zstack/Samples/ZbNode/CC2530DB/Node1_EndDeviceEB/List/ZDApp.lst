@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:32 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:28:31 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ #
 #                          ZDApp.c                                            #
@@ -42,7 +42,7 @@
 #                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Components\stack\zdo\ZDApp.c -D NWK_AUTO_POLL    #
-#                          -D NODE_ROLE=1 -D HAL_UART=FALSE -D HAL_LCD=FALSE  #
+#                          -D NODE_ROLE=1 -D HAL_UART=TRUE -D HAL_LCD=FALSE   #
 #                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
 #                          amples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\     #
 #                          -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
@@ -53,18 +53,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -7017,6 +7016,18 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDApp.c
    \   000013   02....       LJMP    ?Subroutine2 & 0xFFFF
    3037          }
 
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_1:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_1>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \                     __Constant_3e8:
+   \   000000                DS 4
+   \   000004                REQUIRE `?<Initializer for __Constant_3e8>`
+   \   000004                REQUIRE __INIT_XDATA_I
+
    \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for zdoDiscCounter>`:
    \   000000   01           DB 1
@@ -7040,12 +7051,12 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDApp.c
    \                     `?<Initializer for ZDApp_SavedPollRate>`:
    \   000000   E803         DW 1000
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_1:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_1>`:
    \   000000   01000000     DD 1
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \                     __Constant_3e8:
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for __Constant_3e8>`:
    \   000000   E8030000     DD 1000
 
    \                                 In  segment BANK_RELAYS, align 1
@@ -7789,13 +7800,15 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDApp.c
      ?Subroutine41                                 17
      ZDO_RegisterForZdoCB                          27
      ZDO_DeregisterForZdoCB                        22
+     __Constant_1                                   4
+     __Constant_3e8                                 4
      ?<Initializer for zdoDiscCounter>              1
      ?<Initializer for continueJoining>             1
      ?<Initializer for devState>                    1
      ?<Initializer for ZDApp_epDesc>                6
      ?<Initializer for ZDApp_SavedPollRate>         2
-     __Constant_1                                   4
-     __Constant_3e8                                 4
+     ?<Initializer for __Constant_1>                4
+     ?<Initializer for __Constant_3e8>              4
      ??ZDApp_Init?relay                             6
      ??ZDApp_SecInit?relay                          6
      ??ZDApp_event_loop?relay                       6
@@ -7865,14 +7878,12 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDApp.c
  
  5 211 bytes in segment BANKED_CODE
    390 bytes in segment BANK_RELAYS
-    11 bytes in segment XDATA_I
-    11 bytes in segment XDATA_ID
-     8 bytes in segment XDATA_ROM_C
+    19 bytes in segment XDATA_I
+    19 bytes in segment XDATA_ID
     54 bytes in segment XDATA_Z
  
- 5 612 bytes of CODE  memory
-     0 bytes of CONST memory (+ 8 bytes shared)
-    65 bytes of XDATA memory
+ 5 612 bytes of CODE  memory (+ 8 bytes shared)
+    65 bytes of XDATA memory (+ 8 bytes shared)
 
 Errors: none
 Warnings: none

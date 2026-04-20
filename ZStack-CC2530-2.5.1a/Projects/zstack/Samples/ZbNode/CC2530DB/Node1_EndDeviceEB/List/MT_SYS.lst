@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:31 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:28:28 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mt\MT_SYS. #
 #                          c                                                  #
@@ -42,29 +42,28 @@
 #                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Components\mt\MT_SYS.c -D NWK_AUTO_POLL -D       #
-#                          NODE_ROLE=1 -D HAL_UART=FALSE -D HAL_LCD=FALSE     #
-#                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
-#                          amples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\     #
-#                          -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\S #
-#                          amples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\     #
+#                          NODE_ROLE=1 -D HAL_UART=TRUE -D HAL_LCD=FALSE -lC  #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\         #
 #                          --diag_suppress Pe001,Pa010 -o                     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e       #
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -204,13 +203,12 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mt\MT_SYS.c
      83          #endif
      84          
 
-   \                                 In  segment XDATA_ROM_C, align 1
+   \                                 In  segment XDATA_I, align 1, keep-with-next
      85          const uint16 MT_SysOsalEventId [] = {
    \                     MT_SysOsalEventId:
-   \   000000   0008         DW 2048
-   \   000002   0004         DW 1024
-   \   000004   0002         DW 512
-   \   000006   0001         DW 256
+   \   000000                DS 8
+   \   000008                REQUIRE `?<Initializer for MT_SysOsalEventId>`
+   \   000008                REQUIRE __INIT_XDATA_I
      86                                                MT_SYS_OSAL_EVENT_0,
      87                                                MT_SYS_OSAL_EVENT_1,
      88                                                MT_SYS_OSAL_EVENT_2,
@@ -1282,6 +1280,13 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mt\MT_SYS.c
    \   000024   7F01         MOV     R7,#0x1
    \   000026   02....       LJMP    ?BANKED_LEAVE_XDATA
 
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for MT_SysOsalEventId>`:
+   \   000000   0008         DW 2048
+   \   000002   0004         DW 1024
+   \   000004   0002         DW 512
+   \   000006   0001         DW 256
+
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??MT_SysResetInd?relay:
    \   000000   12....       LCALL   ?BDISPATCH
@@ -1310,24 +1315,26 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mt\MT_SYS.c
 
    Segment part sizes:
 
-     Function/Label                 Bytes
-     --------------                 -----
-     SLEEPSTA                          1
-     MT_SysOsalEventId                 8
-     MT_SysResetInd                   90
-     MT_SysOsalTimerExpired           41
-     ??MT_SysResetInd?relay            6
-     ??MT_SysOsalTimerExpired?relay    6
+     Function/Label                       Bytes
+     --------------                       -----
+     SLEEPSTA                                1
+     MT_SysOsalEventId                       8
+     MT_SysResetInd                         90
+     MT_SysOsalTimerExpired                 41
+     ?<Initializer for MT_SysOsalEventId>    8
+     ??MT_SysResetInd?relay                  6
+     ??MT_SysOsalTimerExpired?relay          6
 
  
  131 bytes in segment BANKED_CODE
   12 bytes in segment BANK_RELAYS
    1 byte  in segment SFR_AN
-   8 bytes in segment XDATA_ROM_C
+   8 bytes in segment XDATA_I
+   8 bytes in segment XDATA_ID
  
- 143 bytes of CODE  memory
-   8 bytes of CONST memory
+ 151 bytes of CODE  memory
    0 bytes of DATA  memory (+ 1 byte shared)
+   8 bytes of XDATA memory
 
 Errors: none
 Warnings: none

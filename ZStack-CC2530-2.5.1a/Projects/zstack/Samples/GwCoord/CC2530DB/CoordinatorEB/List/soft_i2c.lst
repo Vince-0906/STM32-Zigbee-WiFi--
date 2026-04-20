@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  21:05:35 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:32 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -115,12 +115,26 @@
 ###############################################################################
 
 D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\GwCoord\Source\soft_i2c.c
-      1          #include "soft_i2c.h"
-                                     ^
+      1          /*
+                  ^
 Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
           only issued once)
-      2          
-      3          #include "ioCC2530.h"
+      2           * CC2530 协调器板载 OLED 软件 I2C：与 ZbNode/Source/soft_i2c.c 完全同源。
+      3           * cc2530_board.md §4.8 / 原理图 U10：
+      4           *   U10.3 = SCL → P1.2  → OLED_SCL_BM = 0x04
+      5           *   U10.4 = SDA → P1.3  → OLED_SDA_BM = 0x08
+      6           *
+      7           * 用 "开漏模拟 + CC2530 内部上拉" 做主控：
+      8           *   - 释放（线为高）= 切回输入，内部 ~35 kΩ 上拉把 SCL/SDA 拉到 VCC；
+      9           *   - 驱动低         = 切成输出（ODR 位一直保持 0）拉到 GND。
+     10           * 这样即使板上没有外部上拉电阻总线也能工作；如有外部上拉则并联后上升沿更锐。
+     11           *
+     12           * 延时：内部上拉 + ~50 pF 总线电容上升时间 ~4 µs，i2c_delay 取 ~5 µs。
+     13           */
+     14          
+     15          #include "soft_i2c.h"
+     16          
+     17          #include "ioCC2530.h"
 
    \                                 In  segment SFR_AN, at 0x90
    \   union <unnamed> volatile __sfr _A_P1
@@ -132,6 +146,11 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \                     P1SEL:
    \   000000                DS 1
 
+   \                                 In  segment SFR_AN, at 0xf6
+   \   unsigned char volatile __sfr P1INP
+   \                     P1INP:
+   \   000000                DS 1
+
    \                                 In  segment SFR_AN, at 0xf7
    \   unsigned char volatile __sfr P2INP
    \                     P2INP:
@@ -141,49 +160,42 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   unsigned char volatile __sfr P1DIR
    \                     P1DIR:
    \   000000                DS 1
-      4          #include "OnBoard.h"
-      5          
-      6          /* cc2530_board.md §4.8 / 原理图 U10：
-      7           *   U10.3 = SCL → P1.2  → OLED_SCL_BM = 0x04
-      8           *   U10.4 = SDA → P1.3  → OLED_SDA_BM = 0x08
-      9           * 如果后续排线改布请同步改这两行。
-     10           */
-     11          #define OLED_SCL_BM  ((uint8)0x04u)   /* P1.2 */
-     12          #define OLED_SDA_BM  ((uint8)0x08u)   /* P1.3 */
-     13          
-     14          /* 32 MHz CC2530 下每个 NOP ≈ 31 ns，20~40 个 NOP ≈ 1 µs，
-     15           * 对应 100~400 kHz I2C 的最低半周期要求。
-     16           * MicroWait(1) 调用开销已 >200 ns，直接用 NOP 节流更稳。 */
+     18          #include "OnBoard.h"
+     19          
+     20          #define OLED_SCL_BM  ((uint8)0x04u)   /* P1.2 */
+     21          #define OLED_SDA_BM  ((uint8)0x08u)   /* P1.3 */
+     22          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     17          static void i2c_delay(void)
+     23          static void i2c_delay(void)
    \                     i2c_delay:
-     18          {
+     24          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 1
    \   000004   74FF         MOV     A,#-0x1
    \   000006   12....       LCALL   ?ALLOC_XSTACK8
-     19              volatile uint8 i;
-     20              for (i = 0; i < 20u; ++i) {
+     25              /* ~5 µs @ 32 MHz；for 循环每迭代 ~4 cycle = 125 ns，40 迭代 ≈ 5 µs。 */
+     26              volatile uint8 i;
+     27              for (i = 0; i < 40u; ++i) {
    \   000009   85..82       MOV     DPL,?XSP + 0
    \   00000C   85..83       MOV     DPH,?XSP + 1
    \   00000F   E4           CLR     A
    \   000010   8003         SJMP    ??i2c_delay_0
-     21                  asm("NOP");
+     28                  asm("NOP");
    \                     ??i2c_delay_1:
    \   000012   00           NOP
-     22              }
+     29              }
    \   000013   E0           MOVX    A,@DPTR
    \   000014   04           INC     A
    \                     ??i2c_delay_0:
    \   000015   F0           MOVX    @DPTR,A
    \   000016   E0           MOVX    A,@DPTR
    \   000017   C3           CLR     C
-   \   000018   9414         SUBB    A,#0x14
+   \   000018   9428         SUBB    A,#0x28
    \   00001A   40F6         JC      ??i2c_delay_1
-     23          }
+     30          }
    \   00001C   7401         MOV     A,#0x1
    \   00001E   12....       LCALL   ?DEALLOC_XSTACK8
    \   000021   80..         SJMP    ??Subroutine5_0
@@ -193,91 +205,112 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000000   D083         POP     DPH
    \   000002   D082         POP     DPL
    \   000004   02....       LJMP    ?BRET
-     24          
+     31          
+     32          static void sda_release(void)   { P1DIR &= (uint8)~OLED_SDA_BM; }
+     33          static void scl_release(void)   { P1DIR &= (uint8)~OLED_SCL_BM; }
+     34          static void sda_drive_low(void) { P1DIR |= OLED_SDA_BM; }
+     35          static void scl_drive_low(void) { P1DIR |= OLED_SCL_BM; }
+     36          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     25          static void sda_set(uint8 high)
+     37          static void sda_set(uint8 high) { if (high) sda_release(); else sda_drive_low(); }
    \                     sda_set:
-     26          {
    \   000000                ; Saved register size: 0
    \   000000                ; Auto size: 0
-     27              if (high) {
    \   000000   E9           MOV     A,R1
-   \   000001   6004         JZ      ??sda_set_0
-     28                  P1 |= OLED_SDA_BM;
-   \   000003   D293         SETB    0x90.3
-   \   000005   8002         SJMP    ??sda_set_1
-     29              } else {
-     30                  P1 &= (uint8)~OLED_SDA_BM;
+   \   000001   6005         JZ      ??sda_set_0
+   \   000003   53FEF7       ANL     0xfe,#0xf7
+   \   000006   8003         SJMP    ??sda_set_1
    \                     ??sda_set_0:
-   \   000007   C293         CLR     0x90.3
-     31              }
-     32          }
+   \   000008   43FE08       ORL     0xfe,#0x8
    \                     ??sda_set_1:
-   \   000009   02....       LJMP    ?BRET
-   \   00000C                REQUIRE _A_P1
-     33          
+   \   00000B   02....       LJMP    ?BRET
+   \   00000E                REQUIRE P1DIR
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     34          static void scl_set(uint8 high)
+     38          static void scl_set(uint8 high) { if (high) scl_release(); else scl_drive_low(); }
    \                     scl_set:
-     35          {
    \   000000                ; Saved register size: 0
    \   000000                ; Auto size: 0
-     36              if (high) {
    \   000000   E9           MOV     A,R1
-   \   000001   6004         JZ      ??scl_set_0
-     37                  P1 |= OLED_SCL_BM;
-   \   000003   D292         SETB    0x90.2
-   \   000005   8002         SJMP    ??scl_set_1
-     38              } else {
-     39                  P1 &= (uint8)~OLED_SCL_BM;
+   \   000001   6005         JZ      ??scl_set_0
+   \   000003   53FEFB       ANL     0xfe,#0xfb
+   \   000006   8003         SJMP    ??scl_set_1
    \                     ??scl_set_0:
-   \   000007   C292         CLR     0x90.2
-     40              }
-     41          }
+   \   000008   43FE04       ORL     0xfe,#0x4
    \                     ??scl_set_1:
-   \   000009   02....       LJMP    ?BRET
-   \   00000C                REQUIRE _A_P1
-     42          
+   \   00000B   02....       LJMP    ?BRET
+   \   00000E                REQUIRE P1DIR
+     39          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     43          void soft_i2c_init(void)
+     40          void soft_i2c_init(void)
    \                     soft_i2c_init:
-     44          {
+     41          {
+   \   000000                ; Saved register size: 0
+   \   000000                ; Auto size: 0
+     42              /* GPIO 功能，不走 Timer/USART 复用 */
+     43              P1SEL &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
+   \   000000   53F4F3       ANL     0xf4,#0xf3
+     44          
+     45              /* P1.2 / P1.3 输入模式取"上拉/下拉" 而非高阻 */
+     46              P1INP &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
+   \   000003   53F6F3       ANL     0xf6,#0xf3
+     47          
+     48              /* P1 port 的上拉方向 = 上（PDUP1 = 0，P2INP bit6） */
+     49              P2INP &= (uint8)~0x40u;
+   \   000006   53F7BF       ANL     0xf7,#0xbf
+     50          
+     51              /* ODR 位预清 0，后续 P1DIR |= mask 立刻驱动低电平 */
+     52              P1 &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
+   \   000009   5390F3       ANL     0x90,#0xf3
+     53          
+     54              /* 初态释放 */
+     55              sda_release();
+   \   00000C   53FEF7       ANL     0xfe,#0xf7
+     56              scl_release();
+   \   00000F   53FEFB       ANL     0xfe,#0xfb
+     57          }
+   \   000012   02....       LJMP    ?BRET
+   \   000015                REQUIRE P1SEL
+   \   000015                REQUIRE P1INP
+   \   000015                REQUIRE P2INP
+   \   000015                REQUIRE _A_P1
+   \   000015                REQUIRE P1DIR
+     58          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     59          void soft_i2c_start(void)
+   \                     soft_i2c_start:
+     60          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-     45              /* 保证 P1.2/P1.3 以 GPIO 输出使用，不被 USART0-Alt2 等外设挂走。 */
-     46              P1SEL &= (uint8)~(OLED_SDA_BM | OLED_SCL_BM);
-   \   000004   53F4F3       ANL     0xf4,#0xf3
-     47              P1DIR |= (OLED_SDA_BM | OLED_SCL_BM);
-   \   000007   43FE0C       ORL     0xfe,#0xc
-     48              /* 关闭 P1 的内部下拉（默认可能是输入下拉状态），避免推挽前瞬间被拉低。 */
-     49              P2INP &= (uint8)~0x40u;     /* P1 pull select: 0 = pull-up */
-   \   00000A   53F7BF       ANL     0xf7,#0xbf
-     50              sda_set(1);
-   \   00000D                ; Setup parameters for call to function sda_set
-   \   00000D   12....       LCALL   ?Subroutine2 & 0xFFFF
-     51              scl_set(1);
-     52          }
+     61              sda_set(1);
+   \   000004                ; Setup parameters for call to function sda_set
+   \   000004   7901         MOV     R1,#0x1
+   \   000006   12....       LCALL   ??sda_set?relay
+     62              scl_set(1);
+   \   000009                ; Setup parameters for call to function scl_set
+   \   000009   7901         MOV     R1,#0x1
+   \   00000B   12....       LCALL   ?Subroutine2 & 0xFFFF
+     63              i2c_delay();
+     64              sda_set(0);
    \                     ??CrossCallReturnLabel_3:
-   \   000010   80..         SJMP    ??Subroutine5_0
-   \   000012                REQUIRE P1SEL
-   \   000012                REQUIRE P1DIR
-   \   000012                REQUIRE P2INP
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine2:
-   \   000000   7901         MOV     R1,#0x1
-   \   000002   12....       LCALL   ??sda_set?relay
-   \   000005                ; Setup parameters for call to function scl_set
-   \   000005                ; Setup parameters for call to function scl_set
-   \   000005   7901         MOV     R1,#0x1
-   \   000007   12....       LCALL   ??scl_set?relay
-   \   00000A   22           RET
-     53          
+   \   00000E   12....       LCALL   ??sda_set?relay
+     65              i2c_delay();
+   \   000011                ; Setup parameters for call to function i2c_delay
+   \   000011   12....       LCALL   ??i2c_delay?relay
+     66              scl_set(0);
+   \   000014                ; Setup parameters for call to function scl_set
+   \   000014   7900         MOV     R1,#0x0
+   \   000016   12....       LCALL   ??scl_set?relay
+     67              i2c_delay();
+   \   000019                ; Setup parameters for call to function i2c_delay
+   \   000019                REQUIRE ?Subroutine0
+   \   000019                ; // Fall through to label ?Subroutine0
+     68          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine0:
@@ -286,73 +319,13 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000003                ; // Fall through to label ??Subroutine5_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     54          void soft_i2c_start(void)
-   \                     soft_i2c_start:
-     55          {
-   \   000000   C082         PUSH    DPL
-   \   000002   C083         PUSH    DPH
-   \   000004                ; Saved register size: 2
-   \   000004                ; Auto size: 0
-     56              sda_set(1);
-   \   000004                ; Setup parameters for call to function sda_set
-   \   000004   12....       LCALL   ?Subroutine2 & 0xFFFF
-     57              scl_set(1);
-     58              i2c_delay();
-   \                     ??CrossCallReturnLabel_4:
-   \   000007                ; Setup parameters for call to function i2c_delay
-   \   000007   12....       LCALL   ??i2c_delay?relay
-     59              sda_set(0);
-   \   00000A                ; Setup parameters for call to function sda_set
-   \   00000A   7900         MOV     R1,#0x0
-   \   00000C   12....       LCALL   ??sda_set?relay
-     60              i2c_delay();
-   \   00000F                ; Setup parameters for call to function i2c_delay
-   \   00000F   12....       LCALL   ??i2c_delay?relay
-     61              scl_set(0);
-   \   000012                ; Setup parameters for call to function scl_set
-   \   000012   7900         MOV     R1,#0x0
-   \   000014   12....       LCALL   ??scl_set?relay
-     62              i2c_delay();
-   \   000017                ; Setup parameters for call to function i2c_delay
-   \   000017   80..         SJMP    ?Subroutine0
-     63          }
-     64          
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     65          void soft_i2c_stop(void)
-   \                     soft_i2c_stop:
-     66          {
-   \   000000   C082         PUSH    DPL
-   \   000002   C083         PUSH    DPH
-   \   000004                ; Saved register size: 2
-   \   000004                ; Auto size: 0
-     67              scl_set(0);
-   \   000004                ; Setup parameters for call to function scl_set
-   \   000004   12....       LCALL   ?Subroutine4 & 0xFFFF
-     68              i2c_delay();
-     69              sda_set(0);
-   \                     ??CrossCallReturnLabel_7:
-   \   000007                ; Setup parameters for call to function sda_set
-   \   000007   7900         MOV     R1,#0x0
-   \   000009   12....       LCALL   ?Subroutine1 & 0xFFFF
-     70              i2c_delay();
-     71              scl_set(1);
-     72              i2c_delay();
-     73              sda_set(1);
-   \                     ??CrossCallReturnLabel_0:
-   \   00000C                ; Setup parameters for call to function sda_set
-   \   00000C   7901         MOV     R1,#0x1
-   \   00000E   12....       LCALL   ??sda_set?relay
-     74              i2c_delay();
-   \   000011                ; Setup parameters for call to function i2c_delay
-   \   000011   80..         SJMP    ?Subroutine0
-     75          }
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine4:
-   \   000000   7900         MOV     R1,#0x0
-   \   000002                REQUIRE ??Subroutine6_0
-   \   000002                ; // Fall through to label ??Subroutine6_0
+   \                     ?Subroutine2:
+   \   000000   12....       LCALL   ??Subroutine6_0 & 0xFFFF
+   \                     ??CrossCallReturnLabel_9:
+   \   000003                ; Setup parameters for call to function sda_set
+   \   000003                ; Setup parameters for call to function sda_set
+   \   000003   7900         MOV     R1,#0x0
+   \   000005   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ??Subroutine6_0:
@@ -364,8 +337,39 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000003                ; Setup parameters for call to function i2c_delay
    \   000003                ; Setup parameters for call to function i2c_delay
    \   000003                ; Setup parameters for call to function i2c_delay
+   \   000003                ; Setup parameters for call to function i2c_delay
    \   000003   12....       LCALL   ??i2c_delay?relay
    \   000006   22           RET
+     69          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     70          void soft_i2c_stop(void)
+   \                     soft_i2c_stop:
+     71          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     72              scl_set(0);
+   \   000004                ; Setup parameters for call to function scl_set
+   \   000004   7900         MOV     R1,#0x0
+   \   000006   12....       LCALL   ?Subroutine2 & 0xFFFF
+     73              i2c_delay();
+     74              sda_set(0);
+   \                     ??CrossCallReturnLabel_4:
+   \   000009   12....       LCALL   ?Subroutine1 & 0xFFFF
+     75              i2c_delay();
+     76              scl_set(1);
+     77              i2c_delay();
+     78              sda_set(1);
+   \                     ??CrossCallReturnLabel_0:
+   \   00000C                ; Setup parameters for call to function sda_set
+   \   00000C   7901         MOV     R1,#0x1
+   \   00000E   12....       LCALL   ??sda_set?relay
+     79              i2c_delay();
+   \   000011                ; Setup parameters for call to function i2c_delay
+   \   000011   80..         SJMP    ?Subroutine0
+     80          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine1:
@@ -381,29 +385,29 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000008   12....       LCALL   ??Subroutine6_0 & 0xFFFF
    \                     ??CrossCallReturnLabel_10:
    \   00000B   22           RET
-     76          
+     81          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     77          uint8 soft_i2c_write_byte(uint8 data)
+     82          uint8 soft_i2c_write_byte(uint8 data)
    \                     soft_i2c_write_byte:
-     78          {
+     83          {
    \   000000   74F7         MOV     A,#-0x9
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 9
    \   000005                ; Auto size: 0
    \   000005   E9           MOV     A,R1
    \   000006   FF           MOV     R7,A
-     79              uint8 i;
-     80          
-     81              for (i = 0; i < 8u; ++i) {
+     84              uint8 i;
+     85          
+     86              for (i = 0; i < 8u; ++i) {
    \   000007   7E08         MOV     R6,#0x8
-     82                  scl_set(0);
+     87                  scl_set(0);
    \                     ??soft_i2c_write_byte_0:
    \   000009                ; Setup parameters for call to function scl_set
    \   000009   12....       LCALL   ?Subroutine4 & 0xFFFF
-     83                  i2c_delay();
-     84                  sda_set((data & 0x80u) ? 1u : 0u);
-   \                     ??CrossCallReturnLabel_8:
+     88                  i2c_delay();
+     89                  sda_set((data & 0x80u) ? 1u : 0u);
+   \                     ??CrossCallReturnLabel_7:
    \   00000C                ; Setup parameters for call to function sda_set
    \   00000C   EF           MOV     A,R7
    \   00000D   A2E7         MOV     C,0xE0 /* A   */.7
@@ -411,46 +415,52 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000010   33           RLC     A
    \   000011   F9           MOV     R1,A
    \   000012   12....       LCALL   ?Subroutine1 & 0xFFFF
-     85                  i2c_delay();
-     86                  scl_set(1);
-     87                  i2c_delay();
-     88                  data <<= 1;
+     90                  i2c_delay();
+     91                  scl_set(1);
+     92                  i2c_delay();
+     93                  data <<= 1;
    \                     ??CrossCallReturnLabel_1:
    \   000015   EF           MOV     A,R7
    \   000016   C3           CLR     C
    \   000017   33           RLC     A
    \   000018   FF           MOV     R7,A
-     89              }
+     94              }
    \   000019   1E           DEC     R6
    \   00001A   EE           MOV     A,R6
    \   00001B   70EC         JNZ     ??soft_i2c_write_byte_0
-     90          
-     91              /* 释放 SDA 让从机 ACK；本工程为单主 + 无 ACK 检测，保持与 STM32 侧一致。 */
-     92              scl_set(0);
+     95          
+     96              /* 释放 SDA 让从机 ACK；本工程为单主 + 无 ACK 检测，保持与 STM32 侧一致。 */
+     97              scl_set(0);
    \   00001D                ; Setup parameters for call to function scl_set
    \   00001D   12....       LCALL   ?Subroutine3 & 0xFFFF
-     93              i2c_delay();
-     94              sda_set(1);
+     98              i2c_delay();
+     99              sda_set(1);
    \                     ??CrossCallReturnLabel_5:
    \   000020   12....       LCALL   ?Subroutine1 & 0xFFFF
-     95              i2c_delay();
-     96              scl_set(1);
-     97              i2c_delay();
-     98              scl_set(0);
+    100              i2c_delay();
+    101              scl_set(1);
+    102              i2c_delay();
+    103              scl_set(0);
    \                     ??CrossCallReturnLabel_2:
    \   000023                ; Setup parameters for call to function scl_set
    \   000023   12....       LCALL   ?Subroutine3 & 0xFFFF
-     99              i2c_delay();
-    100              return 1;
+    104              i2c_delay();
+    105              return 1;
    \                     ??CrossCallReturnLabel_6:
    \   000026   7F01         MOV     R7,#0x1
    \   000028   02....       LJMP    ?BANKED_LEAVE_XDATA
-    101          }
+    106          }
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine4:
+   \   000000   7900         MOV     R1,#0x0
+   \   000002                REQUIRE ??Subroutine6_0
+   \   000002                ; // Fall through to label ??Subroutine6_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine3:
    \   000000   12....       LCALL   ?Subroutine4 & 0xFFFF
-   \                     ??CrossCallReturnLabel_9:
+   \                     ??CrossCallReturnLabel_8:
    \   000003                ; Setup parameters for call to function sda_set
    \   000003   7901         MOV     R1,#0x1
    \   000005   22           RET
@@ -497,9 +507,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      i2c_delay               2      0     10
      scl_set                 0      0      9
      sda_set                 0      0      9
-     soft_i2c_init           2      0      0
-       -> sda_set            4      0      0
-       -> scl_set            4      0      0
+     soft_i2c_init           0      0      0
      soft_i2c_start          2      0      0
        -> sda_set            4      0      0
        -> scl_set            4      0      0
@@ -540,21 +548,22 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      --------------              -----
      _A_P1                          1
      P1SEL                          1
+     P1INP                          1
      P2INP                          1
      P1DIR                          1
      i2c_delay                     35
      ??Subroutine5_0                7
-     sda_set                       12
-     scl_set                       12
-     soft_i2c_init                 18
-     ?Subroutine2                  11
-     ?Subroutine0                   3
+     sda_set                       14
+     scl_set                       14
+     soft_i2c_init                 21
      soft_i2c_start                25
-     soft_i2c_stop                 19
-     ?Subroutine4                   2
+     ?Subroutine0                   3
+     ?Subroutine2                   6
      ??Subroutine6_0                7
+     soft_i2c_stop                 19
      ?Subroutine1                  12
      soft_i2c_write_byte           43
+     ?Subroutine4                   2
      ?Subroutine3                   6
      ??i2c_delay?relay              6
      ??sda_set?relay                6
@@ -565,12 +574,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      ??soft_i2c_write_byte?relay    6
 
  
- 212 bytes in segment BANKED_CODE
+ 214 bytes in segment BANKED_CODE
   42 bytes in segment BANK_RELAYS
-   4 bytes in segment SFR_AN
+   5 bytes in segment SFR_AN
  
- 254 bytes of CODE memory
-   0 bytes of DATA memory (+ 4 bytes shared)
+ 256 bytes of CODE memory
+   0 bytes of DATA memory (+ 5 bytes shared)
 
 Errors: none
 Warnings: 1

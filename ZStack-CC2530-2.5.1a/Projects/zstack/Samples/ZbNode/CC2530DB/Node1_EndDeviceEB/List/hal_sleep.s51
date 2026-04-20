@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:36 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:28:26 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\targe /
 //                          t\CC2530EB\hal_sleep.c                            /
@@ -42,21 +42,20 @@
 //                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Components\hal\target\CC2530EB\hal_sleep.c -D  /
-//                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=FALSE    /
-//                          -D HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a /
-//                          \Projects\zstack\Samples\ZbNode\CC2530DB\Node1_En /
-//                          dDeviceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\ /
-//                          Projects\zstack\Samples\ZbNode\CC2530DB\Node1_End /
-//                          DeviceEB\List\ --diag_suppress Pe001,Pa010 -o     /
+//                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=TRUE -D  /
+//                          HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr /
+//                          ojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDe /
+//                          viceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro /
+//                          jects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDev /
+//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e     /
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -736,6 +735,62 @@ maxSleepLoopTime:
         DATA32
         DS 4
         REQUIRE `?<Initializer for maxSleepLoopTime>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_fffffffe:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_fffffffe>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_64:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_64>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_1f:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_1f>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_2d:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_2d>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_185197:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_185197>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_185196:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_185196>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_29f:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_29f>`
+        REQUIRE __INIT_XDATA_I
+
+        RSEG XDATA_I:XDATA:NOROOT(0)
+        DATA32
+__Constant_ffffffe9:
+        DS 4
+        REQUIRE `?<Initializer for __Constant_ffffffe9>`
         REQUIRE __INIT_XDATA_I
 //  183 
 //  184 /* ------------------------------------------------------------------------------------------------
@@ -1882,44 +1937,44 @@ halSleepTimerIsr:
         DATA8
         DB 1
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_fffffffe>`:
         DATA32
-__Constant_fffffffe:
         DD 4294967294
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_64>`:
         DATA32
-__Constant_64:
         DD 100
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_1f>`:
         DATA32
-__Constant_1f:
         DD 31
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_2d>`:
         DATA32
-__Constant_2d:
         DD 45
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_185197>`:
         DATA32
-__Constant_185197:
         DD 1593751
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_185196>`:
         DATA32
-__Constant_185196:
         DD 1593750
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_29f>`:
         DATA32
-__Constant_29f:
         DD 671
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for __Constant_ffffffe9>`:
         DATA32
-__Constant_ffffffe9:
         DD 4294967273
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -1969,15 +2024,13 @@ __Constant_ffffffe9:
 //  25 bytes in segment NEAR_CODE
 //  10 bytes in segment SFR_AN
 //   8 bytes in segment SLEEP_CODE
-//   4 bytes in segment XDATA_I
-//   4 bytes in segment XDATA_ID
-//  32 bytes in segment XDATA_ROM_C
+//  36 bytes in segment XDATA_I
+//  36 bytes in segment XDATA_ID
 //   1 byte  in segment XDATA_Z
 // 
-// 561 bytes of CODE  memory (+  3 bytes shared)
-//   0 bytes of CONST memory (+ 32 bytes shared)
+// 561 bytes of CODE  memory (+ 35 bytes shared)
 //   1 byte  of DATA  memory (+ 10 bytes shared)
-//   5 bytes of XDATA memory
+//   5 bytes of XDATA memory (+ 32 bytes shared)
 //
 //Errors: none
 //Warnings: none

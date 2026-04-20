@@ -1,13 +1,13 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  20:49:37 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  14:28:27 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
 #    Code model         =  banked                                             #
 #    Data model         =  large                                              #
 #    Calling convention =  xdata reentrant                                    #
-#    Constant location  =  data_rom                                           #
+#    Constant location  =  data                                               #
 #    Dptr setup         =  1,16                                               #
 #    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\Source\oled_ssd1306.c                    #
@@ -43,7 +43,7 @@
 #                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
 #                          a\Projects\zstack\Samples\ZbNode\Source\oled_ssd13 #
 #                          06.c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D            #
-#                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC                #
+#                          HAL_UART=TRUE -D HAL_LCD=FALSE -lC                 #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA     #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
@@ -54,18 +54,17 @@
 #                          --no_code_motion --debug --core=plain --dptr=16,1  #
 #                          --data_model=large --code_model=banked             #
 #                          --calling_convention=xdata_reentrant               #
-#                          --place_constants=data_rom --nr_virtual_regs 16    #
+#                          --place_constants=data --nr_virtual_regs 16 -I     #
+#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
+#                          es\ZbNode\CC2530DB\ -I D:\ZNJJ\ZStack-CC2530-2.5.1 #
+#                          a\Projects\zstack\Samples\ZbNode\CC2530DB\..\Sourc #
+#                          e\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack #
+#                          \Samples\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\  #
 #                          -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sa #
-#                          mples\ZbNode\CC2530DB\ -I                          #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\Source\ -I                   #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\ZMain\TI2530DB\ -I     #
-#                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
-#                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\hal\i #
-#                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
-#                          stack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Compo #
-#                          nents\hal\target\CC2530EB\ -I                      #
+#                          mples\ZbNode\CC2530DB\..\..\..\..\..\Components\ha #
+#                          l\include\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Project #
+#                          s\zstack\Samples\ZbNode\CC2530DB\..\..\..\..\..\Co #
+#                          mponents\hal\target\CC2530EB\ -I                   #
 #                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Sampl #
 #                          es\ZbNode\CC2530DB\..\..\..\..\..\Components\mac\i #
 #                          nclude\ -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\z #
@@ -129,9 +128,521 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
       9          #include "OnBoard.h"
      10          #include "../../../../../../STM32/Hardware/OLED/oledfont.h"
 
-   \                                 In  segment XDATA_ROM_C, align 1
-   \   static unsigned char const __xdata_rom asc2_1608[95][16]
+   \                                 In  segment XDATA_I, align 1, keep-with-next
+   \   static unsigned char const asc2_1608[95][16]
    \                     asc2_1608:
+   \   000000                DS 1520
+   \   0005F0                REQUIRE `?<Initializer for asc2_1608>`
+   \   0005F0                REQUIRE __INIT_XDATA_I
+     11          
+     12          #define OLED_ADDR      0x78u
+     13          #define OLED_CMD_MODE  0x00u
+     14          #define OLED_DAT_MODE  0x40u
+     15          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     16          static void oled_wait_ms(uint16 ms)
+   \                     oled_wait_ms:
+     17          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   EA           MOV     A,R2
+   \   000006   FE           MOV     R6,A
+   \   000007   EB           MOV     A,R3
+   \   000008   FF           MOV     R7,A
+   \   000009   8007         SJMP    ??oled_wait_ms_0
+     18              while (ms-- != 0u) {
+     19                  MicroWait(4000);
+   \                     ??oled_wait_ms_1:
+   \   00000B                ; Setup parameters for call to function Onboard_wait
+   \   00000B   7AA0         MOV     R2,#-0x60
+   \   00000D   7B0F         MOV     R3,#0xf
+   \   00000F   12....       LCALL   ??Onboard_wait?relay
+     20              }
+   \                     ??oled_wait_ms_0:
+   \   000012   EE           MOV     A,R6
+   \   000013   F8           MOV     R0,A
+   \   000014   EF           MOV     A,R7
+   \   000015   F9           MOV     R1,A
+   \   000016   E8           MOV     A,R0
+   \   000017   24FF         ADD     A,#-0x1
+   \   000019   1E           DEC     R6
+   \   00001A   E9           MOV     A,R1
+   \   00001B   34FF         ADDC    A,#-0x1
+   \   00001D   FF           MOV     R7,A
+   \   00001E   E8           MOV     A,R0
+   \   00001F   49           ORL     A,R1
+   \   000020   70E9         JNZ     ??oled_wait_ms_1
+     21          }
+   \   000022   80..         SJMP    ?Subroutine0
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine0:
+   \   000000   7F01         MOV     R7,#0x1
+   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
+     22          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     23          static void oled_write(uint8 mode, uint8 value)
+   \                     oled_write:
+     24          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   E9           MOV     A,R1
+   \   000006   FF           MOV     R7,A
+   \   000007   EA           MOV     A,R2
+   \   000008   FE           MOV     R6,A
+     25              soft_i2c_start();
+   \   000009                ; Setup parameters for call to function soft_i2c_start
+   \   000009   12....       LCALL   ??soft_i2c_start?relay
+     26              (void)soft_i2c_write_byte(OLED_ADDR);
+   \   00000C                ; Setup parameters for call to function soft_i2c_write_byte
+   \   00000C   7978         MOV     R1,#0x78
+   \   00000E   12....       LCALL   ??soft_i2c_write_byte?relay
+     27              (void)soft_i2c_write_byte(mode);
+   \   000011                ; Setup parameters for call to function soft_i2c_write_byte
+   \   000011   EF           MOV     A,R7
+   \   000012   F9           MOV     R1,A
+   \   000013   12....       LCALL   ??soft_i2c_write_byte?relay
+     28              (void)soft_i2c_write_byte(value);
+   \   000016                ; Setup parameters for call to function soft_i2c_write_byte
+   \   000016   EE           MOV     A,R6
+   \   000017   F9           MOV     R1,A
+   \   000018   12....       LCALL   ??soft_i2c_write_byte?relay
+     29              soft_i2c_stop();
+   \   00001B                ; Setup parameters for call to function soft_i2c_stop
+   \   00001B   12....       LCALL   ??soft_i2c_stop?relay
+     30          }
+   \   00001E   80..         SJMP    ?Subroutine0
+     31          
+     32          #define WR_CMD(c)  oled_write(OLED_CMD_MODE, (uint8)(c))
+     33          #define WR_DAT(d)  oled_write(OLED_DAT_MODE, (uint8)(d))
+     34          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     35          static void oled_set_pos(uint8 x, uint8 page)
+   \                     oled_set_pos:
+     36          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+   \   000005   E9           MOV     A,R1
+   \   000006   FE           MOV     R6,A
+   \   000007   EA           MOV     A,R2
+   \   000008   FF           MOV     R7,A
+     37              WR_CMD(0xB0u | page);
+   \   000009                ; Setup parameters for call to function oled_write
+   \   000009   74B0         MOV     A,#-0x50
+   \   00000B   4F           ORL     A,R7
+   \   00000C   FA           MOV     R2,A
+   \   00000D   7900         MOV     R1,#0x0
+   \   00000F   12....       LCALL   ??oled_write?relay
+     38              WR_CMD(0x10u | ((x >> 4) & 0x0Fu));
+   \   000012                ; Setup parameters for call to function oled_write
+   \   000012   EE           MOV     A,R6
+   \   000013   C4           SWAP    A
+   \   000014   540F         ANL     A,#0xf
+   \   000016   4410         ORL     A,#0x10
+   \   000018   FA           MOV     R2,A
+   \   000019   7900         MOV     R1,#0x0
+   \   00001B   12....       LCALL   ??oled_write?relay
+     39              WR_CMD(0x00u | (x & 0x0Fu));
+   \   00001E                ; Setup parameters for call to function oled_write
+   \   00001E   740F         MOV     A,#0xf
+   \   000020   5E           ANL     A,R6
+   \   000021   FA           MOV     R2,A
+   \   000022   7900         MOV     R1,#0x0
+   \   000024   12....       LCALL   ??oled_write?relay
+     40          }
+   \   000027                REQUIRE ?Subroutine0
+   \   000027                ; // Fall through to label ?Subroutine0
+     41          
+     42          static void oled_fill_page(uint8 page, uint8 value)
+     43          {
+     44              uint8 x;
+     45          
+     46              oled_set_pos(0, page);
+     47              for (x = 0; x < 128u; ++x) {
+     48                  WR_DAT(value);
+     49              }
+     50          }
+     51          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     52          void oled_ssd1306_init(void)
+   \                     oled_ssd1306_init:
+     53          {
+   \   000000   C082         PUSH    DPL
+   \   000002   C083         PUSH    DPH
+   \   000004                ; Saved register size: 2
+   \   000004                ; Auto size: 0
+     54              soft_i2c_init();
+   \   000004                ; Setup parameters for call to function soft_i2c_init
+   \   000004   12....       LCALL   ??soft_i2c_init?relay
+     55              oled_wait_ms(120);
+   \   000007                ; Setup parameters for call to function oled_wait_ms
+   \   000007   7A78         MOV     R2,#0x78
+   \   000009   7B00         MOV     R3,#0x0
+   \   00000B   12....       LCALL   ??oled_wait_ms?relay
+     56          
+     57              WR_CMD(0xAE);
+   \   00000E                ; Setup parameters for call to function oled_write
+   \   00000E   7AAE         MOV     R2,#-0x52
+   \   000010   12....       LCALL   ?Subroutine2 & 0xFFFF
+     58              WR_CMD(0x00); WR_CMD(0x10);
+   \                     ??CrossCallReturnLabel_2:
+   \   000013                ; Setup parameters for call to function oled_write
+   \   000013   7A10         MOV     R2,#0x10
+   \   000015   12....       LCALL   ?Subroutine3 & 0xFFFF
+     59              WR_CMD(0x40);
+     60              WR_CMD(0x81); WR_CMD(0xCF);
+   \                     ??CrossCallReturnLabel_4:
+   \   000018                ; Setup parameters for call to function oled_write
+   \   000018   7A81         MOV     R2,#-0x7f
+   \   00001A   7900         MOV     R1,#0x0
+   \   00001C   12....       LCALL   ??oled_write?relay
+   \   00001F                ; Setup parameters for call to function oled_write
+   \   00001F   7ACF         MOV     R2,#-0x31
+   \   000021   7900         MOV     R1,#0x0
+   \   000023   12....       LCALL   ??oled_write?relay
+     61              WR_CMD(0xA1);
+   \   000026                ; Setup parameters for call to function oled_write
+   \   000026   7AA1         MOV     R2,#-0x5f
+   \   000028   7900         MOV     R1,#0x0
+   \   00002A   12....       LCALL   ??oled_write?relay
+     62              WR_CMD(0xC8);
+   \   00002D                ; Setup parameters for call to function oled_write
+   \   00002D   7AC8         MOV     R2,#-0x38
+   \   00002F   12....       LCALL   ?Subroutine4 & 0xFFFF
+     63              WR_CMD(0xA6);
+     64              WR_CMD(0xA8); WR_CMD(0x3F);
+   \                     ??CrossCallReturnLabel_6:
+   \   000032                ; Setup parameters for call to function oled_write
+   \   000032   7AA8         MOV     R2,#-0x58
+   \   000034   7900         MOV     R1,#0x0
+   \   000036   12....       LCALL   ??oled_write?relay
+   \   000039                ; Setup parameters for call to function oled_write
+   \   000039   7A3F         MOV     R2,#0x3f
+   \   00003B   7900         MOV     R1,#0x0
+   \   00003D   12....       LCALL   ??oled_write?relay
+     65              WR_CMD(0xD3); WR_CMD(0x00);
+   \   000040                ; Setup parameters for call to function oled_write
+   \   000040   7AD3         MOV     R2,#-0x2d
+   \   000042   12....       LCALL   ?Subroutine2 & 0xFFFF
+     66              WR_CMD(0xD5); WR_CMD(0x80);
+   \                     ??CrossCallReturnLabel_3:
+   \   000045                ; Setup parameters for call to function oled_write
+   \   000045   7AD5         MOV     R2,#-0x2b
+   \   000047   7900         MOV     R1,#0x0
+   \   000049   12....       LCALL   ??oled_write?relay
+   \   00004C                ; Setup parameters for call to function oled_write
+   \   00004C   7A80         MOV     R2,#-0x80
+   \   00004E   7900         MOV     R1,#0x0
+   \   000050   12....       LCALL   ??oled_write?relay
+     67              WR_CMD(0xD9); WR_CMD(0xF1);
+   \   000053                ; Setup parameters for call to function oled_write
+   \   000053   7AD9         MOV     R2,#-0x27
+   \   000055   7900         MOV     R1,#0x0
+   \   000057   12....       LCALL   ??oled_write?relay
+   \   00005A                ; Setup parameters for call to function oled_write
+   \   00005A   7AF1         MOV     R2,#-0xf
+   \   00005C   7900         MOV     R1,#0x0
+   \   00005E   12....       LCALL   ??oled_write?relay
+     68              WR_CMD(0xDA); WR_CMD(0x12);
+   \   000061                ; Setup parameters for call to function oled_write
+   \   000061   7ADA         MOV     R2,#-0x26
+   \   000063   7900         MOV     R1,#0x0
+   \   000065   12....       LCALL   ??oled_write?relay
+   \   000068                ; Setup parameters for call to function oled_write
+   \   000068   7A12         MOV     R2,#0x12
+   \   00006A   7900         MOV     R1,#0x0
+   \   00006C   12....       LCALL   ??oled_write?relay
+     69              WR_CMD(0xDB); WR_CMD(0x40);
+   \   00006F                ; Setup parameters for call to function oled_write
+   \   00006F   7ADB         MOV     R2,#-0x25
+   \   000071   12....       LCALL   ?Subroutine3 & 0xFFFF
+     70              WR_CMD(0x20); WR_CMD(0x02);
+   \                     ??CrossCallReturnLabel_5:
+   \   000074                ; Setup parameters for call to function oled_write
+   \   000074   7A20         MOV     R2,#0x20
+   \   000076   7900         MOV     R1,#0x0
+   \   000078   12....       LCALL   ??oled_write?relay
+   \   00007B                ; Setup parameters for call to function oled_write
+   \   00007B   7A02         MOV     R2,#0x2
+   \   00007D   7900         MOV     R1,#0x0
+   \   00007F   12....       LCALL   ??oled_write?relay
+     71              WR_CMD(0x8D); WR_CMD(0x14);
+   \   000082                ; Setup parameters for call to function oled_write
+   \   000082   7A8D         MOV     R2,#-0x73
+   \   000084   7900         MOV     R1,#0x0
+   \   000086   12....       LCALL   ??oled_write?relay
+   \   000089                ; Setup parameters for call to function oled_write
+   \   000089   7A14         MOV     R2,#0x14
+   \   00008B   7900         MOV     R1,#0x0
+   \   00008D   12....       LCALL   ??oled_write?relay
+     72              WR_CMD(0xA4);
+   \   000090                ; Setup parameters for call to function oled_write
+   \   000090   7AA4         MOV     R2,#-0x5c
+   \   000092   12....       LCALL   ?Subroutine4 & 0xFFFF
+     73              WR_CMD(0xA6);
+     74              WR_CMD(0xAF);
+   \                     ??CrossCallReturnLabel_7:
+   \   000095                ; Setup parameters for call to function oled_write
+   \   000095   7AAF         MOV     R2,#-0x51
+   \   000097   7900         MOV     R1,#0x0
+   \   000099   12....       LCALL   ??oled_write?relay
+     75          
+     76              oled_wait_ms(20);
+   \   00009C                ; Setup parameters for call to function oled_wait_ms
+   \   00009C   7A14         MOV     R2,#0x14
+   \   00009E   7B00         MOV     R3,#0x0
+   \   0000A0   12....       LCALL   ??oled_wait_ms?relay
+     77              oled_ssd1306_clear();
+   \   0000A3                ; Setup parameters for call to function oled_ssd1306_clear
+   \   0000A3   12....       LCALL   ??oled_ssd1306_clear?relay
+     78          }
+   \   0000A6   D083         POP     DPH
+   \   0000A8   D082         POP     DPL
+   \   0000AA   02....       LJMP    ?BRET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine4:
+   \   000000   7900         MOV     R1,#0x0
+   \   000002   12....       LCALL   ??oled_write?relay
+   \   000005                ; Setup parameters for call to function oled_write
+   \   000005                ; Setup parameters for call to function oled_write
+   \   000005   7AA6         MOV     R2,#-0x5a
+   \   000007   7900         MOV     R1,#0x0
+   \   000009   12....       LCALL   ??oled_write?relay
+   \   00000C   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine3:
+   \   000000   7900         MOV     R1,#0x0
+   \   000002   12....       LCALL   ??oled_write?relay
+   \   000005                ; Setup parameters for call to function oled_write
+   \   000005                ; Setup parameters for call to function oled_write
+   \   000005   7A40         MOV     R2,#0x40
+   \   000007   7900         MOV     R1,#0x0
+   \   000009   12....       LCALL   ??oled_write?relay
+   \   00000C   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine2:
+   \   000000   7900         MOV     R1,#0x0
+   \   000002   12....       LCALL   ??oled_write?relay
+   \   000005                ; Setup parameters for call to function oled_write
+   \   000005                ; Setup parameters for call to function oled_write
+   \   000005   7A00         MOV     R2,#0x0
+   \   000007   7900         MOV     R1,#0x0
+   \   000009   12....       LCALL   ??oled_write?relay
+   \   00000C   22           RET
+     79          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     80          void oled_ssd1306_clear(void)
+   \                     oled_ssd1306_clear:
+     81          {
+   \   000000   74F7         MOV     A,#-0x9
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 9
+   \   000005                ; Auto size: 0
+     82              uint8 page;
+     83          
+     84              for (page = 0; page < 8u; ++page) {
+   \   000005   7E00         MOV     R6,#0x0
+     85                  oled_fill_page(page, 0x00u);
+   \                     ??oled_ssd1306_clear_0:
+   \   000007                ; Setup parameters for call to function oled_set_pos
+   \   000007   EE           MOV     A,R6
+   \   000008   FA           MOV     R2,A
+   \   000009   7900         MOV     R1,#0x0
+   \   00000B   12....       LCALL   ??oled_set_pos?relay
+   \   00000E   7F80         MOV     R7,#-0x80
+   \                     ??oled_ssd1306_clear_1:
+   \   000010                ; Setup parameters for call to function oled_write
+   \   000010   7A00         MOV     R2,#0x0
+   \   000012   7940         MOV     R1,#0x40
+   \   000014   12....       LCALL   ??oled_write?relay
+   \   000017   1F           DEC     R7
+   \   000018   EF           MOV     A,R7
+   \   000019   70F5         JNZ     ??oled_ssd1306_clear_1
+     86              }
+   \   00001B   0E           INC     R6
+   \   00001C   EE           MOV     A,R6
+   \   00001D   C3           CLR     C
+   \   00001E   9408         SUBB    A,#0x8
+   \   000020   40E5         JC      ??oled_ssd1306_clear_0
+     87          }
+   \   000022   02....       LJMP    ?Subroutine0 & 0xFFFF
+     88          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+     89          void oled_ssd1306_draw_text(uint8 row, const char *text)
+   \                     oled_ssd1306_draw_text:
+     90          {
+   \   000000   74EF         MOV     A,#-0x11
+   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
+   \   000005                ; Saved register size: 17
+   \   000005                ; Auto size: 0
+   \   000005   EA           MOV     A,R2
+   \   000006   FE           MOV     R6,A
+   \   000007   EB           MOV     A,R3
+   \   000008   FF           MOV     R7,A
+     91              uint8 i;
+     92              uint8 ch;
+     93              uint8 x;
+     94              uint8 page;
+     95              uint8 col;
+     96              const uint8 *glyph;
+     97          
+     98              if (row > 3u) {
+   \   000009   E9           MOV     A,R1
+   \   00000A   C3           CLR     C
+   \   00000B   9404         SUBB    A,#0x4
+   \   00000D   4003         JC      $+5
+   \   00000F   02....       LJMP    ??oled_ssd1306_draw_text_0 & 0xFFFF
+     99                  return;
+    100              }
+    101          
+    102              page = (uint8)(row * 2u);
+   \   000012   E9           MOV     A,R1
+   \   000013   C3           CLR     C
+   \   000014   33           RLC     A
+   \   000015   F5..         MOV     ?V0 + 3,A
+    103              x = 0u;
+   \   000017   75..00       MOV     ?V0 + 2,#0x0
+    104              for (i = 0; i < 16u; ++i) {
+   \   00001A   75..00       MOV     ?V0 + 7,#0x0
+    105                  ch = (text != 0 && text[i] != '\0') ? (uint8)text[i] : (uint8)' ';
+   \                     ??oled_ssd1306_draw_text_1:
+   \   00001D   EE           MOV     A,R6
+   \   00001E   4F           ORL     A,R7
+   \   00001F   6014         JZ      ??oled_ssd1306_draw_text_2
+   \   000021   85....       MOV     ?V0 + 0,?V0 + 7
+   \   000024   EE           MOV     A,R6
+   \   000025   25..         ADD     A,?V0 + 0
+   \   000027   F582         MOV     DPL,A
+   \   000029   EF           MOV     A,R7
+   \   00002A   3400         ADDC    A,#0x0
+   \   00002C   F583         MOV     DPH,A
+   \   00002E   E0           MOVX    A,@DPTR
+   \   00002F   6004         JZ      ??oled_ssd1306_draw_text_2
+   \   000031   F5..         MOV     ?V0 + 0,A
+   \   000033   8003         SJMP    ??oled_ssd1306_draw_text_3
+   \                     ??oled_ssd1306_draw_text_2:
+   \   000035   75..20       MOV     ?V0 + 0,#0x20
+    106                  if (ch < 0x20u || ch > 0x7Eu) {
+   \                     ??oled_ssd1306_draw_text_3:
+   \   000038   74E0         MOV     A,#-0x20
+   \   00003A   25..         ADD     A,?V0 + 0
+   \   00003C   C3           CLR     C
+   \   00003D   945F         SUBB    A,#0x5f
+   \   00003F   4003         JC      ??oled_ssd1306_draw_text_4
+    107                      ch = (uint8)'?';
+   \   000041   75..3F       MOV     ?V0 + 0,#0x3f
+    108                  }
+    109                  glyph = (const uint8 *)&asc2_1608[ch - 0x20u][0];
+   \                     ??oled_ssd1306_draw_text_4:
+   \   000044   75..00       MOV     ?V0 + 1,#0x0
+   \   000047   7404         MOV     A,#0x4
+   \   000049   78..         MOV     R0,#?V0 + 0
+   \   00004B   12....       LCALL   ?S_SHL
+   \   00004E   74..         MOV     A,#asc2_1608 & 0xff
+   \   000050   25..         ADD     A,?V0 + 0
+   \   000052   F5..         MOV     ?V0 + 0,A
+   \   000054   74..         MOV     A,#((asc2_1608 - 512) >> 8) & 0xff
+   \   000056   35..         ADDC    A,?V0 + 1
+   \   000058   F5..         MOV     ?V0 + 1,A
+    110          
+    111                  oled_set_pos(x, page);
+   \   00005A                ; Setup parameters for call to function oled_set_pos
+   \   00005A   AA..         MOV     R2,?V0 + 3
+   \   00005C   A9..         MOV     R1,?V0 + 2
+   \   00005E   12....       LCALL   ??oled_set_pos?relay
+    112                  for (col = 0; col < 8u; ++col) {
+   \   000061   75..00       MOV     ?V0 + 8,#0x0
+    113                      WR_DAT(glyph[col]);
+   \                     ??oled_ssd1306_draw_text_5:
+   \   000064                ; Setup parameters for call to function oled_write
+   \   000064   12....       LCALL   ?Subroutine5 & 0xFFFF
+    114                  }
+   \                     ??CrossCallReturnLabel_8:
+   \   000067   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_0:
+   \   00006A   40F8         JC      ??oled_ssd1306_draw_text_5
+    115                  oled_set_pos(x, (uint8)(page + 1u));
+   \   00006C                ; Setup parameters for call to function oled_set_pos
+   \   00006C   7401         MOV     A,#0x1
+   \   00006E   25..         ADD     A,?V0 + 3
+   \   000070   FA           MOV     R2,A
+   \   000071   A9..         MOV     R1,?V0 + 2
+   \   000073   12....       LCALL   ??oled_set_pos?relay
+    116                  for (col = 0; col < 8u; ++col) {
+   \   000076   75..00       MOV     ?V0 + 8,#0x0
+    117                      WR_DAT(glyph[col + 8u]);
+   \                     ??oled_ssd1306_draw_text_6:
+   \   000079                ; Setup parameters for call to function oled_write
+   \   000079   12....       LCALL   ?Subroutine5 & 0xFFFF
+    118                  }
+   \                     ??CrossCallReturnLabel_9:
+   \   00007C   A3           INC     DPTR
+   \   00007D   A3           INC     DPTR
+   \   00007E   A3           INC     DPTR
+   \   00007F   A3           INC     DPTR
+   \   000080   A3           INC     DPTR
+   \   000081   A3           INC     DPTR
+   \   000082   A3           INC     DPTR
+   \   000083   A3           INC     DPTR
+   \   000084   12....       LCALL   ?Subroutine1 & 0xFFFF
+   \                     ??CrossCallReturnLabel_1:
+   \   000087   40F0         JC      ??oled_ssd1306_draw_text_6
+    119          
+    120                  x = (uint8)(x + 8u);
+   \   000089   7408         MOV     A,#0x8
+   \   00008B   25..         ADD     A,?V0 + 2
+   \   00008D   F5..         MOV     ?V0 + 2,A
+    121              }
+   \   00008F   05..         INC     ?V0 + 7
+   \   000091   E5..         MOV     A,?V0 + 7
+   \   000093   C3           CLR     C
+   \   000094   9410         SUBB    A,#0x10
+   \   000096   4085         JC      ??oled_ssd1306_draw_text_1
+   \                     ??oled_ssd1306_draw_text_0:
+   \   000098   7F09         MOV     R7,#0x9
+   \   00009A   02....       LJMP    ?BANKED_LEAVE_XDATA
+    122          }
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine5:
+   \   000000   85....       MOV     ?V0 + 4,?V0 + 8
+   \   000003   E5..         MOV     A,?V0 + 0
+   \   000005   25..         ADD     A,?V0 + 4
+   \   000007   F582         MOV     DPL,A
+   \   000009   E5..         MOV     A,?V0 + 1
+   \   00000B   3400         ADDC    A,#0x0
+   \   00000D   F583         MOV     DPH,A
+   \   00000F   22           RET
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+   \                     ?Subroutine1:
+   \   000000   E0           MOVX    A,@DPTR
+   \   000001   FA           MOV     R2,A
+   \   000002   7940         MOV     R1,#0x40
+   \   000004   12....       LCALL   ??oled_write?relay
+   \   000007   05..         INC     ?V0 + 8
+   \   000009   E5..         MOV     A,?V0 + 8
+   \   00000B   C3           CLR     C
+   \   00000C   9408         SUBB    A,#0x8
+   \   00000E   22           RET
+
+   \                                 In  segment XDATA_ID, align 1, keep-with-next
+   \                     `?<Initializer for asc2_1608>`:
    \   000000   00           DB 0
    \   000001   00           DB 0
    \   000002   00           DB 0
@@ -1652,512 +2163,6 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   0005ED   00           DB 0
    \   0005EE   20           DB 32
    \   0005EF   00           DB 0
-     11          
-     12          #define OLED_ADDR      0x78u
-     13          #define OLED_CMD_MODE  0x00u
-     14          #define OLED_DAT_MODE  0x40u
-     15          
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     16          static void oled_wait_ms(uint16 ms)
-   \                     oled_wait_ms:
-     17          {
-   \   000000   74F7         MOV     A,#-0x9
-   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 9
-   \   000005                ; Auto size: 0
-   \   000005   EA           MOV     A,R2
-   \   000006   FE           MOV     R6,A
-   \   000007   EB           MOV     A,R3
-   \   000008   FF           MOV     R7,A
-   \   000009   8007         SJMP    ??oled_wait_ms_0
-     18              while (ms-- != 0u) {
-     19                  MicroWait(4000);
-   \                     ??oled_wait_ms_1:
-   \   00000B                ; Setup parameters for call to function Onboard_wait
-   \   00000B   7AA0         MOV     R2,#-0x60
-   \   00000D   7B0F         MOV     R3,#0xf
-   \   00000F   12....       LCALL   ??Onboard_wait?relay
-     20              }
-   \                     ??oled_wait_ms_0:
-   \   000012   EE           MOV     A,R6
-   \   000013   F8           MOV     R0,A
-   \   000014   EF           MOV     A,R7
-   \   000015   F9           MOV     R1,A
-   \   000016   E8           MOV     A,R0
-   \   000017   24FF         ADD     A,#-0x1
-   \   000019   1E           DEC     R6
-   \   00001A   E9           MOV     A,R1
-   \   00001B   34FF         ADDC    A,#-0x1
-   \   00001D   FF           MOV     R7,A
-   \   00001E   E8           MOV     A,R0
-   \   00001F   49           ORL     A,R1
-   \   000020   70E9         JNZ     ??oled_wait_ms_1
-     21          }
-   \   000022   80..         SJMP    ?Subroutine0
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine0:
-   \   000000   7F01         MOV     R7,#0x1
-   \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
-     22          
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     23          static void oled_write(uint8 mode, uint8 value)
-   \                     oled_write:
-     24          {
-   \   000000   74F7         MOV     A,#-0x9
-   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 9
-   \   000005                ; Auto size: 0
-   \   000005   E9           MOV     A,R1
-   \   000006   FF           MOV     R7,A
-   \   000007   EA           MOV     A,R2
-   \   000008   FE           MOV     R6,A
-     25              soft_i2c_start();
-   \   000009                ; Setup parameters for call to function soft_i2c_start
-   \   000009   12....       LCALL   ??soft_i2c_start?relay
-     26              (void)soft_i2c_write_byte(OLED_ADDR);
-   \   00000C                ; Setup parameters for call to function soft_i2c_write_byte
-   \   00000C   7978         MOV     R1,#0x78
-   \   00000E   12....       LCALL   ??soft_i2c_write_byte?relay
-     27              (void)soft_i2c_write_byte(mode);
-   \   000011                ; Setup parameters for call to function soft_i2c_write_byte
-   \   000011   EF           MOV     A,R7
-   \   000012   F9           MOV     R1,A
-   \   000013   12....       LCALL   ??soft_i2c_write_byte?relay
-     28              (void)soft_i2c_write_byte(value);
-   \   000016                ; Setup parameters for call to function soft_i2c_write_byte
-   \   000016   EE           MOV     A,R6
-   \   000017   F9           MOV     R1,A
-   \   000018   12....       LCALL   ??soft_i2c_write_byte?relay
-     29              soft_i2c_stop();
-   \   00001B                ; Setup parameters for call to function soft_i2c_stop
-   \   00001B   12....       LCALL   ??soft_i2c_stop?relay
-     30          }
-   \   00001E   80..         SJMP    ?Subroutine0
-     31          
-     32          #define WR_CMD(c)  oled_write(OLED_CMD_MODE, (uint8)(c))
-     33          #define WR_DAT(d)  oled_write(OLED_DAT_MODE, (uint8)(d))
-     34          
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     35          static void oled_set_pos(uint8 x, uint8 page)
-   \                     oled_set_pos:
-     36          {
-   \   000000   74F7         MOV     A,#-0x9
-   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 9
-   \   000005                ; Auto size: 0
-   \   000005   E9           MOV     A,R1
-   \   000006   FE           MOV     R6,A
-   \   000007   EA           MOV     A,R2
-   \   000008   FF           MOV     R7,A
-     37              WR_CMD(0xB0u | page);
-   \   000009                ; Setup parameters for call to function oled_write
-   \   000009   74B0         MOV     A,#-0x50
-   \   00000B   4F           ORL     A,R7
-   \   00000C   FA           MOV     R2,A
-   \   00000D   7900         MOV     R1,#0x0
-   \   00000F   12....       LCALL   ??oled_write?relay
-     38              WR_CMD(0x10u | ((x >> 4) & 0x0Fu));
-   \   000012                ; Setup parameters for call to function oled_write
-   \   000012   EE           MOV     A,R6
-   \   000013   C4           SWAP    A
-   \   000014   540F         ANL     A,#0xf
-   \   000016   4410         ORL     A,#0x10
-   \   000018   FA           MOV     R2,A
-   \   000019   7900         MOV     R1,#0x0
-   \   00001B   12....       LCALL   ??oled_write?relay
-     39              WR_CMD(0x00u | (x & 0x0Fu));
-   \   00001E                ; Setup parameters for call to function oled_write
-   \   00001E   740F         MOV     A,#0xf
-   \   000020   5E           ANL     A,R6
-   \   000021   FA           MOV     R2,A
-   \   000022   7900         MOV     R1,#0x0
-   \   000024   12....       LCALL   ??oled_write?relay
-     40          }
-   \   000027                REQUIRE ?Subroutine0
-   \   000027                ; // Fall through to label ?Subroutine0
-     41          
-     42          static void oled_fill_page(uint8 page, uint8 value)
-     43          {
-     44              uint8 x;
-     45          
-     46              oled_set_pos(0, page);
-     47              for (x = 0; x < 128u; ++x) {
-     48                  WR_DAT(value);
-     49              }
-     50          }
-     51          
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     52          void oled_ssd1306_init(void)
-   \                     oled_ssd1306_init:
-     53          {
-   \   000000   C082         PUSH    DPL
-   \   000002   C083         PUSH    DPH
-   \   000004                ; Saved register size: 2
-   \   000004                ; Auto size: 0
-     54              soft_i2c_init();
-   \   000004                ; Setup parameters for call to function soft_i2c_init
-   \   000004   12....       LCALL   ??soft_i2c_init?relay
-     55              oled_wait_ms(120);
-   \   000007                ; Setup parameters for call to function oled_wait_ms
-   \   000007   7A78         MOV     R2,#0x78
-   \   000009   7B00         MOV     R3,#0x0
-   \   00000B   12....       LCALL   ??oled_wait_ms?relay
-     56          
-     57              WR_CMD(0xAE);
-   \   00000E                ; Setup parameters for call to function oled_write
-   \   00000E   7AAE         MOV     R2,#-0x52
-   \   000010   12....       LCALL   ?Subroutine2 & 0xFFFF
-     58              WR_CMD(0x00); WR_CMD(0x10);
-   \                     ??CrossCallReturnLabel_2:
-   \   000013                ; Setup parameters for call to function oled_write
-   \   000013   7A10         MOV     R2,#0x10
-   \   000015   12....       LCALL   ?Subroutine3 & 0xFFFF
-     59              WR_CMD(0x40);
-     60              WR_CMD(0x81); WR_CMD(0xCF);
-   \                     ??CrossCallReturnLabel_4:
-   \   000018                ; Setup parameters for call to function oled_write
-   \   000018   7A81         MOV     R2,#-0x7f
-   \   00001A   7900         MOV     R1,#0x0
-   \   00001C   12....       LCALL   ??oled_write?relay
-   \   00001F                ; Setup parameters for call to function oled_write
-   \   00001F   7ACF         MOV     R2,#-0x31
-   \   000021   7900         MOV     R1,#0x0
-   \   000023   12....       LCALL   ??oled_write?relay
-     61              WR_CMD(0xA1);
-   \   000026                ; Setup parameters for call to function oled_write
-   \   000026   7AA1         MOV     R2,#-0x5f
-   \   000028   7900         MOV     R1,#0x0
-   \   00002A   12....       LCALL   ??oled_write?relay
-     62              WR_CMD(0xC8);
-   \   00002D                ; Setup parameters for call to function oled_write
-   \   00002D   7AC8         MOV     R2,#-0x38
-   \   00002F   12....       LCALL   ?Subroutine4 & 0xFFFF
-     63              WR_CMD(0xA6);
-     64              WR_CMD(0xA8); WR_CMD(0x3F);
-   \                     ??CrossCallReturnLabel_6:
-   \   000032                ; Setup parameters for call to function oled_write
-   \   000032   7AA8         MOV     R2,#-0x58
-   \   000034   7900         MOV     R1,#0x0
-   \   000036   12....       LCALL   ??oled_write?relay
-   \   000039                ; Setup parameters for call to function oled_write
-   \   000039   7A3F         MOV     R2,#0x3f
-   \   00003B   7900         MOV     R1,#0x0
-   \   00003D   12....       LCALL   ??oled_write?relay
-     65              WR_CMD(0xD3); WR_CMD(0x00);
-   \   000040                ; Setup parameters for call to function oled_write
-   \   000040   7AD3         MOV     R2,#-0x2d
-   \   000042   12....       LCALL   ?Subroutine2 & 0xFFFF
-     66              WR_CMD(0xD5); WR_CMD(0x80);
-   \                     ??CrossCallReturnLabel_3:
-   \   000045                ; Setup parameters for call to function oled_write
-   \   000045   7AD5         MOV     R2,#-0x2b
-   \   000047   7900         MOV     R1,#0x0
-   \   000049   12....       LCALL   ??oled_write?relay
-   \   00004C                ; Setup parameters for call to function oled_write
-   \   00004C   7A80         MOV     R2,#-0x80
-   \   00004E   7900         MOV     R1,#0x0
-   \   000050   12....       LCALL   ??oled_write?relay
-     67              WR_CMD(0xD9); WR_CMD(0xF1);
-   \   000053                ; Setup parameters for call to function oled_write
-   \   000053   7AD9         MOV     R2,#-0x27
-   \   000055   7900         MOV     R1,#0x0
-   \   000057   12....       LCALL   ??oled_write?relay
-   \   00005A                ; Setup parameters for call to function oled_write
-   \   00005A   7AF1         MOV     R2,#-0xf
-   \   00005C   7900         MOV     R1,#0x0
-   \   00005E   12....       LCALL   ??oled_write?relay
-     68              WR_CMD(0xDA); WR_CMD(0x12);
-   \   000061                ; Setup parameters for call to function oled_write
-   \   000061   7ADA         MOV     R2,#-0x26
-   \   000063   7900         MOV     R1,#0x0
-   \   000065   12....       LCALL   ??oled_write?relay
-   \   000068                ; Setup parameters for call to function oled_write
-   \   000068   7A12         MOV     R2,#0x12
-   \   00006A   7900         MOV     R1,#0x0
-   \   00006C   12....       LCALL   ??oled_write?relay
-     69              WR_CMD(0xDB); WR_CMD(0x40);
-   \   00006F                ; Setup parameters for call to function oled_write
-   \   00006F   7ADB         MOV     R2,#-0x25
-   \   000071   12....       LCALL   ?Subroutine3 & 0xFFFF
-     70              WR_CMD(0x20); WR_CMD(0x02);
-   \                     ??CrossCallReturnLabel_5:
-   \   000074                ; Setup parameters for call to function oled_write
-   \   000074   7A20         MOV     R2,#0x20
-   \   000076   7900         MOV     R1,#0x0
-   \   000078   12....       LCALL   ??oled_write?relay
-   \   00007B                ; Setup parameters for call to function oled_write
-   \   00007B   7A02         MOV     R2,#0x2
-   \   00007D   7900         MOV     R1,#0x0
-   \   00007F   12....       LCALL   ??oled_write?relay
-     71              WR_CMD(0x8D); WR_CMD(0x14);
-   \   000082                ; Setup parameters for call to function oled_write
-   \   000082   7A8D         MOV     R2,#-0x73
-   \   000084   7900         MOV     R1,#0x0
-   \   000086   12....       LCALL   ??oled_write?relay
-   \   000089                ; Setup parameters for call to function oled_write
-   \   000089   7A14         MOV     R2,#0x14
-   \   00008B   7900         MOV     R1,#0x0
-   \   00008D   12....       LCALL   ??oled_write?relay
-     72              WR_CMD(0xA4);
-   \   000090                ; Setup parameters for call to function oled_write
-   \   000090   7AA4         MOV     R2,#-0x5c
-   \   000092   12....       LCALL   ?Subroutine4 & 0xFFFF
-     73              WR_CMD(0xA6);
-     74              WR_CMD(0xAF);
-   \                     ??CrossCallReturnLabel_7:
-   \   000095                ; Setup parameters for call to function oled_write
-   \   000095   7AAF         MOV     R2,#-0x51
-   \   000097   7900         MOV     R1,#0x0
-   \   000099   12....       LCALL   ??oled_write?relay
-     75          
-     76              oled_wait_ms(20);
-   \   00009C                ; Setup parameters for call to function oled_wait_ms
-   \   00009C   7A14         MOV     R2,#0x14
-   \   00009E   7B00         MOV     R3,#0x0
-   \   0000A0   12....       LCALL   ??oled_wait_ms?relay
-     77              oled_ssd1306_clear();
-   \   0000A3                ; Setup parameters for call to function oled_ssd1306_clear
-   \   0000A3   12....       LCALL   ??oled_ssd1306_clear?relay
-     78          }
-   \   0000A6   D083         POP     DPH
-   \   0000A8   D082         POP     DPL
-   \   0000AA   02....       LJMP    ?BRET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine4:
-   \   000000   7900         MOV     R1,#0x0
-   \   000002   12....       LCALL   ??oled_write?relay
-   \   000005                ; Setup parameters for call to function oled_write
-   \   000005                ; Setup parameters for call to function oled_write
-   \   000005   7AA6         MOV     R2,#-0x5a
-   \   000007   7900         MOV     R1,#0x0
-   \   000009   12....       LCALL   ??oled_write?relay
-   \   00000C   22           RET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine3:
-   \   000000   7900         MOV     R1,#0x0
-   \   000002   12....       LCALL   ??oled_write?relay
-   \   000005                ; Setup parameters for call to function oled_write
-   \   000005                ; Setup parameters for call to function oled_write
-   \   000005   7A40         MOV     R2,#0x40
-   \   000007   7900         MOV     R1,#0x0
-   \   000009   12....       LCALL   ??oled_write?relay
-   \   00000C   22           RET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine2:
-   \   000000   7900         MOV     R1,#0x0
-   \   000002   12....       LCALL   ??oled_write?relay
-   \   000005                ; Setup parameters for call to function oled_write
-   \   000005                ; Setup parameters for call to function oled_write
-   \   000005   7A00         MOV     R2,#0x0
-   \   000007   7900         MOV     R1,#0x0
-   \   000009   12....       LCALL   ??oled_write?relay
-   \   00000C   22           RET
-     79          
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     80          void oled_ssd1306_clear(void)
-   \                     oled_ssd1306_clear:
-     81          {
-   \   000000   74F7         MOV     A,#-0x9
-   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 9
-   \   000005                ; Auto size: 0
-     82              uint8 page;
-     83          
-     84              for (page = 0; page < 8u; ++page) {
-   \   000005   7E00         MOV     R6,#0x0
-     85                  oled_fill_page(page, 0x00u);
-   \                     ??oled_ssd1306_clear_0:
-   \   000007                ; Setup parameters for call to function oled_set_pos
-   \   000007   EE           MOV     A,R6
-   \   000008   FA           MOV     R2,A
-   \   000009   7900         MOV     R1,#0x0
-   \   00000B   12....       LCALL   ??oled_set_pos?relay
-   \   00000E   7F80         MOV     R7,#-0x80
-   \                     ??oled_ssd1306_clear_1:
-   \   000010                ; Setup parameters for call to function oled_write
-   \   000010   7A00         MOV     R2,#0x0
-   \   000012   7940         MOV     R1,#0x40
-   \   000014   12....       LCALL   ??oled_write?relay
-   \   000017   1F           DEC     R7
-   \   000018   EF           MOV     A,R7
-   \   000019   70F5         JNZ     ??oled_ssd1306_clear_1
-     86              }
-   \   00001B   0E           INC     R6
-   \   00001C   EE           MOV     A,R6
-   \   00001D   C3           CLR     C
-   \   00001E   9408         SUBB    A,#0x8
-   \   000020   40E5         JC      ??oled_ssd1306_clear_0
-     87          }
-   \   000022   02....       LJMP    ?Subroutine0 & 0xFFFF
-     88          
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     89          void oled_ssd1306_draw_text(uint8 row, const char *text)
-   \                     oled_ssd1306_draw_text:
-     90          {
-   \   000000   74EF         MOV     A,#-0x11
-   \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 17
-   \   000005                ; Auto size: 0
-   \   000005   EA           MOV     A,R2
-   \   000006   FE           MOV     R6,A
-   \   000007   EB           MOV     A,R3
-   \   000008   FF           MOV     R7,A
-     91              uint8 i;
-     92              uint8 ch;
-     93              uint8 x;
-     94              uint8 page;
-     95              uint8 col;
-     96              const uint8 *glyph;
-     97          
-     98              if (row > 3u) {
-   \   000009   E9           MOV     A,R1
-   \   00000A   C3           CLR     C
-   \   00000B   9404         SUBB    A,#0x4
-   \   00000D   4003         JC      $+5
-   \   00000F   02....       LJMP    ??oled_ssd1306_draw_text_0 & 0xFFFF
-     99                  return;
-    100              }
-    101          
-    102              page = (uint8)(row * 2u);
-   \   000012   E9           MOV     A,R1
-   \   000013   C3           CLR     C
-   \   000014   33           RLC     A
-   \   000015   F5..         MOV     ?V0 + 3,A
-    103              x = 0u;
-   \   000017   75..00       MOV     ?V0 + 2,#0x0
-    104              for (i = 0; i < 16u; ++i) {
-   \   00001A   75..00       MOV     ?V0 + 7,#0x0
-    105                  ch = (text != 0 && text[i] != '\0') ? (uint8)text[i] : (uint8)' ';
-   \                     ??oled_ssd1306_draw_text_1:
-   \   00001D   EE           MOV     A,R6
-   \   00001E   4F           ORL     A,R7
-   \   00001F   6014         JZ      ??oled_ssd1306_draw_text_2
-   \   000021   85....       MOV     ?V0 + 0,?V0 + 7
-   \   000024   EE           MOV     A,R6
-   \   000025   25..         ADD     A,?V0 + 0
-   \   000027   F582         MOV     DPL,A
-   \   000029   EF           MOV     A,R7
-   \   00002A   3400         ADDC    A,#0x0
-   \   00002C   F583         MOV     DPH,A
-   \   00002E   E0           MOVX    A,@DPTR
-   \   00002F   6004         JZ      ??oled_ssd1306_draw_text_2
-   \   000031   F5..         MOV     ?V0 + 0,A
-   \   000033   8003         SJMP    ??oled_ssd1306_draw_text_3
-   \                     ??oled_ssd1306_draw_text_2:
-   \   000035   75..20       MOV     ?V0 + 0,#0x20
-    106                  if (ch < 0x20u || ch > 0x7Eu) {
-   \                     ??oled_ssd1306_draw_text_3:
-   \   000038   74E0         MOV     A,#-0x20
-   \   00003A   25..         ADD     A,?V0 + 0
-   \   00003C   C3           CLR     C
-   \   00003D   945F         SUBB    A,#0x5f
-   \   00003F   4003         JC      ??oled_ssd1306_draw_text_4
-    107                      ch = (uint8)'?';
-   \   000041   75..3F       MOV     ?V0 + 0,#0x3f
-    108                  }
-    109                  glyph = (const uint8 *)&asc2_1608[ch - 0x20u][0];
-   \                     ??oled_ssd1306_draw_text_4:
-   \   000044   75..00       MOV     ?V0 + 1,#0x0
-   \   000047   7404         MOV     A,#0x4
-   \   000049   78..         MOV     R0,#?V0 + 0
-   \   00004B   12....       LCALL   ?S_SHL
-   \   00004E   74..         MOV     A,#asc2_1608 & 0xff
-   \   000050   25..         ADD     A,?V0 + 0
-   \   000052   F5..         MOV     ?V0 + 0,A
-   \   000054   74..         MOV     A,#((asc2_1608 - 512) >> 8) & 0xff
-   \   000056   35..         ADDC    A,?V0 + 1
-   \   000058   F5..         MOV     ?V0 + 1,A
-    110          
-    111                  oled_set_pos(x, page);
-   \   00005A                ; Setup parameters for call to function oled_set_pos
-   \   00005A   AA..         MOV     R2,?V0 + 3
-   \   00005C   A9..         MOV     R1,?V0 + 2
-   \   00005E   12....       LCALL   ??oled_set_pos?relay
-    112                  for (col = 0; col < 8u; ++col) {
-   \   000061   75..00       MOV     ?V0 + 8,#0x0
-    113                      WR_DAT(glyph[col]);
-   \                     ??oled_ssd1306_draw_text_5:
-   \   000064                ; Setup parameters for call to function oled_write
-   \   000064   12....       LCALL   ?Subroutine5 & 0xFFFF
-    114                  }
-   \                     ??CrossCallReturnLabel_8:
-   \   000067   12....       LCALL   ?Subroutine1 & 0xFFFF
-   \                     ??CrossCallReturnLabel_0:
-   \   00006A   40F8         JC      ??oled_ssd1306_draw_text_5
-    115                  oled_set_pos(x, (uint8)(page + 1u));
-   \   00006C                ; Setup parameters for call to function oled_set_pos
-   \   00006C   7401         MOV     A,#0x1
-   \   00006E   25..         ADD     A,?V0 + 3
-   \   000070   FA           MOV     R2,A
-   \   000071   A9..         MOV     R1,?V0 + 2
-   \   000073   12....       LCALL   ??oled_set_pos?relay
-    116                  for (col = 0; col < 8u; ++col) {
-   \   000076   75..00       MOV     ?V0 + 8,#0x0
-    117                      WR_DAT(glyph[col + 8u]);
-   \                     ??oled_ssd1306_draw_text_6:
-   \   000079                ; Setup parameters for call to function oled_write
-   \   000079   12....       LCALL   ?Subroutine5 & 0xFFFF
-    118                  }
-   \                     ??CrossCallReturnLabel_9:
-   \   00007C   A3           INC     DPTR
-   \   00007D   A3           INC     DPTR
-   \   00007E   A3           INC     DPTR
-   \   00007F   A3           INC     DPTR
-   \   000080   A3           INC     DPTR
-   \   000081   A3           INC     DPTR
-   \   000082   A3           INC     DPTR
-   \   000083   A3           INC     DPTR
-   \   000084   12....       LCALL   ?Subroutine1 & 0xFFFF
-   \                     ??CrossCallReturnLabel_1:
-   \   000087   40F0         JC      ??oled_ssd1306_draw_text_6
-    119          
-    120                  x = (uint8)(x + 8u);
-   \   000089   7408         MOV     A,#0x8
-   \   00008B   25..         ADD     A,?V0 + 2
-   \   00008D   F5..         MOV     ?V0 + 2,A
-    121              }
-   \   00008F   05..         INC     ?V0 + 7
-   \   000091   E5..         MOV     A,?V0 + 7
-   \   000093   C3           CLR     C
-   \   000094   9410         SUBB    A,#0x10
-   \   000096   4085         JC      ??oled_ssd1306_draw_text_1
-   \                     ??oled_ssd1306_draw_text_0:
-   \   000098   7F09         MOV     R7,#0x9
-   \   00009A   02....       LJMP    ?BANKED_LEAVE_XDATA
-    122          }
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine5:
-   \   000000   85....       MOV     ?V0 + 4,?V0 + 8
-   \   000003   E5..         MOV     A,?V0 + 0
-   \   000005   25..         ADD     A,?V0 + 4
-   \   000007   F582         MOV     DPL,A
-   \   000009   E5..         MOV     A,?V0 + 1
-   \   00000B   3400         ADDC    A,#0x0
-   \   00000D   F583         MOV     DPH,A
-   \   00000F   22           RET
-
-   \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine1:
-   \   000000   E0           MOVX    A,@DPTR
-   \   000001   FA           MOV     R2,A
-   \   000002   7940         MOV     R1,#0x40
-   \   000004   12....       LCALL   ??oled_write?relay
-   \   000007   05..         INC     ?V0 + 8
-   \   000009   E5..         MOV     A,?V0 + 8
-   \   00000B   C3           CLR     C
-   \   00000C   9408         SUBB    A,#0x8
-   \   00000E   22           RET
 
    \                                 In  segment BANK_RELAYS, align 1
    \                     ??oled_wait_ms?relay:
@@ -2265,6 +2270,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      oled_ssd1306_draw_text          157
      ?Subroutine5                     16
      ?Subroutine1                     15
+     ?<Initializer for asc2_1608>   1520
      ??oled_wait_ms?relay              6
      ??oled_write?relay                6
      ??oled_set_pos?relay              6
@@ -2275,10 +2281,11 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
  
    549 bytes in segment BANKED_CODE
     36 bytes in segment BANK_RELAYS
- 1 520 bytes in segment XDATA_ROM_C
+ 1 520 bytes in segment XDATA_I
+ 1 520 bytes in segment XDATA_ID
  
-   585 bytes of CODE  memory
- 1 520 bytes of CONST memory
+ 2 105 bytes of CODE  memory
+ 1 520 bytes of XDATA memory
 
 Errors: none
 Warnings: 1

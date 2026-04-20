@@ -38,6 +38,7 @@ static void on_frame(const frame_t *f)
     s_miss_cnt = 0;
     s_alive = 1;
     s_ok++;
+    LOGI("zb", "rx cmd=0x%02X plen=%u", f->cmd, f->plen);
     if (f->cmd == CMD_ZB_PING) {
         /* 保活应答：不再上交业务层 */
         return;

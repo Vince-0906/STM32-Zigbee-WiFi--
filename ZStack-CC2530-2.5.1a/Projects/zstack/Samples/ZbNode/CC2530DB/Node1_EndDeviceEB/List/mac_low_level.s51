@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:37 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:28:31 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\low_l /
 //                          evel\srf04\mac_low_level.c                        /
@@ -43,7 +43,7 @@
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Components\mac\low_level\srf04\mac_low_level.c /
 //                           -D NWK_AUTO_POLL -D NODE_ROLE=1 -D               /
-//                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC               /
+//                          HAL_UART=TRUE -D HAL_LCD=FALSE -lC                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA   /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -54,10 +54,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /

@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         18/Apr/2026  15:57:07 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         19/Apr/2026  20:43:33 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -179,19 +179,27 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \                     s_last_tick_ms:
    \   000000                DS 4
    \   000004                REQUIRE __INIT_XDATA_Z
-     26          
+     26          /* 无子节点时每 s_reopen_window_s 秒自动再开一次 60s 入网窗。
+     27           * 避免 STM32 那次 ZB_ALLOW_JOIN 时序不对（例如 coord 还没 form PAN 就收到命令）导致死窗。 */
+
+   \                                 In  segment XDATA_Z, align 1, keep-with-next
+     28          static uint8  s_reopen_window_s = 0;
+   \                     s_reopen_window_s:
+   \   000000                DS 1
+   \   000001                REQUIRE __INIT_XDATA_Z
+     29          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     27          static zb_node_t *find_slot(uint16 nodeid)
+     30          static zb_node_t *find_slot(uint16 nodeid)
    \                     find_slot:
-     28          {
+     31          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-     29              uint8 i;
-     30          
-     31              for (i = 0; i < s_node_cnt; ++i) {
+     32              uint8 i;
+     33          
+     34              for (i = 0; i < s_node_cnt; ++i) {
    \   000004   7D00         MOV     R5,#0x0
    \   000006   8001         SJMP    ??find_slot_0
    \                     ??find_slot_1:
@@ -204,7 +212,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00000F   C3           CLR     C
    \   000010   98           SUBB    A,R0
    \   000011   501D         JNC     ??find_slot_2
-     32                  if (s_nodes[i].nodeid == nodeid) {
+     35                  if (s_nodes[i].nodeid == nodeid) {
    \   000013   ED           MOV     A,R5
    \   000014   75F01B       MOV     B,#0x1b
    \   000017   A4           MUL     AB
@@ -219,7 +227,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000023   6B           XRL     A,R3
    \                     ??find_slot_3:
    \   000024   70E2         JNZ     ??find_slot_1
-     33                      return &s_nodes[i];
+     36                      return &s_nodes[i];
    \   000026   74..         MOV     A,#s_nodes & 0xff
    \   000028   28           ADD     A,R0
    \   000029   FA           MOV     R2,A
@@ -227,15 +235,15 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00002C   39           ADDC    A,R1
    \   00002D   FB           MOV     R3,A
    \   00002E   8004         SJMP    ??find_slot_4
-     34                  }
-     35              }
-     36              return 0;
+     37                  }
+     38              }
+     39              return 0;
    \                     ??find_slot_2:
    \   000030   7A00         MOV     R2,#0x0
    \   000032   7B00         MOV     R3,#0x0
    \                     ??find_slot_4:
    \   000034   02....       LJMP    ?Subroutine0 & 0xFFFF
-     37          }
+     40          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine5:
@@ -253,33 +261,33 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000000   D083         POP     DPH
    \   000002   D082         POP     DPL
    \   000004   02....       LJMP    ?BRET
-     38          
+     41          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     39          static zb_node_t *alloc_slot(void)
+     42          static zb_node_t *alloc_slot(void)
    \                     alloc_slot:
-     40          {
+     43          {
    \   000000   74F0         MOV     A,#-0x10
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 16
    \   000005                ; Auto size: 0
-     41              if (s_node_cnt >= ZB_NODE_MAX) {
+     44              if (s_node_cnt >= ZB_NODE_MAX) {
    \   000005   90....       MOV     DPTR,#s_node_cnt
    \   000008   E0           MOVX    A,@DPTR
    \   000009   C3           CLR     C
    \   00000A   9408         SUBB    A,#0x8
    \   00000C   4055         JC      ??alloc_slot_0
-     42                  uint8 i;
-     43                  uint8 oldest = 0;
+     45                  uint8 i;
+     46                  uint8 oldest = 0;
    \   00000E   75..00       MOV     ?V0 + 0,#0x0
-     44                  uint32 oldest_ms = s_nodes[0].last_seen_ms;
+     47                  uint32 oldest_ms = s_nodes[0].last_seen_ms;
    \   000011   90....       MOV     DPTR,#s_nodes + 13
    \   000014   78..         MOV     R0,#?V0 + 4
    \   000016   12....       LCALL   ?L_MOV_X
-     45          
-     46                  for (i = 1; i < ZB_NODE_MAX; ++i) {
+     48          
+     49                  for (i = 1; i < ZB_NODE_MAX; ++i) {
    \   000019   7B01         MOV     R3,#0x1
-     47                      if (s_nodes[i].last_seen_ms < oldest_ms) {
+     50                      if (s_nodes[i].last_seen_ms < oldest_ms) {
    \                     ??alloc_slot_1:
    \   00001B   EB           MOV     A,R3
    \   00001C   75F01B       MOV     B,#0x1b
@@ -290,7 +298,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \                     ??CrossCallReturnLabel_0:
    \   000026   12....       LCALL   ?UL_GT_X
    \   000029   500E         JNC     ??alloc_slot_2
-     48                          oldest_ms = s_nodes[i].last_seen_ms;
+     51                          oldest_ms = s_nodes[i].last_seen_ms;
    \   00002B   EB           MOV     A,R3
    \   00002C   75F01B       MOV     B,#0x1b
    \   00002F   A4           MUL     AB
@@ -298,17 +306,17 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000031   12....       LCALL   ?Subroutine3 & 0xFFFF
    \                     ??CrossCallReturnLabel_1:
    \   000034   12....       LCALL   ?L_MOV_X
-     49                          oldest = i;
+     52                          oldest = i;
    \   000037   8B..         MOV     ?V0 + 0,R3
-     50                      }
-     51                  }
+     53                      }
+     54                  }
    \                     ??alloc_slot_2:
    \   000039   0B           INC     R3
    \   00003A   EB           MOV     A,R3
    \   00003B   C3           CLR     C
    \   00003C   9408         SUBB    A,#0x8
    \   00003E   40DB         JC      ??alloc_slot_1
-     52                  osal_memset(&s_nodes[oldest], 0, sizeof(zb_node_t));
+     55                  osal_memset(&s_nodes[oldest], 0, sizeof(zb_node_t));
    \   000040   E5..         MOV     A,?V0 + 0
    \   000042   75F01B       MOV     B,#0x1b
    \   000045   A4           MUL     AB
@@ -329,14 +337,14 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000059   EF           MOV     A,R7
    \   00005A   FB           MOV     R3,A
    \   00005B   12....       LCALL   ??osal_memset?relay
-     53                  return &s_nodes[oldest];
+     56                  return &s_nodes[oldest];
    \   00005E   EE           MOV     A,R6
    \   00005F   FA           MOV     R2,A
    \   000060   EF           MOV     A,R7
    \   000061   8027         SJMP    ??alloc_slot_3
-     54              }
-     55          
-     56              osal_memset(&s_nodes[s_node_cnt], 0, sizeof(zb_node_t));
+     57              }
+     58          
+     59              osal_memset(&s_nodes[s_node_cnt], 0, sizeof(zb_node_t));
    \                     ??alloc_slot_0:
    \   000063                ; Setup parameters for call to function osal_memset
    \   000063   7C1B         MOV     R4,#0x1b
@@ -345,9 +353,9 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000069   E0           MOVX    A,@DPTR
    \   00006A   8CF0         MOV     B,R4
    \   00006C   12....       LCALL   ?Subroutine6 & 0xFFFF
-   \                     ??CrossCallReturnLabel_11:
+   \                     ??CrossCallReturnLabel_16:
    \   00006F   12....       LCALL   ??osal_memset?relay
-     57              return &s_nodes[s_node_cnt++];
+     60              return &s_nodes[s_node_cnt++];
    \   000072   90....       MOV     DPTR,#s_node_cnt
    \   000075   E0           MOVX    A,@DPTR
    \   000076   F8           MOV     R0,A
@@ -368,7 +376,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00008A   FB           MOV     R3,A
    \   00008B                REQUIRE ?Subroutine1
    \   00008B                ; // Fall through to label ?Subroutine1
-     58          }
+     61          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine1:
@@ -380,11 +388,11 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000000   A4           MUL     AB
    \   000001   FA           MOV     R2,A
    \   000002   ABF0         MOV     R3,B
-   \   000004                REQUIRE ??Subroutine8_0
-   \   000004                ; // Fall through to label ??Subroutine8_0
+   \   000004                REQUIRE ??Subroutine10_0
+   \   000004                ; // Fall through to label ??Subroutine10_0
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ??Subroutine8_0:
+   \                     ??Subroutine10_0:
    \   000000   74..         MOV     A,#s_nodes & 0xff
    \   000002   2A           ADD     A,R2
    \   000003   FA           MOV     R2,A
@@ -395,13 +403,13 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
    \                     ?Subroutine3:
-   \   000000   12....       LCALL   ?Subroutine7 & 0xFFFF
-   \                     ??CrossCallReturnLabel_9:
+   \   000000   12....       LCALL   ?Subroutine8 & 0xFFFF
+   \                     ??CrossCallReturnLabel_11:
    \   000003   78..         MOV     R0,#?V0 + 4
    \   000005   22           RET
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-   \                     ?Subroutine7:
+   \                     ?Subroutine8:
    \   000000   74..         MOV     A,#(s_nodes + 13) & 0xff
    \   000002   28           ADD     A,R0
    \   000003   F582         MOV     DPL,A
@@ -409,32 +417,32 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000007   39           ADDC    A,R1
    \   000008   F583         MOV     DPH,A
    \   00000A   22           RET
-     59          
+     62          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     60          void zb_net_init(void)
+     63          void zb_net_init(void)
    \                     zb_net_init:
-     61          {
+     64          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 3
    \   000004   74FD         MOV     A,#-0x3
    \   000006   12....       LCALL   ?ALLOC_XSTACK8
-     62              uint16 nv_pan = 0xFFFF;
+     65              uint16 nv_pan = 0xFFFF;
    \   000009   7401         MOV     A,#0x1
    \   00000B   12....       LCALL   ?XSTACK_DISP0_8
    \   00000E   74FF         MOV     A,#-0x1
    \   000010   F0           MOVX    @DPTR,A
    \   000011   A3           INC     DPTR
    \   000012   F0           MOVX    @DPTR,A
-     63              uint8 nv_ch = ZB_CHANNEL_DEFAULT;
+     66              uint8 nv_ch = ZB_CHANNEL_DEFAULT;
    \   000013   85..82       MOV     DPL,?XSP + 0
    \   000016   85..83       MOV     DPH,?XSP + 1
    \   000019   740F         MOV     A,#0xf
    \   00001B   F0           MOVX    @DPTR,A
-     64          
-     65              osal_memset(s_nodes, 0, sizeof(s_nodes));
+     67          
+     68              osal_memset(s_nodes, 0, sizeof(s_nodes));
    \   00001C                ; Setup parameters for call to function osal_memset
    \   00001C   7CD8         MOV     R4,#-0x28
    \   00001E   7D00         MOV     R5,#0x0
@@ -442,12 +450,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000022   7A..         MOV     R2,#s_nodes & 0xff
    \   000024   7B..         MOV     R3,#(s_nodes >> 8) & 0xff
    \   000026   12....       LCALL   ??osal_memset?relay
-     66              s_node_cnt = 0;
+     69              s_node_cnt = 0;
    \   000029   90....       MOV     DPTR,#s_node_cnt
    \   00002C   E4           CLR     A
    \   00002D   F0           MOVX    @DPTR,A
-     67          
-     68              if (nv_load_u16(NV_ID_PANID, &nv_pan) == 0 && nv_pan != 0xFFFF) {
+     70          
+     71              if (nv_load_u16(NV_ID_PANID, &nv_pan) == 0 && nv_pan != 0xFFFF) {
    \   00002E                ; Setup parameters for call to function nv_load_u16
    \   00002E   04           INC     A
    \   00002F   12....       LCALL   ?XSTACK_DISP0_8
@@ -468,7 +476,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00004B   F4           CPL     A
    \                     ??zb_net_init_1:
    \   00004C   6017         JZ      ??zb_net_init_0
-     69                  s_panid = nv_pan;
+     72                  s_panid = nv_pan;
    \   00004E   7401         MOV     A,#0x1
    \   000050   12....       LCALL   ?XSTACK_DISP0_8
    \   000053   12....       LCALL   ?Subroutine4 & 0xFFFF
@@ -479,13 +487,13 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00005B   A3           INC     DPTR
    \   00005C   E9           MOV     A,R1
    \   00005D   F0           MOVX    @DPTR,A
-     70                  ZDO_Config_Node_Descriptor.LogicalType = NODETYPE_COORDINATOR;
+     73                  ZDO_Config_Node_Descriptor.LogicalType = NODETYPE_COORDINATOR;
    \   00005E   90....       MOV     DPTR,#ZDO_Config_Node_Descriptor
    \   000061   E0           MOVX    A,@DPTR
    \   000062   54F8         ANL     A,#0xf8
    \   000064   F0           MOVX    @DPTR,A
-     71              }
-     72              if (nv_load_u8(NV_ID_CHANNEL, &nv_ch) == 0 && nv_ch != 0xFF) {
+     74              }
+     75              if (nv_load_u8(NV_ID_CHANNEL, &nv_ch) == 0 && nv_ch != 0xFF) {
    \                     ??zb_net_init_0:
    \   000065                ; Setup parameters for call to function nv_load_u8
    \   000065   85..82       MOV     DPL,?XSP + 0
@@ -502,18 +510,18 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00007F   E0           MOVX    A,@DPTR
    \   000080   F4           CPL     A
    \   000081   6005         JZ      ??zb_net_init_2
-     73                  s_channel = nv_ch;
+     76                  s_channel = nv_ch;
    \   000083   E0           MOVX    A,@DPTR
    \   000084   90....       MOV     DPTR,#s_channel
    \   000087   F0           MOVX    @DPTR,A
-     74              }
-     75              s_last_tick_ms = osal_GetSystemClock();
+     77              }
+     78              s_last_tick_ms = osal_GetSystemClock();
    \                     ??zb_net_init_2:
    \   000088                ; Setup parameters for call to function osal_GetSystemClock
    \   000088   12....       LCALL   ??osal_GetSystemClock?relay
    \   00008B   90....       MOV     DPTR,#s_last_tick_ms
    \   00008E   12....       LCALL   ?XSTORE_R2345
-     76          }
+     79          }
    \   000091   7403         MOV     A,#0x3
    \   000093   12....       LCALL   ?DEALLOC_XSTACK8
    \   000096   02....       LJMP    ?Subroutine0 & 0xFFFF
@@ -526,24 +534,24 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000003   E0           MOVX    A,@DPTR
    \   000004   F9           MOV     R1,A
    \   000005   22           RET
-     77          
+     80          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-     78          void zb_net_tick(uint32 now_ms)
+     81          void zb_net_tick(uint32 now_ms)
    \                     zb_net_tick:
-     79          {
+     82          {
    \   000000   74EC         MOV     A,#-0x14
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 20
    \   000005                ; Auto size: 0
-   \   000005   8A..         MOV     ?V0 + 4,R2
-   \   000007   8B..         MOV     ?V0 + 5,R3
-   \   000009   8C..         MOV     ?V0 + 6,R4
-   \   00000B   8D..         MOV     ?V0 + 7,R5
-     80              uint32 delta;
-     81              uint8 i;
-     82          
-     83              if (now_ms - s_last_tick_ms < 1000u) {
+   \   000005   8A..         MOV     ?V0 + 8,R2
+   \   000007   8B..         MOV     ?V0 + 9,R3
+   \   000009   8C..         MOV     ?V0 + 10,R4
+   \   00000B   8D..         MOV     ?V0 + 11,R5
+     83              uint32 delta;
+     84              uint8 i;
+     85          
+     86              if (now_ms - s_last_tick_ms < 1000u) {
    \   00000D   8A..         MOV     ?V0 + 0,R2
    \   00000F   8B..         MOV     ?V0 + 1,R3
    \   000011   8C..         MOV     ?V0 + 2,R4
@@ -556,194 +564,270 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000022   12....       LCALL   ?UL_GE_X
    \   000025   4003         JC      $+5
    \   000027   02....       LJMP    ??zb_net_tick_0 & 0xFFFF
-     84                  return;
-     85              }
-     86              delta = (now_ms - s_last_tick_ms) / 1000u;
-   \   00002A   8A..         MOV     ?V0 + 0,R2
-   \   00002C   8B..         MOV     ?V0 + 1,R3
-   \   00002E   8C..         MOV     ?V0 + 2,R4
-   \   000030   8D..         MOV     ?V0 + 3,R5
+     87                  return;
+     88              }
+     89              delta = (now_ms - s_last_tick_ms) / 1000u;
+   \   00002A   8A..         MOV     ?V0 + 4,R2
+   \   00002C   8B..         MOV     ?V0 + 5,R3
+   \   00002E   8C..         MOV     ?V0 + 6,R4
+   \   000030   8D..         MOV     ?V0 + 7,R5
    \   000032   90....       MOV     DPTR,#s_last_tick_ms
-   \   000035   78..         MOV     R0,#?V0 + 0
+   \   000035   78..         MOV     R0,#?V0 + 4
    \   000037   12....       LCALL   ?L_SUB_X
    \   00003A   90....       MOV     DPTR,#__Constant_3e8
-   \   00003D   78..         MOV     R0,#?V0 + 8
+   \   00003D   78..         MOV     R0,#?V0 + 0
    \   00003F   12....       LCALL   ?L_MOV_X
-   \   000042   78..         MOV     R0,#?V0 + 0
-   \   000044   79..         MOV     R1,#?V0 + 8
+   \   000042   78..         MOV     R0,#?V0 + 4
+   \   000044   79..         MOV     R1,#?V0 + 0
    \   000046   12....       LCALL   ?UL_DIV_MOD
-     87              s_last_tick_ms = now_ms;
+     90              s_last_tick_ms = now_ms;
    \   000049   90....       MOV     DPTR,#s_last_tick_ms
-   \   00004C   78..         MOV     R0,#?V0 + 4
+   \   00004C   78..         MOV     R0,#?V0 + 8
    \   00004E   12....       LCALL   ?L_MOV_TO_X
-     88          
-     89              if (s_allow_join_rem_s != 0xFFu && s_allow_join_rem_s > 0u) {
+     91          
+     92              if (s_allow_join_rem_s != 0xFFu && s_allow_join_rem_s > 0u) {
    \   000051   90....       MOV     DPTR,#s_allow_join_rem_s
    \   000054   E0           MOVX    A,@DPTR
    \   000055   F4           CPL     A
-   \   000056   6022         JZ      ??zb_net_tick_1
+   \   000056   6025         JZ      ??zb_net_tick_1
    \   000058   E0           MOVX    A,@DPTR
-   \   000059   601F         JZ      ??zb_net_tick_1
-     90                  if (delta >= s_allow_join_rem_s) {
-   \   00005B   F5..         MOV     ?V0 + 8,A
+   \   000059   6022         JZ      ??zb_net_tick_1
+     93                  if (delta >= s_allow_join_rem_s) {
+   \   00005B   F5..         MOV     ?V0 + 0,A
    \   00005D   E4           CLR     A
-   \   00005E   F5..         MOV     ?V0 + 9,A
-   \   000060   F5..         MOV     ?V0 + 10,A
-   \   000062   F5..         MOV     ?V0 + 11,A
-   \   000064   78..         MOV     R0,#?V0 + 8
-   \   000066   79..         MOV     R1,#?V0 + 0
+   \   00005E   F5..         MOV     ?V0 + 1,A
+   \   000060   F5..         MOV     ?V0 + 2,A
+   \   000062   F5..         MOV     ?V0 + 3,A
+   \   000064   78..         MOV     R0,#?V0 + 0
+   \   000066   79..         MOV     R1,#?V0 + 4
    \   000068   12....       LCALL   ?UL_GT
    \   00006B   4008         JC      ??zb_net_tick_2
-     91                      s_allow_join_rem_s = 0;
+     94                      s_allow_join_rem_s = 0;
    \   00006D   E4           CLR     A
    \   00006E   F0           MOVX    @DPTR,A
-     92                      NLME_PermitJoiningRequest(0);
+     95                      NLME_PermitJoiningRequest(0);
    \   00006F                ; Setup parameters for call to function NLME_PermitJoiningRequest
    \   00006F   F9           MOV     R1,A
    \   000070   12....       LCALL   ??NLME_PermitJoiningRequest?relay
-   \   000073   8005         SJMP    ??zb_net_tick_1
-     93                  } else {
-     94                      s_allow_join_rem_s = (uint8)(s_allow_join_rem_s - delta);
+   \   000073   8008         SJMP    ??zb_net_tick_1
+     96                  } else {
+     97                      s_allow_join_rem_s = (uint8)(s_allow_join_rem_s - delta);
    \                     ??zb_net_tick_2:
-   \   000075   E0           MOVX    A,@DPTR
-   \   000076   C3           CLR     C
-   \   000077   95..         SUBB    A,?V0 + 0
-   \   000079   F0           MOVX    @DPTR,A
-     95                  }
-     96              }
-     97          
-     98              for (i = 0; i < s_node_cnt; ++i) {
+   \   000075   85....       MOV     ?V0 + 0,?V0 + 4
+   \   000078   E0           MOVX    A,@DPTR
+   \   000079   C3           CLR     C
+   \   00007A   95..         SUBB    A,?V0 + 0
+   \   00007C   F0           MOVX    @DPTR,A
+     98                  }
+     99              }
+    100          
+    101              /* 若网络已就绪但一个节点都没加入，每 30s 自动再开 60s 入网窗。
+    102               * 这样即便 STM32 侧 ZB_ALLOW_JOIN 丢帧或节点来得晚，也能一直有机会重试。 */
+    103              if (s_dev_state == DEV_ZB_COORD && zb_net_online_count() == 0u) {
    \                     ??zb_net_tick_1:
-   \   00007A   7E00         MOV     R6,#0x0
-   \   00007C   8046         SJMP    ??zb_net_tick_3
-     99                  if ((s_nodes[i].flags & 0x01u) &&
-    100                      (now_ms - s_nodes[i].last_seen_ms) > (uint32)(3u * ZB_HEARTBEAT_S * 1000u)) {
+   \   00007D   90....       MOV     DPTR,#s_dev_state
+   \   000080   E0           MOVX    A,@DPTR
+   \   000081   6409         XRL     A,#0x9
+   \   000083   703B         JNZ     ??zb_net_tick_3
+   \   000085                ; Setup parameters for call to function zb_net_online_count
+   \   000085   12....       LCALL   ??zb_net_online_count?relay
+   \   000088   E9           MOV     A,R1
+   \   000089   7035         JNZ     ??zb_net_tick_3
+    104                  if (s_reopen_window_s <= delta) {
+   \   00008B   90....       MOV     DPTR,#s_reopen_window_s
+   \   00008E   E0           MOVX    A,@DPTR
+   \   00008F   F5..         MOV     ?V0 + 0,A
+   \   000091   E4           CLR     A
+   \   000092   F5..         MOV     ?V0 + 1,A
+   \   000094   F5..         MOV     ?V0 + 2,A
+   \   000096   F5..         MOV     ?V0 + 3,A
+   \   000098   78..         MOV     R0,#?V0 + 0
+   \   00009A   79..         MOV     R1,#?V0 + 4
+   \   00009C   12....       LCALL   ?UL_GT
+   \   00009F   4019         JC      ??zb_net_tick_4
+    105                      s_reopen_window_s = 30u;
+   \   0000A1   741E         MOV     A,#0x1e
+   \   0000A3   F0           MOVX    @DPTR,A
+    106                      if (s_allow_join_rem_s < 60u) {
+   \   0000A4   90....       MOV     DPTR,#s_allow_join_rem_s
+   \   0000A7   E0           MOVX    A,@DPTR
+   \   0000A8   C3           CLR     C
+   \   0000A9   943C         SUBB    A,#0x3c
+   \   0000AB   5018         JNC     ??zb_net_tick_5
+    107                          NLME_PermitJoiningRequest(60);
+   \   0000AD                ; Setup parameters for call to function NLME_PermitJoiningRequest
+   \   0000AD   793C         MOV     R1,#0x3c
+   \   0000AF   12....       LCALL   ?Subroutine9 & 0xFFFF
+    108                          s_allow_join_rem_s = 60u;
+   \                     ??CrossCallReturnLabel_12:
+   \   0000B2   743C         MOV     A,#0x3c
+   \   0000B4   F0           MOVX    @DPTR,A
+    109                          GwCoord_SendNetStatus();
+   \   0000B5                ; Setup parameters for call to function GwCoord_SendNetStatus
+   \   0000B5   12....       LCALL   ??GwCoord_SendNetStatus?relay
+   \   0000B8   800B         SJMP    ??zb_net_tick_5
+    110                      }
+    111                  } else {
+    112                      s_reopen_window_s = (uint8)(s_reopen_window_s - delta);
    \                     ??zb_net_tick_4:
-   \   00007E   EE           MOV     A,R6
-   \   00007F   75F01B       MOV     B,#0x1b
-   \   000082   A4           MUL     AB
-   \   000083   F8           MOV     R0,A
-   \   000084   A9F0         MOV     R1,B
-   \   000086   74..         MOV     A,#(s_nodes + 17) & 0xff
-   \   000088   28           ADD     A,R0
-   \   000089   F582         MOV     DPL,A
-   \   00008B   74..         MOV     A,#((s_nodes + 17) >> 8) & 0xff
-   \   00008D   39           ADDC    A,R1
-   \   00008E   F583         MOV     DPH,A
-   \   000090   E0           MOVX    A,@DPTR
-   \   000091   A2E0         MOV     C,0xE0 /* A   */.0
-   \   000093   502E         JNC     ??zb_net_tick_5
-   \   000095   85....       MOV     ?V0 + 0,?V0 + 4
-   \   000098   85....       MOV     ?V0 + 1,?V0 + 5
-   \   00009B   85....       MOV     ?V0 + 2,?V0 + 6
-   \   00009E   85....       MOV     ?V0 + 3,?V0 + 7
-   \   0000A1   12....       LCALL   ?Subroutine7 & 0xFFFF
-   \                     ??CrossCallReturnLabel_8:
-   \   0000A4   78..         MOV     R0,#?V0 + 0
-   \   0000A6   12....       LCALL   ?L_SUB_X
-   \   0000A9   90....       MOV     DPTR,#__Constant_bf21
-   \   0000AC   78..         MOV     R0,#?V0 + 0
-   \   0000AE   12....       LCALL   ?UL_GE_X
-   \   0000B1   5010         JNC     ??zb_net_tick_5
-    101                      zb_net_mark_offline(s_nodes[i].nodeid);
-   \   0000B3                ; Setup parameters for call to function zb_net_mark_offline
-   \   0000B3   EE           MOV     A,R6
-   \   0000B4   75F01B       MOV     B,#0x1b
-   \   0000B7   A4           MUL     AB
-   \   0000B8   F8           MOV     R0,A
-   \   0000B9   12....       LCALL   ?Subroutine5 & 0xFFFF
-    102                  }
-    103              }
-   \                     ??CrossCallReturnLabel_7:
-   \   0000BC   FA           MOV     R2,A
-   \   0000BD   A3           INC     DPTR
-   \   0000BE   E0           MOVX    A,@DPTR
-   \   0000BF   FB           MOV     R3,A
-   \   0000C0   12....       LCALL   ??zb_net_mark_offline?relay
-   \                     ??zb_net_tick_5:
-   \   0000C3   0E           INC     R6
+   \   0000BA   E0           MOVX    A,@DPTR
+   \   0000BB   C3           CLR     C
+   \   0000BC   95..         SUBB    A,?V0 + 4
+   \   0000BE   8004         SJMP    ??zb_net_tick_6
+    113                  }
+    114              } else {
+    115                  s_reopen_window_s = 0;
    \                     ??zb_net_tick_3:
-   \   0000C4   90....       MOV     DPTR,#s_node_cnt
-   \   0000C7   E0           MOVX    A,@DPTR
-   \   0000C8   F8           MOV     R0,A
+   \   0000C0   90....       MOV     DPTR,#s_reopen_window_s
+   \   0000C3   E4           CLR     A
+   \                     ??zb_net_tick_6:
+   \   0000C4   F0           MOVX    @DPTR,A
+    116              }
+    117          
+    118              for (i = 0; i < s_node_cnt; ++i) {
+   \                     ??zb_net_tick_5:
+   \   0000C5   7E00         MOV     R6,#0x0
+   \   0000C7   8046         SJMP    ??zb_net_tick_7
+    119                  if ((s_nodes[i].flags & 0x01u) &&
+    120                      (now_ms - s_nodes[i].last_seen_ms) > (uint32)(3u * ZB_HEARTBEAT_S * 1000u)) {
+   \                     ??zb_net_tick_8:
    \   0000C9   EE           MOV     A,R6
-   \   0000CA   C3           CLR     C
-   \   0000CB   98           SUBB    A,R0
-   \   0000CC   40B0         JC      ??zb_net_tick_4
+   \   0000CA   75F01B       MOV     B,#0x1b
+   \   0000CD   A4           MUL     AB
+   \   0000CE   F8           MOV     R0,A
+   \   0000CF   A9F0         MOV     R1,B
+   \   0000D1   74..         MOV     A,#(s_nodes + 17) & 0xff
+   \   0000D3   28           ADD     A,R0
+   \   0000D4   F582         MOV     DPL,A
+   \   0000D6   74..         MOV     A,#((s_nodes + 17) >> 8) & 0xff
+   \   0000D8   39           ADDC    A,R1
+   \   0000D9   F583         MOV     DPH,A
+   \   0000DB   E0           MOVX    A,@DPTR
+   \   0000DC   A2E0         MOV     C,0xE0 /* A   */.0
+   \   0000DE   502E         JNC     ??zb_net_tick_9
+   \   0000E0   85....       MOV     ?V0 + 0,?V0 + 8
+   \   0000E3   85....       MOV     ?V0 + 1,?V0 + 9
+   \   0000E6   85....       MOV     ?V0 + 2,?V0 + 10
+   \   0000E9   85....       MOV     ?V0 + 3,?V0 + 11
+   \   0000EC   12....       LCALL   ?Subroutine8 & 0xFFFF
+   \                     ??CrossCallReturnLabel_10:
+   \   0000EF   78..         MOV     R0,#?V0 + 0
+   \   0000F1   12....       LCALL   ?L_SUB_X
+   \   0000F4   90....       MOV     DPTR,#__Constant_bf21
+   \   0000F7   78..         MOV     R0,#?V0 + 0
+   \   0000F9   12....       LCALL   ?UL_GE_X
+   \   0000FC   5010         JNC     ??zb_net_tick_9
+    121                      zb_net_mark_offline(s_nodes[i].nodeid);
+   \   0000FE                ; Setup parameters for call to function zb_net_mark_offline
+   \   0000FE   EE           MOV     A,R6
+   \   0000FF   75F01B       MOV     B,#0x1b
+   \   000102   A4           MUL     AB
+   \   000103   F8           MOV     R0,A
+   \   000104   12....       LCALL   ?Subroutine5 & 0xFFFF
+    122                  }
+    123              }
+   \                     ??CrossCallReturnLabel_7:
+   \   000107   FA           MOV     R2,A
+   \   000108   A3           INC     DPTR
+   \   000109   E0           MOVX    A,@DPTR
+   \   00010A   FB           MOV     R3,A
+   \   00010B   12....       LCALL   ??zb_net_mark_offline?relay
+   \                     ??zb_net_tick_9:
+   \   00010E   0E           INC     R6
+   \                     ??zb_net_tick_7:
+   \   00010F   90....       MOV     DPTR,#s_node_cnt
+   \   000112   E0           MOVX    A,@DPTR
+   \   000113   F8           MOV     R0,A
+   \   000114   EE           MOV     A,R6
+   \   000115   C3           CLR     C
+   \   000116   98           SUBB    A,R0
+   \   000117   40B0         JC      ??zb_net_tick_8
    \                     ??zb_net_tick_0:
-   \   0000CE   7F0C         MOV     R7,#0xc
-   \   0000D0   02....       LJMP    ?BANKED_LEAVE_XDATA
-    104          }
-    105          
+   \   000119   7F0C         MOV     R7,#0xc
+   \   00011B   02....       LJMP    ?BANKED_LEAVE_XDATA
+    124          }
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    106          void zb_net_allow_join(uint8 sec)
+   \                     ?Subroutine9:
+   \   000000   12....       LCALL   ??NLME_PermitJoiningRequest?relay
+   \   000003   90....       MOV     DPTR,#s_allow_join_rem_s
+   \   000006   22           RET
+    125          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    126          void zb_net_allow_join(uint8 sec)
    \                     zb_net_allow_join:
-    107          {
+    127          {
    \   000000   74F7         MOV     A,#-0x9
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 9
    \   000005                ; Auto size: 0
    \   000005   E9           MOV     A,R1
    \   000006   FE           MOV     R6,A
-    108              if (sec == 0u) {
-   \   000007   700B         JNZ     ??zb_net_allow_join_0
-    109                  NLME_PermitJoiningRequest(0);
+    128              if (sec == 0u) {
+   \   000007   7008         JNZ     ??zb_net_allow_join_0
+    129                  NLME_PermitJoiningRequest(0);
    \   000009                ; Setup parameters for call to function NLME_PermitJoiningRequest
    \   000009   7900         MOV     R1,#0x0
-   \   00000B   12....       LCALL   ??NLME_PermitJoiningRequest?relay
-    110                  s_allow_join_rem_s = 0;
-   \   00000E   90....       MOV     DPTR,#s_allow_join_rem_s
-   \   000011   E4           CLR     A
-   \   000012   8018         SJMP    ??zb_net_allow_join_1
-    111              } else if (sec == 0xFFu) {
+   \   00000B   12....       LCALL   ?Subroutine9 & 0xFFFF
+    130                  s_allow_join_rem_s = 0;
+    131              } else if (sec == 0xFFu) {
+   \                     ??CrossCallReturnLabel_13:
+   \   00000E   E4           CLR     A
+   \   00000F   8011         SJMP    ??zb_net_allow_join_1
    \                     ??zb_net_allow_join_0:
-   \   000014   74FF         MOV     A,#-0x1
-   \   000016   6E           XRL     A,R6
-   \   000017   700C         JNZ     ??zb_net_allow_join_2
-    112                  NLME_PermitJoiningRequest(0xFFu);
-   \   000019                ; Setup parameters for call to function NLME_PermitJoiningRequest
-   \   000019   79FF         MOV     R1,#-0x1
-   \   00001B   12....       LCALL   ??NLME_PermitJoiningRequest?relay
-    113                  s_allow_join_rem_s = 0xFFu;
-   \   00001E   90....       MOV     DPTR,#s_allow_join_rem_s
-   \   000021   74FF         MOV     A,#-0x1
-   \   000023   8007         SJMP    ??zb_net_allow_join_1
-    114              } else {
-    115                  NLME_PermitJoiningRequest(sec);
+   \   000011   74FF         MOV     A,#-0x1
+   \   000013   6E           XRL     A,R6
+   \   000014   7005         JNZ     ??zb_net_allow_join_2
+    132                  NLME_PermitJoiningRequest(0xFFu);
+   \   000016                ; Setup parameters for call to function NLME_PermitJoiningRequest
+   \   000016   12....       LCALL   ?Subroutine7 & 0xFFFF
+    133                  s_allow_join_rem_s = 0xFFu;
+    134              } else {
+   \                     ??CrossCallReturnLabel_8:
+   \   000019   8007         SJMP    ??zb_net_allow_join_1
+    135                  NLME_PermitJoiningRequest(sec);
    \                     ??zb_net_allow_join_2:
-   \   000025                ; Setup parameters for call to function NLME_PermitJoiningRequest
-   \   000025   12....       LCALL   ??NLME_PermitJoiningRequest?relay
-    116                  s_allow_join_rem_s = sec;
-   \   000028   EE           MOV     A,R6
-   \   000029   90....       MOV     DPTR,#s_allow_join_rem_s
+   \   00001B                ; Setup parameters for call to function NLME_PermitJoiningRequest
+   \   00001B   12....       LCALL   ??NLME_PermitJoiningRequest?relay
+    136                  s_allow_join_rem_s = sec;
+   \   00001E   EE           MOV     A,R6
+   \   00001F   90....       MOV     DPTR,#s_allow_join_rem_s
    \                     ??zb_net_allow_join_1:
-   \   00002C   F0           MOVX    @DPTR,A
-    117              }
-    118          }
-   \   00002D   7F01         MOV     R7,#0x1
-   \   00002F   02....       LJMP    ?BANKED_LEAVE_XDATA
-    119          
+   \   000022   F0           MOVX    @DPTR,A
+    137              }
+    138          }
+   \   000023   7F01         MOV     R7,#0x1
+   \   000025   02....       LJMP    ?BANKED_LEAVE_XDATA
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    120          zb_node_t *zb_net_find(uint16 nodeid)
+   \                     ?Subroutine7:
+   \   000000   79FF         MOV     R1,#-0x1
+   \   000002   12....       LCALL   ?Subroutine9 & 0xFFFF
+   \                     ??CrossCallReturnLabel_14:
+   \   000005   74FF         MOV     A,#-0x1
+   \   000007   22           RET
+    139          
+
+   \                                 In  segment BANKED_CODE, align 1, keep-with-next
+    140          zb_node_t *zb_net_find(uint16 nodeid)
    \                     zb_net_find:
-    121          {
+    141          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-    122              return find_slot(nodeid);
+    142              return find_slot(nodeid);
    \   000004                ; Setup parameters for call to function find_slot
    \   000004   12....       LCALL   ??find_slot?relay
    \   000007   02....       LJMP    ?Subroutine0 & 0xFFFF
-    123          }
-    124          
+    143          }
+    144          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    125          zb_node_t *zb_net_touch(uint16 nodeid, const uint8 *ieee, uint8 type, int8 rssi)
+    145          zb_node_t *zb_net_touch(uint16 nodeid, const uint8 *ieee, uint8 type, int8 rssi)
    \                     zb_net_touch:
-    126          {
+    146          {
    \   000000   74F0         MOV     A,#-0x10
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 16
@@ -757,39 +841,39 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000011   12....       LCALL   ?XSTACK_DISP0_8
    \   000014   E0           MOVX    A,@DPTR
    \   000015   F5..         MOV     ?V0 + 3,A
-    127              zb_node_t *n;
-    128          
-    129              n = find_slot(nodeid);
+    147              zb_node_t *n;
+    148          
+    149              n = find_slot(nodeid);
    \   000017                ; Setup parameters for call to function find_slot
    \   000017   12....       LCALL   ??find_slot?relay
    \   00001A   8A..         MOV     ?V0 + 6,R2
    \   00001C   8B..         MOV     ?V0 + 7,R3
    \   00001E   AE..         MOV     R6,?V0 + 6
    \   000020   AF..         MOV     R7,?V0 + 7
-    130              if (n == 0) {
+    150              if (n == 0) {
    \   000022   EE           MOV     A,R6
    \   000023   4F           ORL     A,R7
    \   000024   700B         JNZ     ??zb_net_touch_0
-    131                  n = alloc_slot();
+    151                  n = alloc_slot();
    \   000026                ; Setup parameters for call to function alloc_slot
    \   000026   12....       LCALL   ??alloc_slot?relay
    \   000029   8A..         MOV     ?V0 + 6,R2
    \   00002B   8B..         MOV     ?V0 + 7,R3
    \   00002D   AE..         MOV     R6,?V0 + 6
    \   00002F   AF..         MOV     R7,?V0 + 7
-    132              }
-    133              if (n == 0) {
+    152              }
+    153              if (n == 0) {
    \                     ??zb_net_touch_0:
    \   000031   EE           MOV     A,R6
    \   000032   4F           ORL     A,R7
    \   000033   7007         JNZ     ??zb_net_touch_1
-    134                  return 0;
+    154                  return 0;
    \   000035   7A00         MOV     R2,#0x0
    \   000037   7B00         MOV     R3,#0x0
    \   000039   02....       LJMP    ??zb_net_touch_2 & 0xFFFF
-    135              }
-    136          
-    137              n->nodeid = nodeid;
+    155              }
+    156          
+    157              n->nodeid = nodeid;
    \                     ??zb_net_touch_1:
    \   00003C   8E82         MOV     DPL,R6
    \   00003E   8F83         MOV     DPH,R7
@@ -798,11 +882,11 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000043   A3           INC     DPTR
    \   000044   E5..         MOV     A,?V0 + 5
    \   000046   F0           MOVX    @DPTR,A
-    138              if (ieee != 0) {
+    158              if (ieee != 0) {
    \   000047   E5..         MOV     A,?V0 + 0
    \   000049   45..         ORL     A,?V0 + 1
    \   00004B   6022         JZ      ??zb_net_touch_3
-    139                  osal_memcpy(n->ieee, ieee, 8);
+    159                  osal_memcpy(n->ieee, ieee, 8);
    \   00004D                ; Setup parameters for call to function osal_memcpy
    \   00004D   85....       MOV     ?V0 + 4,?V0 + 0
    \   000050   85....       MOV     ?V0 + 5,?V0 + 1
@@ -820,12 +904,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000067   12....       LCALL   ??osal_memcpy?relay
    \   00006A   7403         MOV     A,#0x3
    \   00006C   12....       LCALL   ?DEALLOC_XSTACK8
-    140              }
-    141              if (type != ZB_DEV_UNKNOWN) {
+    160              }
+    161              if (type != ZB_DEV_UNKNOWN) {
    \                     ??zb_net_touch_3:
    \   00006F   E5..         MOV     A,?V0 + 2
    \   000071   600F         JZ      ??zb_net_touch_4
-    142                  n->type = type;
+    162                  n->type = type;
    \   000073   8E82         MOV     DPL,R6
    \   000075   8F83         MOV     DPH,R7
    \   000077   A3           INC     DPTR
@@ -839,8 +923,8 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00007F   A3           INC     DPTR
    \   000080   A3           INC     DPTR
    \   000081   F0           MOVX    @DPTR,A
-    143              }
-    144              n->rssi = rssi;
+    163              }
+    164              n->rssi = rssi;
    \                     ??zb_net_touch_4:
    \   000082   EE           MOV     A,R6
    \   000083   240C         ADD     A,#0xc
@@ -850,7 +934,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00008A   F583         MOV     DPH,A
    \   00008C   E5..         MOV     A,?V0 + 3
    \   00008E   F0           MOVX    @DPTR,A
-    145              n->last_seen_ms = osal_GetSystemClock();
+    165              n->last_seen_ms = osal_GetSystemClock();
    \   00008F                ; Setup parameters for call to function osal_GetSystemClock
    \   00008F   12....       LCALL   ??osal_GetSystemClock?relay
    \   000092   EE           MOV     A,R6
@@ -860,7 +944,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000098   3400         ADDC    A,#0x0
    \   00009A   F583         MOV     DPH,A
    \   00009C   12....       LCALL   ?XSTORE_R2345
-    146              n->flags |= 0x01u;
+    166              n->flags |= 0x01u;
    \   00009F   EE           MOV     A,R6
    \   0000A0   2411         ADD     A,#0x11
    \   0000A2   F582         MOV     DPL,A
@@ -870,7 +954,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   0000A9   E0           MOVX    A,@DPTR
    \   0000AA   D2E0         SETB    0xE0 /* A   */.0
    \   0000AC   F0           MOVX    @DPTR,A
-    147              n->miss_cnt = 0;
+    167              n->miss_cnt = 0;
    \   0000AD   EE           MOV     A,R6
    \   0000AE   2412         ADD     A,#0x12
    \   0000B0   F582         MOV     DPL,A
@@ -879,27 +963,27 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   0000B5   F583         MOV     DPH,A
    \   0000B7   E4           CLR     A
    \   0000B8   F0           MOVX    @DPTR,A
-    148              return n;
+    168              return n;
    \   0000B9   EE           MOV     A,R6
    \   0000BA   FA           MOV     R2,A
    \   0000BB   EF           MOV     A,R7
    \   0000BC   FB           MOV     R3,A
    \                     ??zb_net_touch_2:
    \   0000BD   02....       LJMP    ?Subroutine1 & 0xFFFF
-    149          }
-    150          
+    169          }
+    170          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    151          const zb_node_t *zb_net_find_by_role(uint8 role)
+    171          const zb_node_t *zb_net_find_by_role(uint8 role)
    \                     zb_net_find_by_role:
-    152          {
+    172          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-    153              uint8 i;
-    154          
-    155              for (i = 0; i < s_node_cnt; ++i) {
+    173              uint8 i;
+    174          
+    175              for (i = 0; i < s_node_cnt; ++i) {
    \   000004   7C00         MOV     R4,#0x0
    \   000006   8001         SJMP    ??zb_net_find_by_role_0
    \                     ??zb_net_find_by_role_1:
@@ -912,7 +996,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00000F   C3           CLR     C
    \   000010   98           SUBB    A,R0
    \   000011   501B         JNC     ??zb_net_find_by_role_2
-    156                  if (s_nodes[i].role == role) {
+    176                  if (s_nodes[i].role == role) {
    \   000013   EC           MOV     A,R4
    \   000014   75F01B       MOV     B,#0x1b
    \   000017   A4           MUL     AB
@@ -927,54 +1011,54 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000025   E0           MOVX    A,@DPTR
    \   000026   69           XRL     A,R1
    \   000027   70DF         JNZ     ??zb_net_find_by_role_1
-    157                      return &s_nodes[i];
-   \   000029   12....       LCALL   ??Subroutine8_0 & 0xFFFF
-    158                  }
-    159              }
-   \                     ??CrossCallReturnLabel_10:
+    177                      return &s_nodes[i];
+   \   000029   12....       LCALL   ??Subroutine10_0 & 0xFFFF
+    178                  }
+    179              }
+   \                     ??CrossCallReturnLabel_15:
    \   00002C   8004         SJMP    ??zb_net_find_by_role_3
-    160              return 0;
+    180              return 0;
    \                     ??zb_net_find_by_role_2:
    \   00002E   7A00         MOV     R2,#0x0
    \   000030   7B00         MOV     R3,#0x0
    \                     ??zb_net_find_by_role_3:
    \   000032                REQUIRE ?Subroutine0
    \   000032                ; // Fall through to label ?Subroutine0
-    161          }
-    162          
+    181          }
+    182          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    163          uint8 zb_net_count(void)
+    183          uint8 zb_net_count(void)
    \                     zb_net_count:
-    164          {
+    184          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-    165              return s_node_cnt;
+    185              return s_node_cnt;
    \   000004   90....       MOV     DPTR,#s_node_cnt
    \   000007   E0           MOVX    A,@DPTR
    \   000008   F9           MOV     R1,A
    \   000009   80..         SJMP    ?Subroutine0
-    166          }
-    167          
+    186          }
+    187          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    168          uint8 zb_net_online_count(void)
+    188          uint8 zb_net_online_count(void)
    \                     zb_net_online_count:
-    169          {
+    189          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-    170              uint8 i;
-    171              uint8 cnt = 0;
+    190              uint8 i;
+    191              uint8 cnt = 0;
    \   000004   7900         MOV     R1,#0x0
-    172          
-    173              for (i = 0; i < s_node_cnt; ++i) {
+    192          
+    193              for (i = 0; i < s_node_cnt; ++i) {
    \   000006   7C00         MOV     R4,#0x0
    \   000008   8019         SJMP    ??zb_net_online_count_0
-    174                  if (s_nodes[i].flags & 0x01u) {
+    194                  if (s_nodes[i].flags & 0x01u) {
    \                     ??zb_net_online_count_1:
    \   00000A   EC           MOV     A,R4
    \   00000B   75F01B       MOV     B,#0x1b
@@ -990,10 +1074,10 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00001C   E0           MOVX    A,@DPTR
    \   00001D   A2E0         MOV     C,0xE0 /* A   */.0
    \   00001F   5001         JNC     ??zb_net_online_count_2
-    175                      cnt++;
+    195                      cnt++;
    \   000021   09           INC     R1
-    176                  }
-    177              }
+    196                  }
+    197              }
    \                     ??zb_net_online_count_2:
    \   000022   0C           INC     R4
    \                     ??zb_net_online_count_0:
@@ -1004,20 +1088,20 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000029   C3           CLR     C
    \   00002A   98           SUBB    A,R0
    \   00002B   40DD         JC      ??zb_net_online_count_1
-    178              return cnt;
+    198              return cnt;
    \   00002D   80..         SJMP    ?Subroutine0
-    179          }
-    180          
+    199          }
+    200          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    181          const zb_node_t *zb_net_at(uint8 idx)
+    201          const zb_node_t *zb_net_at(uint8 idx)
    \                     zb_net_at:
-    182          {
+    202          {
    \   000000   C082         PUSH    DPL
    \   000002   C083         PUSH    DPH
    \   000004                ; Saved register size: 2
    \   000004                ; Auto size: 0
-    183              if (idx >= s_node_cnt) {
+    203              if (idx >= s_node_cnt) {
    \   000004   90....       MOV     DPTR,#s_node_cnt
    \   000007   E0           MOVX    A,@DPTR
    \   000008   F8           MOV     R0,A
@@ -1025,41 +1109,41 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00000A   C3           CLR     C
    \   00000B   98           SUBB    A,R0
    \   00000C   4006         JC      ??zb_net_at_0
-    184                  return 0;
+    204                  return 0;
    \   00000E   7A00         MOV     R2,#0x0
    \   000010   7B00         MOV     R3,#0x0
-   \   000012   8007         SJMP    ??CrossCallReturnLabel_12
-    185              }
-    186              return &s_nodes[idx];
+   \   000012   8007         SJMP    ??CrossCallReturnLabel_17
+    205              }
+    206              return &s_nodes[idx];
    \                     ??zb_net_at_0:
    \   000014   E9           MOV     A,R1
    \   000015   75F01B       MOV     B,#0x1b
    \   000018   12....       LCALL   ?Subroutine6 & 0xFFFF
-   \                     ??CrossCallReturnLabel_12:
+   \                     ??CrossCallReturnLabel_17:
    \   00001B   80..         SJMP    ?Subroutine0
-    187          }
-    188          
+    207          }
+    208          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    189          void zb_net_mark_offline(uint16 nodeid)
+    209          void zb_net_mark_offline(uint16 nodeid)
    \                     zb_net_mark_offline:
-    190          {
+    210          {
    \   000000   74F6         MOV     A,#-0xa
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 10
    \   000005                ; Auto size: 0
-    191              zb_node_t *n;
-    192          
-    193              n = find_slot(nodeid);
+    211              zb_node_t *n;
+    212          
+    213              n = find_slot(nodeid);
    \   000005                ; Setup parameters for call to function find_slot
    \   000005   12....       LCALL   ??find_slot?relay
-    194              if (n == 0) {
+    214              if (n == 0) {
    \   000008   EA           MOV     A,R2
    \   000009   4B           ORL     A,R3
    \   00000A   6018         JZ      ??zb_net_mark_offline_0
-    195                  return;
-    196              }
-    197              if ((n->flags & 0x01u) == 0u) {
+    215                  return;
+    216              }
+    217              if ((n->flags & 0x01u) == 0u) {
    \   00000C   EA           MOV     A,R2
    \   00000D   2411         ADD     A,#0x11
    \   00000F   F582         MOV     DPL,A
@@ -1069,19 +1153,19 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000016   E0           MOVX    A,@DPTR
    \   000017   A2E0         MOV     C,0xE0 /* A   */.0
    \   000019   5009         JNC     ??zb_net_mark_offline_0
-    198                  return;
-    199              }
-    200          
-    201              n->flags &= (uint8)~0x01u;
+    218                  return;
+    219              }
+    220          
+    221              n->flags &= (uint8)~0x01u;
    \   00001B   C2E0         CLR     0xE0 /* A   */.0
    \   00001D   F0           MOVX    @DPTR,A
-    202              GwCoord_SendNodeInfo(n);
+    222              GwCoord_SendNodeInfo(n);
    \   00001E                ; Setup parameters for call to function GwCoord_SendNodeInfo
    \   00001E   12....       LCALL   ??GwCoord_SendNodeInfo?relay
-    203              GwCoord_SendNetStatus();
+    223              GwCoord_SendNetStatus();
    \   000021                ; Setup parameters for call to function GwCoord_SendNetStatus
    \   000021   12....       LCALL   ??GwCoord_SendNetStatus?relay
-    204          }
+    224          }
    \                     ??zb_net_mark_offline_0:
    \   000024                REQUIRE ?Subroutine2
    \   000024                ; // Fall through to label ?Subroutine2
@@ -1090,12 +1174,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \                     ?Subroutine2:
    \   000000   7F02         MOV     R7,#0x2
    \   000002   02....       LJMP    ?BANKED_LEAVE_XDATA
-    205          
+    225          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    206          int8 zb_net_send_onoff(uint16 nodeid, uint8 ep, uint8 onoff)
+    226          int8 zb_net_send_onoff(uint16 nodeid, uint8 ep, uint8 onoff)
    \                     zb_net_send_onoff:
-    207          {
+    227          {
    \   000000   74F4         MOV     A,#-0xc
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 12
@@ -1108,13 +1192,13 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00000D   FF           MOV     R7,A
    \   00000E   89..         MOV     ?V0 + 2,R1
    \   000010   8C..         MOV     ?V0 + 3,R4
-    208              afAddrType_t dst;
-    209              uint8 zcl_buf[3];
-    210              static uint8 s_zcl_seq = 0;
-    211              uint8 rc;
-    212              endPointDesc_t *ep_desc;
-    213          
-    214              osal_memset(&dst, 0, sizeof(dst));
+    228              afAddrType_t dst;
+    229              uint8 zcl_buf[3];
+    230              static uint8 s_zcl_seq = 0;
+    231              uint8 rc;
+    232              endPointDesc_t *ep_desc;
+    233          
+    234              osal_memset(&dst, 0, sizeof(dst));
    \   000012                ; Setup parameters for call to function osal_memset
    \   000012   7C0C         MOV     R4,#0xc
    \   000014   7D00         MOV     R5,#0x0
@@ -1124,12 +1208,12 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00001D   AA82         MOV     R2,DPL
    \   00001F   AB83         MOV     R3,DPH
    \   000021   12....       LCALL   ??osal_memset?relay
-    215              dst.addrMode = (afAddrMode_t)Addr16Bit;
+    235              dst.addrMode = (afAddrMode_t)Addr16Bit;
    \   000024   740B         MOV     A,#0xb
    \   000026   12....       LCALL   ?XSTACK_DISP0_8
    \   000029   7402         MOV     A,#0x2
    \   00002B   F0           MOVX    @DPTR,A
-    216              dst.addr.shortAddr = nodeid;
+    236              dst.addr.shortAddr = nodeid;
    \   00002C   04           INC     A
    \   00002D   12....       LCALL   ?XSTACK_DISP0_8
    \   000030   EE           MOV     A,R6
@@ -1137,18 +1221,18 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000032   A3           INC     DPTR
    \   000033   EF           MOV     A,R7
    \   000034   F0           MOVX    @DPTR,A
-    217              dst.endPoint = ep;
+    237              dst.endPoint = ep;
    \   000035   740C         MOV     A,#0xc
    \   000037   12....       LCALL   ?XSTACK_DISP0_8
    \   00003A   E5..         MOV     A,?V0 + 2
    \   00003C   F0           MOVX    @DPTR,A
-    218          
-    219              zcl_buf[0] = 0x01;
+    238          
+    239              zcl_buf[0] = 0x01;
    \   00003D   85..82       MOV     DPL,?XSP + 0
    \   000040   85..83       MOV     DPH,?XSP + 1
    \   000043   7401         MOV     A,#0x1
    \   000045   F0           MOVX    @DPTR,A
-    220              zcl_buf[1] = ++s_zcl_seq;
+    240              zcl_buf[1] = ++s_zcl_seq;
    \   000046   90....       MOV     DPTR,#??s_zcl_seq
    \   000049   E0           MOVX    A,@DPTR
    \   00004A   04           INC     A
@@ -1158,7 +1242,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000050   12....       LCALL   ?XSTACK_DISP0_8
    \   000053   D0E0         POP     A
    \   000055   F0           MOVX    @DPTR,A
-    221              zcl_buf[2] = onoff ? 0x01 : 0x00;
+    241              zcl_buf[2] = onoff ? 0x01 : 0x00;
    \   000056   E5..         MOV     A,?V0 + 3
    \   000058   6009         JZ      ??zb_net_send_onoff_0
    \   00005A   7402         MOV     A,#0x2
@@ -1171,8 +1255,8 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000068   E4           CLR     A
    \                     ??zb_net_send_onoff_1:
    \   000069   F0           MOVX    @DPTR,A
-    222          
-    223              ep_desc = afFindEndPointDesc(GWCOORD_ENDPOINT);
+    242          
+    243              ep_desc = afFindEndPointDesc(GWCOORD_ENDPOINT);
    \   00006A                ; Setup parameters for call to function afFindEndPointDesc
    \   00006A   7901         MOV     R1,#0x1
    \   00006C   12....       LCALL   ??afFindEndPointDesc?relay
@@ -1180,17 +1264,17 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000071   8B..         MOV     ?V0 + 1,R3
    \   000073   AC..         MOV     R4,?V0 + 0
    \   000075   AD..         MOV     R5,?V0 + 1
-    224              if (ep_desc == 0) {
+    244              if (ep_desc == 0) {
    \   000077   EC           MOV     A,R4
    \   000078   4D           ORL     A,R5
    \   000079   6050         JZ      ??zb_net_send_onoff_2
-    225                  return (int8)RC_ERR_PARAM;
-    226              }
-    227          
-    228              rc = AF_DataRequest(&dst, ep_desc, ZCL_CLU_ONOFF,
-    229                                  sizeof(zcl_buf), zcl_buf,
-    230                                  &s_zcl_seq, AF_DISCV_ROUTE, AF_DEFAULT_RADIUS);
-    231              return (rc == afStatus_SUCCESS) ? 0 : (int8)-1;
+    245                  return (int8)RC_ERR_PARAM;
+    246              }
+    247          
+    248              rc = AF_DataRequest(&dst, ep_desc, ZCL_CLU_ONOFF,
+    249                                  sizeof(zcl_buf), zcl_buf,
+    250                                  &s_zcl_seq, AF_DISCV_ROUTE, AF_DEFAULT_RADIUS);
+    251              return (rc == afStatus_SUCCESS) ? 0 : (int8)-1;
    \   00007B                ; Setup parameters for call to function AF_DataRequest
    \   00007B   75..1E       MOV     ?V0 + 0,#0x1e
    \   00007E   78..         MOV     R0,#?V0 + 0
@@ -1231,21 +1315,21 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   0000CF   12....       LCALL   ?DEALLOC_XSTACK8
    \   0000D2   7F04         MOV     R7,#0x4
    \   0000D4   02....       LJMP    ?BANKED_LEAVE_XDATA
-    232          }
+    252          }
 
    \                                 In  segment XDATA_Z, align 1, keep-with-next
    \                     ??s_zcl_seq:
    \   000000                DS 1
    \   000001                REQUIRE __INIT_XDATA_Z
-    233          
+    253          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    234          void zb_net_on_state(uint8 state, uint16 panid, uint8 channel)
+    254          void zb_net_on_state(uint8 state, uint16 panid, uint8 channel)
    \                     zb_net_on_state:
-    235          {
-   \   000000   74F6         MOV     A,#-0xa
+    255          {
+   \   000000   74F5         MOV     A,#-0xb
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
-   \   000005                ; Saved register size: 10
+   \   000005                ; Saved register size: 11
    \   000005                ; Auto size: 0
    \   000005   89..         MOV     ?V0 + 1,R1
    \   000007   EA           MOV     A,R2
@@ -1253,54 +1337,83 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   000009   EB           MOV     A,R3
    \   00000A   FF           MOV     R7,A
    \   00000B   8C..         MOV     ?V0 + 0,R4
-    236              s_dev_state = state;
-   \   00000D   E9           MOV     A,R1
-   \   00000E   90....       MOV     DPTR,#s_dev_state
-   \   000011   F0           MOVX    @DPTR,A
-    237              s_panid = panid;
-   \   000012   90....       MOV     DPTR,#s_panid
-   \   000015   EE           MOV     A,R6
-   \   000016   F0           MOVX    @DPTR,A
-   \   000017   A3           INC     DPTR
-   \   000018   EF           MOV     A,R7
+    256              uint8 prev_state = s_dev_state;
+   \   00000D   90....       MOV     DPTR,#s_dev_state
+   \   000010   E0           MOVX    A,@DPTR
+   \   000011   F5..         MOV     ?V0 + 2,A
+    257          
+    258              s_dev_state = state;
+   \   000013   E9           MOV     A,R1
+   \   000014   F0           MOVX    @DPTR,A
+    259              s_panid = panid;
+   \   000015   90....       MOV     DPTR,#s_panid
+   \   000018   EE           MOV     A,R6
    \   000019   F0           MOVX    @DPTR,A
-    238              s_channel = channel;
-   \   00001A   EC           MOV     A,R4
-   \   00001B   90....       MOV     DPTR,#s_channel
-   \   00001E   F0           MOVX    @DPTR,A
-    239              GwCoord_SendNetStatus();
-   \   00001F                ; Setup parameters for call to function GwCoord_SendNetStatus
-   \   00001F   12....       LCALL   ??GwCoord_SendNetStatus?relay
-    240          
-    241              if (state == DEV_ZB_COORD) {
-   \   000022   7409         MOV     A,#0x9
-   \   000024   65..         XRL     A,?V0 + 1
-   \   000026   7014         JNZ     ??zb_net_on_state_0
-    242                  (void)nv_save_u16(NV_ID_PANID, panid);
-   \   000028                ; Setup parameters for call to function nv_save_u16
-   \   000028   EE           MOV     A,R6
-   \   000029   FC           MOV     R4,A
-   \   00002A   EF           MOV     A,R7
-   \   00002B   FD           MOV     R5,A
-   \   00002C   7A01         MOV     R2,#0x1
-   \   00002E   7BF0         MOV     R3,#-0x10
-   \   000030   12....       LCALL   ??nv_save_u16?relay
-    243                  (void)nv_save_u8(NV_ID_CHANNEL, channel);
-   \   000033                ; Setup parameters for call to function nv_save_u8
-   \   000033   A9..         MOV     R1,?V0 + 0
-   \   000035   7A02         MOV     R2,#0x2
-   \   000037   7BF0         MOV     R3,#-0x10
-   \   000039   12....       LCALL   ??nv_save_u8?relay
-    244              }
-    245          }
+   \   00001A   A3           INC     DPTR
+   \   00001B   EF           MOV     A,R7
+   \   00001C   F0           MOVX    @DPTR,A
+    260              s_channel = channel;
+   \   00001D   EC           MOV     A,R4
+   \   00001E   90....       MOV     DPTR,#s_channel
+   \   000021   F0           MOVX    @DPTR,A
+    261              GwCoord_SendNetStatus();
+   \   000022                ; Setup parameters for call to function GwCoord_SendNetStatus
+   \   000022   12....       LCALL   ??GwCoord_SendNetStatus?relay
+    262          
+    263              if (state == DEV_ZB_COORD) {
+   \   000025   7409         MOV     A,#0x9
+   \   000027   65..         XRL     A,?V0 + 1
+   \   000029   7027         JNZ     ??zb_net_on_state_0
+    264                  (void)nv_save_u16(NV_ID_PANID, panid);
+   \   00002B                ; Setup parameters for call to function nv_save_u16
+   \   00002B   EE           MOV     A,R6
+   \   00002C   FC           MOV     R4,A
+   \   00002D   EF           MOV     A,R7
+   \   00002E   FD           MOV     R5,A
+   \   00002F   7A01         MOV     R2,#0x1
+   \   000031   7BF0         MOV     R3,#-0x10
+   \   000033   12....       LCALL   ??nv_save_u16?relay
+    265                  (void)nv_save_u8(NV_ID_CHANNEL, channel);
+   \   000036                ; Setup parameters for call to function nv_save_u8
+   \   000036   A9..         MOV     R1,?V0 + 0
+   \   000038   7A02         MOV     R2,#0x2
+   \   00003A   7BF0         MOV     R3,#-0x10
+   \   00003C   12....       LCALL   ??nv_save_u8?relay
+    266          
+    267                  /* 网络首次就绪时主动开 255s 入网窗，不再等 STM32 的 ZB_ALLOW_JOIN 到达。
+    268                   * 原先 STM32 侧会在 zb_alive 上升沿发一次 60s 窗，但：
+    269                   *   (1) 如果 STM32 送命令时 NIB 还没齐，NLME_PermitJoiningRequest 有可能被忽略；
+    270                   *   (2) 节点若上电慢于这 60s，就错过了窗口再也进不来。
+    271                   * 先给 255s 缓冲让节点有更长的首次入网机会；之后 zb_net_tick 里的 30s 自动再开兜底。 */
+    272                  if (prev_state != DEV_ZB_COORD) {
+   \   00003F   7409         MOV     A,#0x9
+   \   000041   65..         XRL     A,?V0 + 2
+   \   000043   600D         JZ      ??zb_net_on_state_0
+    273                      NLME_PermitJoiningRequest(0xFFu);      /* 注意：255 以下才是秒数，0xFF=一直开 */
+   \   000045                ; Setup parameters for call to function NLME_PermitJoiningRequest
+   \   000045   12....       LCALL   ?Subroutine7 & 0xFFFF
+    274                      s_allow_join_rem_s = 0xFFu;
+   \                     ??CrossCallReturnLabel_9:
+   \   000048   F0           MOVX    @DPTR,A
+    275                      s_reopen_window_s = 30u;
+   \   000049   90....       MOV     DPTR,#s_reopen_window_s
+   \   00004C   741E         MOV     A,#0x1e
+   \   00004E   F0           MOVX    @DPTR,A
+    276                      GwCoord_SendNetStatus();
+   \   00004F                ; Setup parameters for call to function GwCoord_SendNetStatus
+   \   00004F   12....       LCALL   ??GwCoord_SendNetStatus?relay
+    277                  }
+    278              }
+    279          }
    \                     ??zb_net_on_state_0:
-   \   00003C   02....       LJMP    ?Subroutine2 & 0xFFFF
-    246          
+   \   000052   7F03         MOV     R7,#0x3
+   \   000054   02....       LJMP    ?BANKED_LEAVE_XDATA
+    280          
 
    \                                 In  segment BANKED_CODE, align 1, keep-with-next
-    247          void zb_net_get_status(uint8 *state, uint8 *channel, uint16 *panid, uint8 *joined_n)
+    281          void zb_net_get_status(uint8 *state, uint8 *channel, uint16 *panid, uint8 *joined_n)
    \                     zb_net_get_status:
-    248          {
+    282          {
    \   000000   74F6         MOV     A,#-0xa
    \   000002   12....       LCALL   ?BANKED_ENTER_XDATA
    \   000005                ; Saved register size: 10
@@ -1319,38 +1432,38 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00001A   FE           MOV     R6,A
    \   00001B   E9           MOV     A,R1
    \   00001C   FF           MOV     R7,A
-    249              if (state) {
+    283              if (state) {
    \   00001D   EA           MOV     A,R2
    \   00001E   4B           ORL     A,R3
    \   00001F   6009         JZ      ??zb_net_get_status_0
-    250                  *state = s_dev_state;
+    284                  *state = s_dev_state;
    \   000021   90....       MOV     DPTR,#s_dev_state
    \   000024   E0           MOVX    A,@DPTR
    \   000025   8A82         MOV     DPL,R2
    \   000027   8B83         MOV     DPH,R3
    \   000029   F0           MOVX    @DPTR,A
-    251              }
-    252              if (channel) {
+    285              }
+    286              if (channel) {
    \                     ??zb_net_get_status_0:
    \   00002A   EC           MOV     A,R4
    \   00002B   4D           ORL     A,R5
    \   00002C   6009         JZ      ??zb_net_get_status_1
-    253                  *channel = s_channel;
+    287                  *channel = s_channel;
    \   00002E   90....       MOV     DPTR,#s_channel
    \   000031   E0           MOVX    A,@DPTR
    \   000032   8C82         MOV     DPL,R4
    \   000034   8D83         MOV     DPH,R5
    \   000036   F0           MOVX    @DPTR,A
-    254              }
-    255              if (panid) {
+    288              }
+    289              if (panid) {
    \                     ??zb_net_get_status_1:
    \   000037   E5..         MOV     A,?V0 + 0
    \   000039   45..         ORL     A,?V0 + 1
    \   00003B   6011         JZ      ??zb_net_get_status_2
-    256                  *panid = s_panid;
+    290                  *panid = s_panid;
    \   00003D   90....       MOV     DPTR,#s_panid
    \   000040   12....       LCALL   ?Subroutine4 & 0xFFFF
-    257              }
+    291              }
    \                     ??CrossCallReturnLabel_5:
    \   000043   85..82       MOV     DPL,?V0 + 0
    \   000046   85..83       MOV     DPH,?V0 + 1
@@ -1359,20 +1472,20 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
    \   00004B   A3           INC     DPTR
    \   00004C   E9           MOV     A,R1
    \   00004D   F0           MOVX    @DPTR,A
-    258              if (joined_n) {
+    292              if (joined_n) {
    \                     ??zb_net_get_status_2:
    \   00004E   EE           MOV     A,R6
    \   00004F   4F           ORL     A,R7
    \   000050   6009         JZ      ??zb_net_get_status_3
-    259                  *joined_n = zb_net_online_count();
+    293                  *joined_n = zb_net_online_count();
    \   000052                ; Setup parameters for call to function zb_net_online_count
    \   000052   12....       LCALL   ??zb_net_online_count?relay
    \   000055   E9           MOV     A,R1
    \   000056   8E82         MOV     DPL,R6
    \   000058   8F83         MOV     DPH,R7
    \   00005A   F0           MOVX    @DPTR,A
-    260              }
-    261          }
+    294              }
+    295          }
    \                     ??zb_net_get_status_3:
    \   00005B   02....       LJMP    ?Subroutine2 & 0xFFFF
 
@@ -1495,17 +1608,22 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
        -> find_slot                     0      0     20
        -> GwCoord_SendNodeInfo          0      0     20
        -> GwCoord_SendNetStatus         0      0     20
-     zb_net_on_state                    0      0     10
-       -> GwCoord_SendNetStatus         0      0     20
-       -> nv_save_u16                   0      0     20
-       -> nv_save_u8                    0      0     20
-     zb_net_online_count                2      0     10
+     zb_net_on_state                    0      0     11
+       -> GwCoord_SendNetStatus         0      0     22
+       -> nv_save_u16                   0      0     22
+       -> nv_save_u8                    0      0     22
+       -> NLME_PermitJoiningRequest     0      0     22
+       -> GwCoord_SendNetStatus         0      0     22
+     zb_net_online_count                2      0     20
      zb_net_send_onoff                  1      0     36
        -> osal_memset                   0      0     54
        -> afFindEndPointDesc            0      0     54
        -> AF_DataRequest                0      0     72
      zb_net_tick                        0      0     20
        -> NLME_PermitJoiningRequest     0      0     40
+       -> zb_net_online_count           0      0     40
+       -> NLME_PermitJoiningRequest     0      0     40
+       -> GwCoord_SendNetStatus         0      0     40
        -> zb_net_mark_offline           0      0     40
      zb_net_touch                       1      0     20
        -> find_slot                     0      0     32
@@ -1525,19 +1643,22 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      s_channel                       1
      s_allow_join_rem_s              1
      s_last_tick_ms                  4
+     s_reopen_window_s               1
      find_slot                      55
      ?Subroutine5                   12
      ?Subroutine0                    7
      alloc_slot                    139
      ?Subroutine1                    5
      ?Subroutine6                    4
-     ??Subroutine8_0                 9
+     ??Subroutine10_0                9
      ?Subroutine3                    6
-     ?Subroutine7                   11
+     ?Subroutine8                   11
      zb_net_init                   153
      ?Subroutine4                    6
-     zb_net_tick                   211
-     zb_net_allow_join              50
+     zb_net_tick                   286
+     ?Subroutine9                    7
+     zb_net_allow_join              40
+     ?Subroutine7                    8
      zb_net_find                    10
      zb_net_touch                  192
      zb_net_find_by_role            50
@@ -1548,7 +1669,7 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      ?Subroutine2                    5
      zb_net_send_onoff             215
      s_zcl_seq                       1
-     zb_net_on_state                63
+     zb_net_on_state                87
      zb_net_get_status              94
      ?<Initializer for s_panid>      2
      ?<Initializer for s_channel>    1
@@ -1571,16 +1692,16 @@ Warning[Pa050]: non-native end of line sequence detected (this diagnostic is
      ??zb_net_get_status?relay       6
 
  
- 1 420 bytes in segment BANKED_CODE
+ 1 524 bytes in segment BANKED_CODE
     90 bytes in segment BANK_RELAYS
      3 bytes in segment XDATA_I
      3 bytes in segment XDATA_ID
      8 bytes in segment XDATA_ROM_C
-   224 bytes in segment XDATA_Z
+   225 bytes in segment XDATA_Z
  
- 1 513 bytes of CODE  memory
+ 1 617 bytes of CODE  memory
      0 bytes of CONST memory (+ 8 bytes shared)
-   227 bytes of XDATA memory
+   228 bytes of XDATA memory
 
 Errors: none
 Warnings: 1

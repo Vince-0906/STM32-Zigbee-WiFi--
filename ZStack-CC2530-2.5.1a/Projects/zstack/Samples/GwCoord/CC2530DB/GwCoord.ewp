@@ -1138,7 +1138,7 @@
         </option>
         <option>
           <name>Constant Placement</name>
-          <state>1</state>
+          <state>0</state>
         </option>
         <option>
           <name>Datapointer Size</name>
@@ -1245,7 +1245,7 @@
         </option>
         <option>
           <name>General Xdata Stack Size</name>
-          <state>0x300</state>
+          <state>0x1FF</state>
         </option>
         <option>
           <name>General Ext Stack Size</name>
@@ -1843,7 +1843,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$PROJ_DIR$\..\..\..\Tools\CC2530DB\f8w2530.xcl</state>
+          <state>D:\IAR\8051\config\devices\Texas Instruments\lnk51ew_cc2530F256_banked.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -1963,15 +1963,15 @@
         </option>
         <option>
           <name>AllowExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>GenerateExtraOutput</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>XExtraOutOverride</name>
-          <state>0</state>
+          <state>1</state>
         </option>
         <option>
           <name>ExtraOutputFile</name>
@@ -1980,7 +1980,7 @@
         <option>
           <name>ExtraOutputFormat</name>
           <version>11</version>
-          <state>60</state>
+          <state>23</state>
         </option>
         <option>
           <name>ExtraFormatVariant</name>
@@ -4234,16 +4234,10 @@
   <group>
     <name>App</name>
     <file>
-      <name>$PROJ_DIR$\..\Source\OSAL_GwCoord.c</name>
+      <name>$PROJ_DIR$\..\Source\cmd_map.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\gw_coord.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\gw_coord.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\gw_types.h</name>
+      <name>$PROJ_DIR$\..\Source\cmd_map.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\frame.c</name>
@@ -4252,28 +4246,10 @@
       <name>$PROJ_DIR$\..\Source\frame.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\uart_link.c</name>
+      <name>$PROJ_DIR$\..\Source\gw_coord.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\uart_link.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\cmd_map.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\cmd_map.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\soft_i2c.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\soft_i2c.h</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\oled_ssd1306.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\oled_ssd1306.h</name>
+      <name>$PROJ_DIR$\..\Source\gw_coord.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\gw_oled_view.c</name>
@@ -4282,16 +4258,40 @@
       <name>$PROJ_DIR$\..\Source\gw_oled_view.h</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\Source\zb_net.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\Source\zb_net.h</name>
+      <name>$PROJ_DIR$\..\Source\gw_types.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\nv_store.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\Source\nv_store.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\oled_ssd1306.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\OSAL_GwCoord.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\soft_i2c.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\soft_i2c.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\uart_link.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\uart_link.h</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\zb_net.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Source\zb_net.h</name>
     </file>
   </group>
   <group>
@@ -4852,3 +4852,5 @@
     </file>
   </group>
 </project>
+
+

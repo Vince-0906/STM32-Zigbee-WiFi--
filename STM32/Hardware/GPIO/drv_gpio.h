@@ -20,7 +20,7 @@ void cc2530_reset_pulse(void);
 /* WiFi EN（PB12） */
 void wifi_en_set(uint8_t on);
 
-/* 蜂鸣器（PA15） */
+/* 蜂鸣器（PA15，板上 Q1 SS8550 PNP 低有效：low=鸣叫 high=静默） */
 void buzzer_set(uint8_t on);
 
 /* 按键（PB6/PB7，上拉） */

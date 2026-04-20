@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:31 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:28:28 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mt\MT_SYS /
 //                          .c                                                /
@@ -42,7 +42,7 @@
 //                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Components\mt\MT_SYS.c -D NWK_AUTO_POLL -D     /
-//                          NODE_ROLE=1 -D HAL_UART=FALSE -D HAL_LCD=FALSE    /
+//                          NODE_ROLE=1 -D HAL_UART=TRUE -D HAL_LCD=FALSE     /
 //                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\ /
 //                          Samples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\   /
 //                          -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\ /
@@ -53,10 +53,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -140,6 +139,7 @@
         EXTERN ?V0
         EXTERN ?XSP
         EXTERN ?XSTACK_DISP0_8
+        EXTERN __INIT_XDATA_I
 
         PUBLIC ??MT_SysOsalTimerExpired?relay
         FUNCTION ??MT_SysOsalTimerExpired?relay,0203H
@@ -367,15 +367,13 @@ SLEEPSTA:
 //   83 #endif
 //   84 
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 //   85 const uint16 MT_SysOsalEventId [] = {
 MT_SysOsalEventId:
-        DATA16
-        DW 2048
-        DW 1024
-        DW 512
-        DW 256
+        DS 8
+        REQUIRE `?<Initializer for MT_SysOsalEventId>`
+        REQUIRE __INIT_XDATA_I
 //   86                                       MT_SYS_OSAL_EVENT_0,
 //   87                                       MT_SYS_OSAL_EVENT_1,
 //   88                                       MT_SYS_OSAL_EVENT_2,
@@ -1518,6 +1516,14 @@ MT_SysOsalTimerExpired:
         LJMP    ?BANKED_LEAVE_XDATA
         CFI EndBlock cfiBlock1
 
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for MT_SysOsalEventId>`:
+        DATA16
+        DW 2048
+        DW 1024
+        DW 512
+        DW 256
+
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??MT_SysResetInd?relay:
         LCALL   ?BDISPATCH
@@ -1538,11 +1544,12 @@ MT_SysOsalTimerExpired:
 // 131 bytes in segment BANKED_CODE
 //  12 bytes in segment BANK_RELAYS
 //   1 byte  in segment SFR_AN
-//   8 bytes in segment XDATA_ROM_C
+//   8 bytes in segment XDATA_I
+//   8 bytes in segment XDATA_ID
 // 
-// 143 bytes of CODE  memory
-//   8 bytes of CONST memory
+// 151 bytes of CODE  memory
 //   0 bytes of DATA  memory (+ 1 byte shared)
+//   8 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: none

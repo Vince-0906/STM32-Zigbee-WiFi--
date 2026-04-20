@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:34 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:28:24 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\Source\OSAL_ZbNode.c                   /
@@ -43,7 +43,7 @@
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Projects\zstack\Samples\ZbNode\Source\OSAL_ZbN /
 //                          ode.c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D          /
-//                          HAL_UART=FALSE -D HAL_LCD=FALSE -lC               /
+//                          HAL_UART=TRUE -D HAL_LCD=FALSE -lC                /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA   /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -54,10 +54,9 @@
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -134,6 +133,7 @@
 
         EXTERN ?BDISPATCH
         EXTERN ?BRET
+        EXTERN __INIT_XDATA_I
         EXTERN __INIT_XDATA_Z
 
         PUBLIC ??osalInitTasks?relay
@@ -392,18 +392,13 @@ osalInitTasks       SYMBOL "osalInitTasks"
 //   13 #include "zb_node.h"
 //   14 
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 //   15 const pTaskEventHandlerFn tasksArr[] = {
 tasksArr:
-        DATA16
-        DW ??macEventLoop?relay
-        DW ??nwk_event_loop?relay
-        DW ??Hal_ProcessEvent?relay
-        DW ??APS_event_loop?relay
-        DW ??APSF_ProcessEvent?relay
-        DW ??ZDApp_event_loop?relay
-        DW ??ZbNode_ProcessEvent?relay
+        DS 14
+        REQUIRE `?<Initializer for tasksArr>`
+        REQUIRE __INIT_XDATA_I
 //   16   macEventLoop,
 //   17   nwk_event_loop,
 //   18   Hal_ProcessEvent,
@@ -416,11 +411,13 @@ tasksArr:
 //   25 };
 //   26 
 
-        RSEG XDATA_ROM_C:CONST:REORDER:NOROOT(0)
+        RSEG XDATA_I:XDATA:NOROOT(0)
         DATA8
 //   27 const uint8 tasksCnt = sizeof( tasksArr ) / sizeof( tasksArr[0] );
 tasksCnt:
-        DB 7
+        DS 1
+        REQUIRE `?<Initializer for tasksCnt>`
+        REQUIRE __INIT_XDATA_I
 
         RSEG XDATA_Z:XDATA:NOROOT(0)
         DATA16
@@ -617,6 +614,22 @@ osalInitTasks:
         LJMP    ?BRET
         CFI EndBlock cfiBlock0
 
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for tasksArr>`:
+        DATA16
+        DW ??macEventLoop?relay
+        DW ??nwk_event_loop?relay
+        DW ??Hal_ProcessEvent?relay
+        DW ??APS_event_loop?relay
+        DW ??APSF_ProcessEvent?relay
+        DW ??ZDApp_event_loop?relay
+        DW ??ZbNode_ProcessEvent?relay
+
+        RSEG XDATA_ID:CODE:NOROOT(0)
+`?<Initializer for tasksCnt>`:
+        DATA8
+        DB 7
+
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??osalInitTasks?relay:
         LCALL   ?BDISPATCH
@@ -627,12 +640,12 @@ osalInitTasks:
 // 
 // 73 bytes in segment BANKED_CODE
 //  6 bytes in segment BANK_RELAYS
-// 15 bytes in segment XDATA_ROM_C
+// 15 bytes in segment XDATA_I
+// 15 bytes in segment XDATA_ID
 //  2 bytes in segment XDATA_Z
 // 
-// 79 bytes of CODE  memory
-// 15 bytes of CONST memory
-//  2 bytes of XDATA memory
+// 94 bytes of CODE  memory
+// 17 bytes of XDATA memory
 //
 //Errors: none
 //Warnings: 1

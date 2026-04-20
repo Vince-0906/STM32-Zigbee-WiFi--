@@ -1,8 +1,5 @@
-[ChipconEmu]
-Stop timers on halt=1
-Leave target running=1
 [DebugChecksum]
-Checksum=-771402354
+Checksum=1979491574
 [DisAssemblyWindow]
 NumStates=_ 1
 State 1=_ 1
@@ -20,6 +17,13 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
+[CallStackLog]
+Enabled=0
+[DriverProfiling]
+Enabled=0
+Mode=1
+Graph=0
+Symbiont=0
 [InterruptLog]
 LogEnabled=0
 SumEnabled=0
@@ -27,8 +31,6 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
-[Breakpoints]
-Count=0
 [Interrupts]
 Enabled=1
 [MemoryMap]
@@ -38,6 +40,14 @@ UseAuto=0
 TypeViolation=1
 UnspecRange=1
 ActionState=1
+[TraceHelper]
+Enabled=0
+ShowSource=1
+[Breakpoints]
+Count=0
+[ChipconEmu]
+Stop timers on halt=0
+Leave target running=1
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -48,13 +58,3 @@ LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0
-[TraceHelper]
-Enabled=0
-ShowSource=1
-[CallStackLog]
-Enabled=0
-[DriverProfiling]
-Enabled=0
-Mode=1
-Graph=0
-Symbiont=0

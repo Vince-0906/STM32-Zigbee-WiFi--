@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:51:03 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:26:02 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -42,12 +42,12 @@
 //                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Components\hal\common\hal_drivers.c -D         /
-//                          NWK_AUTO_POLL -D NODE_ROLE=2 -D HAL_UART=FALSE    /
-//                          -D HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a /
-//                          \Projects\zstack\Samples\ZbNode\CC2530DB\Node2_En /
-//                          dDeviceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\ /
-//                          Projects\zstack\Samples\ZbNode\CC2530DB\Node2_End /
-//                          DeviceEB\List\ --diag_suppress Pe001,Pa010 -o     /
+//                          NWK_AUTO_POLL -D NODE_ROLE=2 -D HAL_UART=TRUE -D  /
+//                          HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr /
+//                          ojects\zstack\Samples\ZbNode\CC2530DB\Node2_EndDe /
+//                          viceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro /
+//                          jects\zstack\Samples\ZbNode\CC2530DB\Node2_EndDev /
+//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node2_EndDeviceEB\Obj\ -e     /
 //                          --no_code_motion --debug --core=plain             /
@@ -158,8 +158,9 @@
         ARGFRAME XSTACK, 0, STACK
         LOCFRAME XSTACK, 10, STACK
         PUBLIC Hal_ProcessPoll
-        FUNCTION Hal_ProcessPoll,0203H
+        FUNCTION Hal_ProcessPoll,021203H
         ARGFRAME XSTACK, 0, STACK
+        LOCFRAME ISTACK, 2, STACK
         PUBLIC Hal_TaskID
         
         CFI Names cfiNames0
@@ -254,12 +255,14 @@ HalAdcInit          SYMBOL "HalAdcInit"
 HalDmaInit          SYMBOL "HalDmaInit"
 HalAesInit          SYMBOL "HalAesInit"
 HalLedInit          SYMBOL "HalLedInit"
+HalUARTInit         SYMBOL "HalUARTInit"
 HalKeyInit          SYMBOL "HalKeyInit"
 osal_msg_receive    SYMBOL "osal_msg_receive"
 osal_msg_deallocate SYMBOL "osal_msg_deallocate"
 HalLedUpdate        SYMBOL "HalLedUpdate"
 HalKeyPoll          SYMBOL "HalKeyPoll"
 osal_start_timerEx  SYMBOL "osal_start_timerEx"
+HalUARTPoll         SYMBOL "HalUARTPoll"
 ??HalAdcInit?relay  SYMBOL "?relay", HalAdcInit
 ??HalAesInit?relay  SYMBOL "?relay", HalAesInit
 ??HalDmaInit?relay  SYMBOL "?relay", HalDmaInit
@@ -267,6 +270,8 @@ osal_start_timerEx  SYMBOL "osal_start_timerEx"
 ??HalKeyPoll?relay  SYMBOL "?relay", HalKeyPoll
 ??HalLedInit?relay  SYMBOL "?relay", HalLedInit
 ??HalLedUpdate?relay SYMBOL "?relay", HalLedUpdate
+??HalUARTInit?relay SYMBOL "?relay", HalUARTInit
+??HalUARTPoll?relay SYMBOL "?relay", HalUARTPoll
 ??osal_msg_deallocate?relay SYMBOL "?relay", osal_msg_deallocate
 ??osal_msg_receive?relay SYMBOL "?relay", osal_msg_receive
 ??osal_start_timerEx?relay SYMBOL "?relay", osal_start_timerEx
@@ -302,6 +307,13 @@ Hal_ProcessPoll     SYMBOL "Hal_ProcessPoll"
         ARGFRAME DOVERLAY, 0, STATIC
         EXTERN HalLedInit
         FUNCTION HalLedInit,0202H
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN HalUARTInit
+        FUNCTION HalUARTInit,0202H
         ARGFRAME ISTACK, 2, STACK
         ARGFRAME PSTACK, 0, STACK
         ARGFRAME XSTACK, 0, STACK
@@ -349,6 +361,13 @@ Hal_ProcessPoll     SYMBOL "Hal_ProcessPoll"
         ARGFRAME XSTACK, 10, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN HalUARTPoll
+        FUNCTION HalUARTPoll,0202H
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         EXTERN ??HalAdcInit?relay
         FUNCTION ??HalAdcInit?relay,00H
         EXTERN ??HalAesInit?relay
@@ -363,6 +382,10 @@ Hal_ProcessPoll     SYMBOL "Hal_ProcessPoll"
         FUNCTION ??HalLedInit?relay,00H
         EXTERN ??HalLedUpdate?relay
         FUNCTION ??HalLedUpdate?relay,00H
+        EXTERN ??HalUARTInit?relay
+        FUNCTION ??HalUARTInit?relay,00H
+        EXTERN ??HalUARTPoll?relay
+        FUNCTION ??HalUARTPoll?relay,00H
         EXTERN ??osal_msg_deallocate?relay
         FUNCTION ??osal_msg_deallocate?relay,00H
         EXTERN ??osal_msg_receive?relay
@@ -592,6 +615,17 @@ HalDriverInit:
         ARGFRAME XSTACK, 0, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL HalDriverInit, HalUARTInit
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL HalDriverInit, HalKeyInit
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -653,6 +687,8 @@ HalDriverInit:
 //  160   /* UART */
 //  161 #if (defined HAL_UART) && (HAL_UART == TRUE)
 //  162   HalUARTInit();
+        ; Setup parameters for call to function HalUARTInit
+        LCALL   ??HalUARTInit?relay
 //  163 #endif
 //  164 
 //  165   /* KEY */
@@ -927,7 +963,24 @@ Hal_ProcessPoll:
         CFI Function Hal_ProcessPoll
         CODE
 //  270 {
-        ; Saved register size: 0
+        FUNCALL Hal_ProcessPoll, HalUARTPoll
+        LOCFRAME ISTACK, 2, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 0, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 2, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 0, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    DPL
+        CFI DPL0 Frame(CFA_SP, 4)
+        CFI CFA_SP SP+-4
+        PUSH    DPH
+        CFI DPH0 Frame(CFA_SP, 5)
+        CFI CFA_SP SP+-5
+        ; Saved register size: 2
         ; Auto size: 0
 //  271 
 //  272   /* Timer Poll */
@@ -938,6 +991,8 @@ Hal_ProcessPoll:
 //  277   /* UART Poll */
 //  278 #if (defined HAL_UART) && (HAL_UART == TRUE)
 //  279   HalUARTPoll();
+        ; Setup parameters for call to function HalUARTPoll
+        LCALL   ??HalUARTPoll?relay
 //  280 #endif  
 //  281 
 //  282   /* SPI Poll */
@@ -956,7 +1011,7 @@ Hal_ProcessPoll:
 //  295 #endif
 //  296 
 //  297 }
-        LJMP    ?BRET
+        LJMP    ?Subroutine0 & 0xFFFF
         CFI EndBlock cfiBlock4
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
@@ -990,11 +1045,11 @@ Hal_ProcessPoll:
 //  301 **************************************************************************************************/
 //  302 
 // 
-// 137 bytes in segment BANKED_CODE
+// 147 bytes in segment BANKED_CODE
 //  24 bytes in segment BANK_RELAYS
 //   1 byte  in segment XDATA_Z
 // 
-// 161 bytes of CODE  memory
+// 171 bytes of CODE  memory
 //   1 byte  of XDATA memory
 //
 //Errors: none

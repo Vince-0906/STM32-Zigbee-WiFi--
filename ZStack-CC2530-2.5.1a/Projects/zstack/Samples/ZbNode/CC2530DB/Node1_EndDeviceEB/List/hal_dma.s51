@@ -1,13 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        18/Apr/2026  20:49:36 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:28:23 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
 //    Code model         =  banked                                            /
 //    Data model         =  large                                             /
 //    Calling convention =  xdata reentrant                                   /
-//    Constant location  =  data_rom                                          /
+//    Constant location  =  data                                              /
 //    Dptr setup         =  1,16                                              /
 //    Source file        =  D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\targe /
 //                          t\CC2530EB\hal_dma.c                              /
@@ -42,21 +42,20 @@
 //                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
 //                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
 //                          1a\Components\hal\target\CC2530EB\hal_dma.c -D    /
-//                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=FALSE    /
-//                          -D HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a /
-//                          \Projects\zstack\Samples\ZbNode\CC2530DB\Node1_En /
-//                          dDeviceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\ /
-//                          Projects\zstack\Samples\ZbNode\CC2530DB\Node1_End /
-//                          DeviceEB\List\ --diag_suppress Pe001,Pa010 -o     /
+//                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=TRUE -D  /
+//                          HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr /
+//                          ojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDe /
+//                          viceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro /
+//                          jects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDev /
+//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e     /
 //                          --no_code_motion --debug --core=plain             /
 //                          --dptr=16,1 --data_model=large                    /
 //                          --code_model=banked --calling_convention=xdata_re /
-//                          entrant --place_constants=data_rom                /
-//                          --nr_virtual_regs 16 -I                           /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\ -I                           /
+//                          entrant --place_constants=data --nr_virtual_regs  /
+//                          16 -I D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstac /
+//                          k\Samples\ZbNode\CC2530DB\ -I                     /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\..\Source\ -I                 /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
@@ -133,19 +132,30 @@
 
         EXTERN ?BDISPATCH
         EXTERN ?BRET
+        EXTERN ?INTERRUPT_ENTER_XSP
+        EXTERN ?INTERRUPT_LEAVE_XSP
         EXTERN __INIT_XDATA_Z
 
         PUBLIC ??HalDmaInit?relay
         FUNCTION ??HalDmaInit?relay,0203H
+        PUBWEAK `??halDmaIsr??INTVEC 67`
         PUBWEAK DMA0CFGH
         PUBWEAK DMA0CFGL
         PUBWEAK DMA1CFGH
         PUBWEAK DMA1CFGL
+        PUBWEAK DMAIRQ
         PUBLIC HalDmaInit
         FUNCTION HalDmaInit,0203H
         ARGFRAME XSTACK, 0, STACK
+        PUBWEAK _A_IEN0
+        PUBWEAK _A_IEN1
+        PUBWEAK _A_IRCON
         PUBLIC dmaCh0
         PUBLIC dmaCh1234
+        PUBLIC halDmaIsr
+        FUNCTION halDmaIsr,021233H
+        ARGFRAME XSTACK, 0, STACK
+        LOCFRAME XSTACK, 14, STACK
         
         CFI Names cfiNames0
         CFI StackFrame CFA_SP SP IDATA
@@ -235,8 +245,89 @@
         CFI ?RET_LOW Frame(CFA_SP, 1)
         CFI EndCommon cfiCommon0
         
+        
+        CFI Common cfiCommon1 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign -1
+        CFI ReturnAddress ?RET CODE
+        CFI CFA_DOVERLAY Used
+        CFI CFA_IOVERLAY Used
+        CFI CFA_SP SP+-2
+        CFI CFA_PSP16 PSP16+0
+        CFI CFA_XSP16 XSP16+0
+        CFI `PSW.CY` SameValue
+        CFI `B.BR0` SameValue
+        CFI `B.BR1` SameValue
+        CFI `B.BR2` SameValue
+        CFI `B.BR3` SameValue
+        CFI `B.BR4` SameValue
+        CFI `B.BR5` SameValue
+        CFI `B.BR6` SameValue
+        CFI `B.BR7` SameValue
+        CFI `VB.BR8` SameValue
+        CFI `VB.BR9` SameValue
+        CFI `VB.BR10` SameValue
+        CFI `VB.BR11` SameValue
+        CFI `VB.BR12` SameValue
+        CFI `VB.BR13` SameValue
+        CFI `VB.BR14` SameValue
+        CFI `VB.BR15` SameValue
+        CFI VB SameValue
+        CFI B SameValue
+        CFI A SameValue
+        CFI PSW SameValue
+        CFI DPL0 SameValue
+        CFI DPH0 SameValue
+        CFI R0 SameValue
+        CFI R1 SameValue
+        CFI R2 SameValue
+        CFI R3 SameValue
+        CFI R4 SameValue
+        CFI R5 SameValue
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI V0 SameValue
+        CFI V1 SameValue
+        CFI V2 SameValue
+        CFI V3 SameValue
+        CFI V4 SameValue
+        CFI V5 SameValue
+        CFI V6 SameValue
+        CFI V7 SameValue
+        CFI V8 SameValue
+        CFI V9 SameValue
+        CFI V10 SameValue
+        CFI V11 SameValue
+        CFI V12 SameValue
+        CFI V13 SameValue
+        CFI V14 SameValue
+        CFI V15 SameValue
+        CFI PSPH Undefined
+        CFI PSPL Undefined
+        CFI XSPH Undefined
+        CFI XSPL Undefined
+        CFI ?RET Concat
+        CFI ?BRET_EXT SameValue
+        CFI ?RET_HIGH Frame(CFA_SP, 2)
+        CFI ?RET_LOW Frame(CFA_SP, 1)
+        CFI EndCommon cfiCommon1
+        
+HalUARTIsrDMA       SYMBOL "HalUARTIsrDMA"
+??HalUARTIsrDMA?relay SYMBOL "?relay", HalUARTIsrDMA
 HalDmaInit          SYMBOL "HalDmaInit"
 ??HalDmaInit?relay  SYMBOL "?relay", HalDmaInit
+halDmaIsr           SYMBOL "halDmaIsr"
+`??halDmaIsr??INTVEC 67` SYMBOL "??INTVEC 67", halDmaIsr
+
+        EXTERN HalUARTIsrDMA
+        FUNCTION HalUARTIsrDMA,0202H
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 14, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        EXTERN ??HalUARTIsrDMA?relay
+        FUNCTION ??HalUARTIsrDMA?relay,00H
 
 // D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\hal\target\CC2530EB\hal_dma.c
 //    1 /**************************************************************************************************
@@ -285,6 +376,30 @@ HalDmaInit          SYMBOL "HalDmaInit"
 //   44 #include "hal_types.h"
 //   45 #include "hal_defs.h"
 //   46 #include "hal_dma.h"
+
+        ASEGN SFR_AN:DATA:NOROOT,0a8H
+// union <unnamed> volatile __sfr _A_IEN0
+_A_IEN0:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0b8H
+// union <unnamed> volatile __sfr _A_IEN1
+_A_IEN1:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0c0H
+// union <unnamed> volatile __sfr _A_IRCON
+_A_IRCON:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0d1H
+// unsigned char volatile __sfr DMAIRQ
+DMAIRQ:
+        DATA8
+        DS 1
 
         ASEGN SFR_AN:DATA:NOROOT,0d2H
 // unsigned char volatile __sfr DMA1CFGL
@@ -397,6 +512,7 @@ HalDmaInit:
 //  106    ((defined HAL_SPI) && (HAL_SPI == TRUE))  || \ 
 //  107    ((defined HAL_IRGEN) && (HAL_IRGEN == TRUE)))
 //  108   DMAIE = 1;
+        SETB    0xb8.0
 //  109 #endif
 //  110 }
         LJMP    ?BRET
@@ -405,14 +521,7 @@ HalDmaInit:
         REQUIRE DMA0CFGL
         REQUIRE DMA1CFGH
         REQUIRE DMA1CFGL
-
-        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
-??HalDmaInit?relay:
-        LCALL   ?BDISPATCH
-        DATA
-        DC24    HalDmaInit
-
-        END
+        REQUIRE _A_IEN1
 //  111 
 //  112 #if (HAL_UART_DMA || \ 
 //  113    ((defined HAL_SPI) && (HAL_SPI == TRUE))  || \ 
@@ -426,18 +535,68 @@ HalDmaInit:
 //  121  *
 //  122  * @return  None
 //  123  *****************************************************************************/
+
+        RSEG NEAR_CODE:CODE:NOROOT(0)
 //  124 HAL_ISR_FUNCTION( halDmaIsr, DMA_VECTOR )
+halDmaIsr:
+        CFI Block cfiBlock1 Using cfiCommon1
+        CFI Function halDmaIsr
+        CODE
 //  125 {
+        FUNCALL halDmaIsr, HalUARTIsrDMA
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 14, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 14, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        PUSH    A
+        CFI A Frame(CFA_SP, 3)
+        CFI CFA_SP SP+-3
+        MOV     A,#-0xe
+        LCALL   ?INTERRUPT_ENTER_XSP
+        CFI B load(1, XDATA, add(CFA_XSP16, literal(-1)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-2)))
+        CFI PSW load(1, XDATA, add(CFA_XSP16, literal(-3)))
+        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-4)))
+        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-5)))
+        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI R5 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI R4 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI R3 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI R2 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI R1 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI R0 load(1, XDATA, add(CFA_XSP16, literal(-14)))
+        CFI CFA_XSP16 add(XSP16, 14)
+        ; Saved register size: 14
+        ; Auto size: 0
 //  126   extern void HalUARTIsrDMA(void);
 //  127 
 //  128   HAL_ENTER_ISR();
+        MOV     C,0xa8.7
+        CLR     A
+        RLC     A
+        MOV     R6,A
+        SETB    0xa8.7
 //  129 
 //  130   DMAIF = 0;
+        CLR     0xc0.0
 //  131 
 //  132 #if HAL_UART_DMA
 //  133   if (HAL_DMA_CHECK_IRQ(HAL_DMA_CH_TX))
+        MOV     A,0xd1
+        MOV     C,0xE0 /* A   */.4
+        JNC     ??halDmaIsr_0
 //  134   {
 //  135     HalUARTIsrDMA();
+        ; Setup parameters for call to function HalUARTIsrDMA
+        LCALL   ??HalUARTIsrDMA?relay
 //  136   }
 //  137 #endif // HAL_UART_DMA
 //  138 
@@ -465,19 +624,44 @@ HalDmaInit:
 //  160 
 //  161   CLEAR_SLEEP_MODE();
 //  162   HAL_EXIT_ISR();
+??halDmaIsr_0:
+        MOV     A,R6
+        MOV     C,0xE0 /* A   */.0
+        MOV     0xa8.7,C
 //  163 }
+        MOV     R7,#0x1
+        LJMP    ?INTERRUPT_LEAVE_XSP
+        CFI EndBlock cfiBlock1
+        REQUIRE _A_IEN0
+        REQUIRE _A_IRCON
+        REQUIRE DMAIRQ
+
+        COMMON INTVEC:CODE:ROOT(0)
+        ORG 67
+`??halDmaIsr??INTVEC 67`:
+        LJMP       (halDmaIsr)
+
+        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
+??HalDmaInit?relay:
+        LCALL   ?BDISPATCH
+        DATA
+        DC24    HalDmaInit
+
+        END
 //  164 #endif
 //  165 #endif  // #if ((defined HAL_DMA) && (HAL_DMA == TRUE))
 //  166 /******************************************************************************
 //  167 ******************************************************************************/
 // 
-// 17 bytes in segment BANKED_CODE
+// 19 bytes in segment BANKED_CODE
 //  6 bytes in segment BANK_RELAYS
-//  4 bytes in segment SFR_AN
+//  3 bytes in segment INTVEC
+// 35 bytes in segment NEAR_CODE
+//  8 bytes in segment SFR_AN
 // 40 bytes in segment XDATA_Z
 // 
-// 23 bytes of CODE  memory
-//  0 bytes of DATA  memory (+ 4 bytes shared)
+// 60 bytes of CODE  memory (+ 3 bytes shared)
+//  0 bytes of DATA  memory (+ 8 bytes shared)
 // 40 bytes of XDATA memory
 //
 //Errors: none

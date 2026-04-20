@@ -244,6 +244,14 @@ static void on_zb_report(const frame_t *f)
         return;
     }
 
+    if (vlen >= 2u) {
+        LOGI("zb", "REPORT id=%04X ep=%u clu=%04X dt=%02X v=0x%02X%02X",
+             (unsigned)nodeid, ep, (unsigned)cluster, dtype, val[1], val[0]);
+    } else {
+        LOGI("zb", "REPORT id=%04X ep=%u clu=%04X dt=%02X vlen=%u",
+             (unsigned)nodeid, ep, (unsigned)cluster, dtype, vlen);
+    }
+
     if (ep == 0u && cluster == 0u && vlen == 1u && val[0] == 0u) {
         ns = slot_touch(nodeid);
         if (ns != 0) {
@@ -344,6 +352,8 @@ static void on_zb_node_info(const frame_t *f)
     LOGI("zb", "NODE id=%04X role=%s dev=%s rssi=%d last=%u on=%u",
          (unsigned)nodeid, role_name(ns->role), dev_name(ns->dev_type),
          ns->rssi, ns->last_seen_s, ns->online);
+    LOGI("zb", "NODEINFO id=%04X role=%u dev=%u on=%u rssi=%d",
+         (unsigned)nodeid, role, dev_type, f->payload[6], rssi);
     emit_node_info_json(nodeid, ns);
 }
 

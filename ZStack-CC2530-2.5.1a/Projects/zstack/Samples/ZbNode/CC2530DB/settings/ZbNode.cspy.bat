@@ -10,6 +10,6 @@
 @REM 
 
 
-"D:\IAR\common\bin\cspybat" "D:\IAR\8051\bin\8051proc.dll" "D:\IAR\8051\bin\8051sim.dll"  %1 --plugin "D:\IAR\8051\bin\8051bat.dll" --backend -B "--proc_core" "plain" "--proc_code_model" "banked" "--proc_nr_virtual_regs" "16" "--proc_pdata_bank_reg_addr" "0x93" "--proc_dptr_nr_of" "1" "--proc_codebank_reg" "0x9F" "--proc_codebank_start" "0x8000" "--proc_codebank_end" "0xFFFF" "--proc_codebank_mask" "0xFF" "--proc_data_model" "large" "-p" "D:\IAR\8051\config\devices\_generic\io8052.ddf" "--proc_driver" "sim" 
+"D:\IAR\common\bin\cspybat" "D:\IAR\8051\bin\8051proc.dll" "D:\IAR\8051\bin\8051emu_cc.dll"  %1 --plugin "D:\IAR\8051\bin\8051bat.dll" --backend -B "--proc_core" "plain" "--proc_code_model" "banked" "--proc_nr_virtual_regs" "16" "--proc_pdata_bank_reg_addr" "0x93" "--proc_dptr_nr_of" "1" "--proc_codebank_reg" "0x9F" "--proc_codebank_start" "0x8000" "--proc_codebank_end" "0xFFFF" "--proc_codebank_mask" "0xFF" "--proc_data_model" "large" "-p" "D:\IAR\8051\config\devices\_generic\io8052.ddf" "--proc_exclude_exit_breakpoint" "--proc_driver" "chipcon" "--retain_memory" "--verify_download" "use_crc16" "--stack_overflow" "--number_of_banks" "4" 
 
 
