@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  14:46:02 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  15:52:27 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -142,41 +142,35 @@
         EXTERN ?XSTACK_DISP0_8
 
         FUNCTION ??delay_us?relay,0203H
+        FUNCTION ??dht11_drive_high?relay,0203H
         PUBLIC ??dht11_init?relay
         FUNCTION ??dht11_init?relay,0203H
-        FUNCTION ??dht11_pin_out?relay,0203H
         PUBLIC ??dht11_read?relay
         FUNCTION ??dht11_read?relay,0203H
-        FUNCTION ??dht11_set?relay,0203H
         FUNCTION ??wait_level?relay,0203H
         PUBWEAK P2DIR
         PUBWEAK P2SEL
+        PUBWEAK _A_IEN0
         PUBWEAK _A_P2
-        FUNCTION delay_us,0203H
-        ARGFRAME XSTACK, 18, STACK
+        FUNCTION delay_us,080203H
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME XSTACK, 2, STACK
+        FUNCTION dht11_drive_high,0203H
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
         PUBLIC dht11_init
         FUNCTION dht11_init,021203H
         ARGFRAME XSTACK, 0, STACK
         LOCFRAME ISTACK, 2, STACK
-        FUNCTION dht11_pin_out,0203H
-        ARGFRAME XSTACK, 18, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
         PUBLIC dht11_read
         FUNCTION dht11_read,021203H
         ARGFRAME XSTACK, 0, STACK
         LOCFRAME ISTACK, 6, STACK
-        LOCFRAME XSTACK, 18, STACK
-        FUNCTION dht11_set,0203H
-        ARGFRAME XSTACK, 18, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
+        LOCFRAME XSTACK, 19, STACK
         FUNCTION wait_level,021203H
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         LOCFRAME XSTACK, 9, STACK
@@ -269,73 +263,6 @@
         CFI ?RET_LOW Frame(CFA_SP, 1)
         CFI EndCommon cfiCommon0
         
-        
-        CFI Common cfiCommon1 Using cfiNames0
-        CFI CodeAlign 1
-        CFI DataAlign -1
-        CFI ReturnAddress ?RET CODE
-        CFI CFA_DOVERLAY Used
-        CFI CFA_IOVERLAY Used
-        CFI CFA_SP SP+-2
-        CFI CFA_PSP16 PSP16+0
-        CFI CFA_XSP16 XSP16+0
-        CFI `PSW.CY` SameValue
-        CFI `B.BR0` SameValue
-        CFI `B.BR1` SameValue
-        CFI `B.BR2` SameValue
-        CFI `B.BR3` SameValue
-        CFI `B.BR4` SameValue
-        CFI `B.BR5` SameValue
-        CFI `B.BR6` SameValue
-        CFI `B.BR7` SameValue
-        CFI `VB.BR8` SameValue
-        CFI `VB.BR9` SameValue
-        CFI `VB.BR10` SameValue
-        CFI `VB.BR11` SameValue
-        CFI `VB.BR12` SameValue
-        CFI `VB.BR13` SameValue
-        CFI `VB.BR14` SameValue
-        CFI `VB.BR15` SameValue
-        CFI VB SameValue
-        CFI B SameValue
-        CFI A SameValue
-        CFI PSW SameValue
-        CFI DPL0 SameValue
-        CFI DPH0 SameValue
-        CFI R0 SameValue
-        CFI R1 SameValue
-        CFI R2 SameValue
-        CFI R3 SameValue
-        CFI R4 SameValue
-        CFI R5 SameValue
-        CFI R6 SameValue
-        CFI R7 SameValue
-        CFI V0 SameValue
-        CFI V1 SameValue
-        CFI V2 SameValue
-        CFI V3 SameValue
-        CFI V4 SameValue
-        CFI V5 SameValue
-        CFI V6 SameValue
-        CFI V7 SameValue
-        CFI V8 SameValue
-        CFI V9 SameValue
-        CFI V10 SameValue
-        CFI V11 SameValue
-        CFI V12 SameValue
-        CFI V13 SameValue
-        CFI V14 SameValue
-        CFI V15 SameValue
-        CFI PSPH Undefined
-        CFI PSPL Undefined
-        CFI XSPH Undefined
-        CFI XSPL Undefined
-        CFI ?RET Concat
-        CFI ?BRET_EXT SameValue
-        CFI ?RET_HIGH Frame(CFA_SP, 2)
-        CFI ?RET_LOW Frame(CFA_SP, 1)
-        CFI EndCommon cfiCommon1
-        
 dht11_init          SYMBOL "dht11_init"
 ??dht11_init?relay  SYMBOL "?relay", dht11_init
 dht11_read          SYMBOL "dht11_read"
@@ -343,18 +270,27 @@ dht11_read          SYMBOL "dht11_read"
 
 // D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\sensor_dht11.c
 //    1 /*
-//    2  * DHT11 单总线驱动（P2.0，10k 上拉）。
-//    3  * 时序：主机拉低 ≥18ms → 释放总线 20~40us → 读 40-bit 数据。
-//    4  * 禁浮点：温度取 i16 *100（°C*100），湿度 u16 *100 (%*100)。
-//    5  */
-//    6 
-//    7 #include "sensor_dht11.h"
-//    8 #include "board_e18ms1.h"
-//    9 #include "ioCC2530.h"
+//    2  * DHT11 single-wire driver on CC2530 P2.0.
+//    3  *
+//    4  * The board provides an external 10k pull-up. Follow the reference start
+//    5  * sequence: drive low >=18 ms, drive high for 20~40 us, then switch to input
+//    6  * to sample the sensor response. Timing assumes the system is already running
+//    7  * on the existing 32 MHz XOSC configuration used by the project.
+//    8  */
+//    9 
+//   10 #include "sensor_dht11.h"
+//   11 #include "board_e18ms1.h"
+//   12 #include "ioCC2530.h"
 
         ASEGN SFR_AN:DATA:NOROOT,0a0H
 // union <unnamed> volatile __sfr _A_P2
 _A_P2:
+        DATA8
+        DS 1
+
+        ASEGN SFR_AN:DATA:NOROOT,0a8H
+// union <unnamed> volatile __sfr _A_IEN0
+_A_IEN0:
         DATA8
         DS 1
 
@@ -369,70 +305,87 @@ P2SEL:
 P2DIR:
         DATA8
         DS 1
-//   10 #include "OnBoard.h"
-//   11 
-//   12 #define DHT11_BIT_MASK  (uint8)(1 << NODE_DHT11_PIN)
-//   13 
+//   13 #include "hal_mcu.h"
+//   14 
+//   15 #define DHT11_BIT_MASK  ((uint8)(1u << NODE_DHT11_PIN))
+//   16 
+//   17 static void dht11_gpio_mode(void)
+//   18 {
+//   19     P2SEL &= (uint8)~DHT11_BIT_MASK;
+//   20 }
+//   21 
+//   22 static void dht11_drive_low(void)
+//   23 {
+//   24     dht11_gpio_mode();
+//   25     P2 &= (uint8)~DHT11_BIT_MASK;
+//   26     P2DIR |= DHT11_BIT_MASK;
+//   27 }
+//   28 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   14 static void dht11_pin_out(void)  { P2SEL &= (uint8)~DHT11_BIT_MASK; P2DIR |= DHT11_BIT_MASK; }
-dht11_pin_out:
+//   29 static void dht11_drive_high(void)
+dht11_drive_high:
         CFI Block cfiBlock0 Using cfiCommon0
-        CFI Function dht11_pin_out
+        CFI Function dht11_drive_high
         CODE
+//   30 {
         ; Saved register size: 0
         ; Auto size: 0
+//   31     dht11_gpio_mode();
         ANL     0xf5,#0xfe
+//   32     P2 |= DHT11_BIT_MASK;
+        SETB    0xa0.0
+//   33     P2DIR |= DHT11_BIT_MASK;
         ORL     0xff,#0x1
+//   34 }
         LJMP    ?BRET
         CFI EndBlock cfiBlock0
-        REQUIRE P2SEL
-        REQUIRE P2DIR
-//   15 static void dht11_pin_in(void)   { P2SEL &= (uint8)~DHT11_BIT_MASK; P2DIR &= (uint8)~DHT11_BIT_MASK; }
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-//   16 static void dht11_set(uint8 v)   { if (v) P2 |= DHT11_BIT_MASK; else P2 &= (uint8)~DHT11_BIT_MASK; }
-dht11_set:
-        CFI Block cfiBlock1 Using cfiCommon0
-        CFI Function dht11_set
-        CODE
-        ; Saved register size: 0
-        ; Auto size: 0
-        MOV     A,R1
-        JZ      ??dht11_set_0
-        SETB    0xa0.0
-        SJMP    ??dht11_set_1
-??dht11_set_0:
-        CLR     0xa0.0
-??dht11_set_1:
-        LJMP    ?BRET
-        CFI EndBlock cfiBlock1
         REQUIRE _A_P2
-//   17 static uint8 dht11_get(void)     { return (uint8)((P2 & DHT11_BIT_MASK) ? 1 : 0); }
-//   18 
-//   19 /* 在 32 MHz 时钟下用简单 for 循环延时（非精确，但 DHT11 容差大）。 */
+        REQUIRE P2DIR
+        REQUIRE P2SEL
+//   35 
+//   36 static void dht11_input_mode(void)
+//   37 {
+//   38     dht11_gpio_mode();
+//   39     P2DIR &= (uint8)~DHT11_BIT_MASK;
+//   40 }
+//   41 
+//   42 static uint8 dht11_get(void)
+//   43 {
+//   44     dht11_gpio_mode();
+//   45     return (uint8)((P2 & DHT11_BIT_MASK) ? 1u : 0u);
+//   46 }
+//   47 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   20 static void delay_us(uint16 us)
+//   48 static void delay_us(uint16 us)
 delay_us:
-        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Block cfiBlock1 Using cfiCommon0
         CFI Function delay_us
         CODE
-//   21 {
-        PUSH    DPL
-        CFI DPL0 Frame(CFA_SP, 4)
-        CFI CFA_SP SP+-4
-        PUSH    DPH
-        CFI DPH0 Frame(CFA_SP, 5)
-        CFI CFA_SP SP+-5
-        ; Saved register size: 2
-        ; Auto size: 2
-        MOV     A,#-0x2
-        LCALL   ?ALLOC_XSTACK8
-        CFI CFA_XSP16 add(XSP16, 2)
-//   22     /* 经 32MHz + -Ohigh 经验值：每个 for 迭代 ~1us。上电实测再校准。 */
-//   23     volatile uint16 i;
-//   24     while (us--) {
+//   49 {
+        ; Saved register size: 0
+        ; Auto size: 0
+        SJMP    ??delay_us_0
+//   50     while (us--) {
+//   51         asm("NOP");
+??delay_us_1:
+        NOP
+//   52         asm("NOP");
+        NOP
+//   53         asm("NOP");
+        NOP
+//   54         asm("NOP");
+        NOP
+//   55         asm("NOP");
+        NOP
+//   56         asm("NOP");
+        NOP
+//   57         asm("NOP");
+        NOP
+//   58         asm("NOP");
+        NOP
+//   59     }
 ??delay_us_0:
         MOV     A,R2
         MOV     R0,A
@@ -446,83 +399,27 @@ delay_us:
         MOV     R3,A
         MOV     A,R0
         ORL     A,R1
-        JZ      ??delay_us_1
-//   25         for (i = 0; i < 8; ++i) { ; }
-        MOV     DPL,?XSP + 0
-        MOV     DPH,?XSP + 1
-        CLR     A
-        MOVX    @DPTR,A
-        INC     DPTR
-??delay_us_2:
-        MOVX    @DPTR,A
-        MOV     DPL,?XSP + 0
-        MOV     DPH,?XSP + 1
-        CLR     C
-        MOVX    A,@DPTR
-        SUBB    A,#0x8
-        INC     DPTR
-        MOVX    A,@DPTR
-        SUBB    A,#0x0
-        JNC     ??delay_us_0
-        MOV     DPL,?XSP + 0
-        MOV     DPH,?XSP + 1
-        MOVX    A,@DPTR
-        ADD     A,#0x1
-        MOVX    @DPTR,A
-        INC     DPTR
-        MOVX    A,@DPTR
-        ADDC    A,#0x0
-        SJMP    ??delay_us_2
-//   26     }
-//   27 }
-??delay_us_1:
-        MOV     A,#0x2
-        LCALL   ?DEALLOC_XSTACK8
-        CFI EndBlock cfiBlock2
-        REQUIRE ?Subroutine0
-        ; // Fall through to label ?Subroutine0
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine0:
-        CFI Block cfiBlock3 Using cfiCommon0
-        CFI NoFunction
-        CFI CFA_SP SP+-5
-        CFI DPL0 Frame(CFA_SP, 4)
-        CFI DPH0 Frame(CFA_SP, 5)
-        POP     DPH
-        CFI CFA_SP SP+-4
-        CFI DPH0 SameValue
-        POP     DPL
-        CFI CFA_SP SP+-3
-        CFI DPL0 SameValue
+        JNZ     ??delay_us_1
+//   60 }
         LJMP    ?BRET
-        CFI EndBlock cfiBlock3
-//   28 
-//   29 static void delay_ms(uint16 ms)
-//   30 {
-//   31     while (ms--) delay_us(1000);
-//   32 }
-//   33 
+        CFI EndBlock cfiBlock1
+//   61 
+//   62 static void delay_ms(uint16 ms)
+//   63 {
+//   64     while (ms--) {
+//   65         delay_us(1000u);
+//   66     }
+//   67 }
+//   68 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   34 void dht11_init(void)
+//   69 void dht11_init(void)
 dht11_init:
-        CFI Block cfiBlock4 Using cfiCommon0
+        CFI Block cfiBlock2 Using cfiCommon0
         CFI Function dht11_init
         CODE
-//   35 {
-        FUNCALL dht11_init, dht11_pin_out
-        LOCFRAME ISTACK, 2, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 0, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 2, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 0, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_init, dht11_set
+//   70 {
+        FUNCALL dht11_init, dht11_drive_high
         LOCFRAME ISTACK, 2, STACK
         LOCFRAME PSTACK, 0, STACK
         LOCFRAME XSTACK, 0, STACK
@@ -541,26 +438,27 @@ dht11_init:
         CFI CFA_SP SP+-5
         ; Saved register size: 2
         ; Auto size: 0
-//   36     dht11_pin_out();
-        ; Setup parameters for call to function dht11_pin_out
-        LCALL   ??dht11_pin_out?relay
-//   37     dht11_set(1);
-        ; Setup parameters for call to function dht11_set
-        MOV     R1,#0x1
-        LCALL   ??dht11_set?relay
-//   38 }
-        SJMP    ?Subroutine0
-        CFI EndBlock cfiBlock4
-//   39 
-//   40 /* 等 pin 变为 expect 或超时（us） */
+//   71     dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//   72 }
+        POP     DPH
+        CFI DPH0 SameValue
+        CFI CFA_SP SP+-4
+        POP     DPL
+        CFI DPL0 SameValue
+        CFI CFA_SP SP+-3
+        LJMP    ?BRET
+        CFI EndBlock cfiBlock2
+//   73 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   41 static int8 wait_level(uint8 expect, uint16 timeout_us)
+//   74 static uint8 wait_level(uint8 expect, uint16 timeout_us)
 wait_level:
-        CFI Block cfiBlock5 Using cfiCommon0
+        CFI Block cfiBlock3 Using cfiCommon0
         CFI Function wait_level
         CODE
-//   42 {
+//   75 {
         FUNCALL wait_level, delay_us
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -593,9 +491,11 @@ wait_level:
         MOV     A,R3
         MOV     R7,A
         SJMP    ??wait_level_0
-//   43     while (timeout_us--) {
-//   44         if (dht11_get() == expect) return 0;
-//   45         delay_us(1);
+//   76     while (timeout_us--) {
+//   77         if (dht11_get() == expect) {
+//   78             return 1u;
+//   79         }
+//   80         delay_us(1u);
 ??wait_level_1:
         ; Setup parameters for call to function delay_us
         MOV     R2,#0x1
@@ -615,154 +515,200 @@ wait_level:
         MOV     A,R0
         ORL     A,R1
         JZ      ??wait_level_2
+        ANL     0xf5,#0xfe
         MOV     C,0xa0.0
         CLR     A
         RLC     A
         XRL     A,?V0 + 0
         JNZ     ??wait_level_1
-        MOV     R1,#0x0
+        MOV     R1,#0x1
         SJMP    ??wait_level_3
-//   46     }
-//   47     return -1;
+//   81     }
+//   82     return 0u;
 ??wait_level_2:
-        MOV     R1,#-0x1
+        MOV     R1,#0x0
 ??wait_level_3:
         MOV     R7,#0x1
         LJMP    ?BANKED_LEAVE_XDATA
-        CFI EndBlock cfiBlock5
+        CFI EndBlock cfiBlock3
         REQUIRE _A_P2
-//   48 }
-//   49 
+        REQUIRE P2SEL
+//   83 }
+//   84 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   50 int8 dht11_read(int16 *temp_x100, uint16 *hum_x100)
+//   85 int8 dht11_read(int16 *temp_x100, uint16 *hum_x100)
 dht11_read:
-        CFI Block cfiBlock6 Using cfiCommon0
+        CFI Block cfiBlock4 Using cfiCommon0
         CFI Function dht11_read
         CODE
-//   51 {
-        FUNCALL dht11_read, dht11_pin_out
+//   86 {
+        FUNCALL dht11_read, delay_us
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_read, dht11_set
+        FUNCALL dht11_read, dht11_drive_high
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL dht11_read, delay_us
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_read, dht11_set
+        FUNCALL dht11_read, wait_level
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL dht11_read, dht11_drive_high
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 19, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL dht11_read, wait_level
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 19, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL dht11_read, dht11_drive_high
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 19, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL dht11_read, wait_level
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 19, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL dht11_read, dht11_drive_high
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 19, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL dht11_read, wait_level
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 19, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 19, STACK
+        ARGFRAME IOVERLAY, 0, STATIC
+        ARGFRAME DOVERLAY, 0, STATIC
+        FUNCALL dht11_read, dht11_drive_high
+        LOCFRAME ISTACK, 0, STACK
+        LOCFRAME PSTACK, 0, STACK
+        LOCFRAME XSTACK, 19, STACK
+        LOCFRAME IOVERLAY, 0, STATIC
+        LOCFRAME DOVERLAY, 0, STATIC
+        ARGFRAME ISTACK, 0, STACK
+        ARGFRAME PSTACK, 0, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL dht11_read, delay_us
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
         FUNCALL dht11_read, wait_level
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_read, wait_level
+        FUNCALL dht11_read, dht11_drive_high
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_read, wait_level
+        FUNCALL dht11_read, dht11_drive_high
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
+        LOCFRAME XSTACK, 19, STACK
         LOCFRAME IOVERLAY, 0, STATIC
         LOCFRAME DOVERLAY, 0, STATIC
         ARGFRAME ISTACK, 0, STACK
         ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
+        ARGFRAME XSTACK, 19, STACK
         ARGFRAME IOVERLAY, 0, STATIC
         ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_read, wait_level
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_read, delay_us
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        FUNCALL dht11_read, wait_level
-        LOCFRAME ISTACK, 0, STACK
-        LOCFRAME PSTACK, 0, STACK
-        LOCFRAME XSTACK, 18, STACK
-        LOCFRAME IOVERLAY, 0, STATIC
-        LOCFRAME DOVERLAY, 0, STATIC
-        ARGFRAME ISTACK, 0, STACK
-        ARGFRAME PSTACK, 0, STACK
-        ARGFRAME XSTACK, 18, STACK
-        ARGFRAME IOVERLAY, 0, STATIC
-        ARGFRAME DOVERLAY, 0, STATIC
-        MOV     A,#-0xd
+        MOV     A,#-0xe
         LCALL   ?BANKED_ENTER_XDATA
         CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
         CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
@@ -770,50 +716,53 @@ dht11_read:
         CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
         CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
         CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI V5 load(1, XDATA, add(CFA_XSP16, literal(-7)))
+        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-8)))
+        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-9)))
+        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-10)))
+        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-11)))
+        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-12)))
+        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-13)))
+        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-14)))
         CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 13)
-        ; Saved register size: 13
+        CFI CFA_XSP16 add(XSP16, 14)
+        ; Saved register size: 14
         ; Auto size: 5
         MOV     A,#-0x5
         LCALL   ?ALLOC_XSTACK8
-        CFI CFA_XSP16 add(XSP16, 18)
+        CFI CFA_XSP16 add(XSP16, 19)
         MOV     A,R2
         MOV     R6,A
         MOV     A,R3
         MOV     R7,A
         MOV     ?V0 + 0,R4
         MOV     ?V0 + 1,R5
-//   52     uint8 data[5];
-//   53     uint8 i, j, b;
-//   54 
-//   55     if (temp_x100 == 0 || hum_x100 == 0) return -1;
+//   87     uint8 data[5];
+//   88     uint8 i;
+//   89     uint8 j;
+//   90     uint8 b;
+//   91     int8 rc;
+//   92     if (temp_x100 == 0 || hum_x100 == 0) {
         MOV     A,R6
         ORL     A,R7
         JZ      ??dht11_read_0
         MOV     A,R4
         ORL     A,?V0 + 1
         JNZ     ??dht11_read_1
+//   93         return DHT11_ERR_PARAM;
 ??dht11_read_0:
         MOV     R1,#-0x1
         LJMP    ??dht11_read_2 & 0xFFFF
-//   56 
-//   57     /* Start: 主机拉低 20ms → 拉高 30us → 切输入 */
-//   58     dht11_pin_out();
+//   94     }
+//   95 
+//   96     rc = DHT11_OK;
+//   97 
+//   98     dht11_drive_low();
 ??dht11_read_1:
-        ; Setup parameters for call to function dht11_pin_out
-        LCALL   ??dht11_pin_out?relay
-//   59     dht11_set(0);
-        ; Setup parameters for call to function dht11_set
-        MOV     R1,#0x0
-        LCALL   ??dht11_set?relay
-//   60     delay_ms(20);
+        ANL     0xf5,#0xfe
+        CLR     0xa0.0
+        ORL     0xff,#0x1
+//   99     delay_ms(20u);
         MOV     ?V0 + 2,#0x14
         MOV     ?V0 + 3,#0x0
         SJMP    ??dht11_read_3
@@ -834,98 +783,149 @@ dht11_read:
         MOV     A,R0
         ORL     A,R1
         JNZ     ??dht11_read_4
-//   61     dht11_set(1);
-        ; Setup parameters for call to function dht11_set
-        MOV     R1,#0x1
-        LCALL   ??dht11_set?relay
-//   62     delay_us(30);
+//  100     dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//  101     delay_us(30u);
         ; Setup parameters for call to function delay_us
         MOV     R2,#0x1e
         MOV     R3,#0x0
         LCALL   ??delay_us?relay
-//   63     dht11_pin_in();
+//  102 
+//  103     dht11_input_mode();
         ANL     0xf5,#0xfe
         ANL     0xff,#0xfe
-//   64 
-//   65     /* 等 DHT11 应答：先低 80us 再高 80us */
-//   66     if (wait_level(0, 100) < 0) return -2;
+//  104 
+//  105     if (!wait_level(0u, 100u)) {
         ; Setup parameters for call to function wait_level
-        LCALL   ?Subroutine1 & 0xFFFF
-??CrossCallReturnLabel_0:
-        JNC     ??dht11_read_5
+        MOV     R2,#0x64
+        MOV     R3,#0x0
+        MOV     R1,#0x0
+        LCALL   ??wait_level?relay
+        MOV     A,R1
+        JNZ     ??dht11_read_5
+//  106         dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//  107         return DHT11_ERR_RESP_LOW;
         MOV     R1,#-0x2
         LJMP    ??dht11_read_2 & 0xFFFF
-//   67     if (wait_level(1, 100) < 0) return -3;
+//  108     }
+//  109     if (!wait_level(1u, 100u)) {
 ??dht11_read_5:
         ; Setup parameters for call to function wait_level
         MOV     R2,#0x64
         MOV     R3,#0x0
         MOV     R1,#0x1
-        LCALL   ??Subroutine2_0 & 0xFFFF
-??CrossCallReturnLabel_3:
-        JNC     ??dht11_read_6
+        LCALL   ??wait_level?relay
+        MOV     A,R1
+        JNZ     ??dht11_read_6
+//  110         dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//  111         return DHT11_ERR_RESP_HIGH;
         MOV     R1,#-0x3
         LJMP    ??dht11_read_2 & 0xFFFF
-//   68     if (wait_level(0, 100) < 0) return -4;
+//  112     }
+//  113     if (!wait_level(0u, 100u)) {
 ??dht11_read_6:
         ; Setup parameters for call to function wait_level
-        LCALL   ?Subroutine1 & 0xFFFF
-??CrossCallReturnLabel_1:
-        JNC     ??dht11_read_7
+        MOV     R2,#0x64
+        MOV     R3,#0x0
+        MOV     R1,#0x0
+        LCALL   ??wait_level?relay
+        MOV     A,R1
+        JNZ     ??dht11_read_7
+//  114         dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//  115         return DHT11_ERR_RESP_END;
         MOV     R1,#-0x4
         LJMP    ??dht11_read_2 & 0xFFFF
-//   69 
-//   70     /* 40 bits */
-//   71     for (i = 0; i < 5; ++i) {
+//  116     }
+//  117 
+//  118     {
+//  119         halIntState_t int_state;
+//  120 
+//  121         HAL_ENTER_CRITICAL_SECTION(int_state);
 ??dht11_read_7:
+        MOV     C,0xa8.7
+        CLR     A
+        RLC     A
+        MOV     ?V0 + 5,A
+        CLR     0xa8.7
+//  122         for (i = 0u; i < 5u; ++i) {
         MOV     ?V0 + 4,#0x0
-//   72         b = 0;
+//  123             b = 0u;
 ??dht11_read_8:
         MOV     ?V0 + 3,#0x0
-//   73         for (j = 0; j < 8; ++j) {
+//  124             for (j = 0u; j < 8u; ++j) {
         MOV     ?V0 + 2,#0x8
-//   74             /* 每位前 50us 低电平 */
-//   75             if (wait_level(1, 100) < 0) return -5;
+//  125                 if (!wait_level(1u, 100u)) {
 ??dht11_read_9:
         ; Setup parameters for call to function wait_level
         MOV     R2,#0x64
         MOV     R3,#0x0
         MOV     R1,#0x1
-        LCALL   ??Subroutine2_0 & 0xFFFF
-??CrossCallReturnLabel_4:
-        JNC     ??dht11_read_10
+        LCALL   ??wait_level?relay
+        MOV     A,R1
+        JNZ     ??dht11_read_10
+//  126                     HAL_EXIT_CRITICAL_SECTION(int_state);
+        MOV     A,?V0 + 5
+        MOV     C,0xE0 /* A   */.0
+        MOV     0xa8.7,C
+//  127                     dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//  128                     return DHT11_ERR_BIT_HIGH;
         MOV     R1,#-0x5
         LJMP    ??dht11_read_2 & 0xFFFF
-//   76             delay_us(30);                         /* 约略采样点 */
+//  129                 }
+//  130                 delay_us(30u);
 ??dht11_read_10:
         ; Setup parameters for call to function delay_us
         MOV     R2,#0x1e
         MOV     R3,#0x0
         LCALL   ??delay_us?relay
-//   77             b <<= 1;
+//  131                 b <<= 1;
         MOV     A,?V0 + 3
         CLR     C
         RLC     A
         MOV     ?V0 + 3,A
-//   78             if (dht11_get()) b |= 1;
+//  132                 if (dht11_get()) {
+        ANL     0xf5,#0xfe
         MOV     C,0xa0.0
         JNC     ??dht11_read_11
+//  133                     b |= 1u;
         SETB    0xE0 /* A   */.0
         MOV     ?V0 + 3,A
-//   79             if (wait_level(0, 100) < 0) return -6;
+//  134                 }
+//  135                 if (!wait_level(0u, 100u)) {
 ??dht11_read_11:
         ; Setup parameters for call to function wait_level
-        LCALL   ?Subroutine1 & 0xFFFF
-??CrossCallReturnLabel_2:
-        JNC     ??dht11_read_12
+        MOV     R2,#0x64
+        MOV     R3,#0x0
+        MOV     R1,#0x0
+        LCALL   ??wait_level?relay
+        MOV     A,R1
+        JNZ     ??dht11_read_12
+//  136                     HAL_EXIT_CRITICAL_SECTION(int_state);
+        MOV     A,?V0 + 5
+        MOV     C,0xE0 /* A   */.0
+        MOV     0xa8.7,C
+//  137                     dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//  138                     return DHT11_ERR_BIT_LOW;
         MOV     R1,#-0x6
         LJMP    ??dht11_read_2 & 0xFFFF
-//   80         }
+//  139                 }
+//  140             }
 ??dht11_read_12:
         DEC     ?V0 + 2
         MOV     A,?V0 + 2
         JNZ     ??dht11_read_9
-//   81         data[i] = b;
+//  141             data[i] = b;
         MOV     ?V0 + 2,?V0 + 4
         MOV     DPL,?XSP + 0
         MOV     DPH,?XSP + 1
@@ -937,15 +937,27 @@ dht11_read:
         MOV     DPH,A
         MOV     A,?V0 + 3
         MOVX    @DPTR,A
-//   82     }
+//  142         }
         INC     ?V0 + 4
         MOV     A,?V0 + 4
         CLR     C
         SUBB    A,#0x5
         JC      ??dht11_read_8
-//   83 
-//   84     /* 校验：data[0..3] 累加 == data[4] */
-//   85     if ((uint8)(data[0] + data[1] + data[2] + data[3]) != data[4]) return -7;
+//  143         HAL_EXIT_CRITICAL_SECTION(int_state);
+        MOV     A,?V0 + 5
+        MOV     C,0xE0 /* A   */.0
+        MOV     0xa8.7,C
+//  144     }
+//  145 
+//  146     dht11_drive_high();
+        ; Setup parameters for call to function dht11_drive_high
+        LCALL   ??dht11_drive_high?relay
+//  147 
+//  148     if (rc != DHT11_OK) {
+//  149         return rc;
+//  150     }
+//  151 
+//  152     if ((uint8)(data[0] + data[1] + data[2] + data[3]) != data[4]) {
         MOV     A,#0x3
         LCALL   ?XSTACK_DISP0_8
         PUSH    DPL
@@ -994,11 +1006,12 @@ dht11_read:
         MOVX    A,@DPTR
         XRL     A,R0
         JZ      ??dht11_read_13
+//  153         return DHT11_ERR_CHECKSUM;
         MOV     R1,#-0x7
         SJMP    ??dht11_read_2
-//   86 
-//   87     /* DHT11 格式：data[0]=湿度整数，data[1]=湿度小数(通常 0)，data[2]=温度整数，data[3]=温度小数低位=0.1°C */
-//   88     *hum_x100  = (uint16)((uint16)data[0] * 100u + (uint16)data[1]);
+//  154     }
+//  155 
+//  156     *hum_x100 = (uint16)((uint16)data[0] * 100u + (uint16)data[1]);
 ??dht11_read_13:
         MOV     DPL,?XSP + 0
         MOV     DPH,?XSP + 1
@@ -1023,7 +1036,7 @@ dht11_read:
         INC     DPTR
         MOV     A,R1
         MOVX    @DPTR,A
-//   89     *temp_x100 = (int16)((int16)data[2] * 100 + (int16)(data[3] & 0x7F) * 10);
+//  157     *temp_x100 = (int16)((int16)data[2] * 100 + (int16)(data[3] & 0x7Fu) * 10);
         MOV     A,#0x2
         LCALL   ?XSTACK_DISP0_8
         MOVX    A,@DPTR
@@ -1052,12 +1065,13 @@ dht11_read:
         INC     DPTR
         MOV     A,R1
         MOVX    @DPTR,A
-//   90     if (data[3] & 0x80) *temp_x100 = (int16)(-(*temp_x100));
+//  158     if (data[3] & 0x80u) {
         MOV     A,#0x3
         LCALL   ?XSTACK_DISP0_8
         MOVX    A,@DPTR
         MOV     C,0xE0 /* A   */.7
         JNC     ??dht11_read_14
+//  159         *temp_x100 = (int16)(-(*temp_x100));
         MOV     DPL,R6
         MOV     DPH,R7
         MOVX    A,@DPTR
@@ -1074,211 +1088,29 @@ dht11_read:
         INC     DPTR
         MOV     A,R1
         MOVX    @DPTR,A
-//   91     return 0;
+//  160     }
+//  161 
+//  162     return DHT11_OK;
 ??dht11_read_14:
         MOV     R1,#0x0
 ??dht11_read_2:
         MOV     A,#0x5
         LCALL   ?DEALLOC_XSTACK8
-        CFI CFA_XSP16 add(XSP16, 13)
-        MOV     R7,#0x5
+        CFI CFA_XSP16 add(XSP16, 14)
+        MOV     R7,#0x6
         LJMP    ?BANKED_LEAVE_XDATA
-        CFI EndBlock cfiBlock6
+        CFI EndBlock cfiBlock4
+        REQUIRE _A_IEN0
         REQUIRE _A_P2
         REQUIRE P2SEL
         REQUIRE P2DIR
-//   92 }
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-?Subroutine1:
-        CFI Block cfiCond7 Using cfiCommon0
-        CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_0
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiCond8 Using cfiCommon0
-        CFI (cfiCond8) NoFunction
-        CFI (cfiCond8) Conditional ??CrossCallReturnLabel_1
-        CFI (cfiCond8) R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond8) VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond8) V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond8) V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond8) V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond8) V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond8) V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond8) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond8) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond8) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond8) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond8) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond8) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond8) CFA_SP SP+0
-        CFI (cfiCond8) CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiCond9 Using cfiCommon0
-        CFI (cfiCond9) NoFunction
-        CFI (cfiCond9) Conditional ??CrossCallReturnLabel_2
-        CFI (cfiCond9) R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond9) VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond9) V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond9) V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond9) V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond9) V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond9) V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond9) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond9) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond9) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond9) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond9) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond9) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond9) CFA_SP SP+0
-        CFI (cfiCond9) CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiPicker10 Using cfiCommon1
-        CFI (cfiPicker10) NoFunction
-        CFI (cfiPicker10) Picker
-        MOV     R2,#0x64
-        MOV     R3,#0x0
-        MOV     R1,#0x0
-        CFI EndBlock cfiCond7
-        CFI EndBlock cfiCond8
-        CFI EndBlock cfiCond9
-        CFI EndBlock cfiPicker10
-        REQUIRE ??Subroutine2_0
-        ; // Fall through to label ??Subroutine2_0
-
-        RSEG BANKED_CODE:CODE:NOROOT(0)
-??Subroutine2_0:
-        CFI Block cfiCond11 Using cfiCommon0
-        CFI NoFunction
-        CFI Conditional ??CrossCallReturnLabel_3
-        CFI R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI CFA_SP SP+0
-        CFI CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiCond12 Using cfiCommon0
-        CFI (cfiCond12) NoFunction
-        CFI (cfiCond12) Conditional ??CrossCallReturnLabel_4
-        CFI (cfiCond12) R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond12) VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond12) V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond12) V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond12) V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond12) V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond12) V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond12) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond12) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond12) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond12) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond12) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond12) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond12) CFA_SP SP+0
-        CFI (cfiCond12) CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiCond13 Using cfiCommon0
-        CFI (cfiCond13) NoFunction
-        CFI (cfiCond13) Conditional ??CrossCallReturnLabel_0
-        CFI (cfiCond13) R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond13) VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond13) V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond13) V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond13) V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond13) V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond13) V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond13) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond13) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond13) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond13) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond13) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond13) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond13) CFA_SP SP+0
-        CFI (cfiCond13) CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiCond14 Using cfiCommon0
-        CFI (cfiCond14) NoFunction
-        CFI (cfiCond14) Conditional ??CrossCallReturnLabel_1
-        CFI (cfiCond14) R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond14) VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond14) V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond14) V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond14) V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond14) V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond14) V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond14) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond14) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond14) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond14) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond14) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond14) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond14) CFA_SP SP+0
-        CFI (cfiCond14) CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiCond15 Using cfiCommon0
-        CFI (cfiCond15) NoFunction
-        CFI (cfiCond15) Conditional ??CrossCallReturnLabel_2
-        CFI (cfiCond15) R6 load(1, XDATA, add(CFA_XSP16, literal(-13)))
-        CFI (cfiCond15) VB load(1, XDATA, add(CFA_XSP16, literal(-12)))
-        CFI (cfiCond15) V0 load(1, XDATA, add(CFA_XSP16, literal(-11)))
-        CFI (cfiCond15) V1 load(1, XDATA, add(CFA_XSP16, literal(-10)))
-        CFI (cfiCond15) V2 load(1, XDATA, add(CFA_XSP16, literal(-9)))
-        CFI (cfiCond15) V3 load(1, XDATA, add(CFA_XSP16, literal(-8)))
-        CFI (cfiCond15) V4 load(1, XDATA, add(CFA_XSP16, literal(-7)))
-        CFI (cfiCond15) R7 load(1, XDATA, add(CFA_XSP16, literal(-6)))
-        CFI (cfiCond15) ?RET_LOW load(1, XDATA, add(CFA_XSP16, literal(-5)))
-        CFI (cfiCond15) ?RET_HIGH load(1, XDATA, add(CFA_XSP16, literal(-4)))
-        CFI (cfiCond15) ?BRET_EXT load(1, XDATA, add(CFA_XSP16, literal(-3)))
-        CFI (cfiCond15) DPL0 load(1, XDATA, add(CFA_XSP16, literal(-2)))
-        CFI (cfiCond15) DPH0 load(1, XDATA, add(CFA_XSP16, literal(-1)))
-        CFI (cfiCond15) CFA_SP SP+0
-        CFI (cfiCond15) CFA_XSP16 add(XSP16, 18)
-        CFI Block cfiPicker16 Using cfiCommon1
-        CFI (cfiPicker16) NoFunction
-        CFI (cfiPicker16) Picker
-        LCALL   ??wait_level?relay
-        MOV     A,R1
-        CLR     C
-        SUBB    A,#0x0
-        MOV     C,0xD0 /* PSW */.2
-        XRL     A,PSW
-        RLC     A
-        RET
-        CFI EndBlock cfiCond11
-        CFI EndBlock cfiCond12
-        CFI EndBlock cfiCond13
-        CFI EndBlock cfiCond14
-        CFI EndBlock cfiCond15
-        CFI EndBlock cfiPicker16
+//  163 }
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
-??dht11_pin_out?relay:
+??dht11_drive_high?relay:
         LCALL   ?BDISPATCH
         DATA
-        DC24    dht11_pin_out
-
-        RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
-??dht11_set?relay:
-        LCALL   ?BDISPATCH
-        DATA
-        DC24    dht11_set
+        DC24    dht11_drive_high
 
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??delay_us?relay:
@@ -1306,12 +1138,12 @@ dht11_read:
 
         END
 // 
-// 600 bytes in segment BANKED_CODE
-//  36 bytes in segment BANK_RELAYS
-//   3 bytes in segment SFR_AN
+// 592 bytes in segment BANKED_CODE
+//  30 bytes in segment BANK_RELAYS
+//   4 bytes in segment SFR_AN
 // 
-// 636 bytes of CODE memory
-//   0 bytes of DATA memory (+ 3 bytes shared)
+// 622 bytes of CODE memory
+//   0 bytes of DATA memory (+ 4 bytes shared)
 //
 //Errors: none
 //Warnings: 1

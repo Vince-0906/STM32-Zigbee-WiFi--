@@ -190,11 +190,15 @@ static void status_led_refresh(void)
         } else {
             startup_led_set(0u);
         }
-    } else if (network_joining() || network_joined()) {
+    } else if (network_joining()) {
         s_startup_leds_owned = 1u;
         blink_on = (uint8)((s_status_led_phase % STATUS_LED_FAST_TICKS) <
                            (STATUS_LED_FAST_TICKS / 2u));
         startup_pattern_set(blink_on);
+    } else if (network_joined()) {
+        s_startup_leds_owned = 1u;
+        actuator_led_set(0u);
+        startup_led_set(1u);
     } else {
         s_startup_leds_owned = 1u;
         blink_on = (uint8)((s_status_led_phase % STATUS_LED_SLOW_TICKS) <
@@ -227,11 +231,16 @@ static uint8 network_ready(void)
            network_joined();
 }
 
-static void note_local_report_failure(int8 rc)
+static void note_local_sample_failure(int8 rc)
 {
     s_report_diag.last_result = rc;
     s_report_diag.fail_count++;
     s_report_diag.consecutive_fail++;
+}
+
+static void note_transport_failure(int8 rc)
+{
+    note_local_sample_failure(rc);
 
     if (network_ready()) {
         (void)osal_start_timerEx(ZbNode_TaskID, ZN_EVT_REPORT_RETRY, REPORT_RETRY_MS);
@@ -248,7 +257,7 @@ static int8 send_attr_report(uint8 src_ep, uint16 cluster, uint16 attrId,
     if (rc == 0) {
         s_report_diag.pending_reports++;
     } else {
-        note_local_report_failure(rc);
+        note_transport_failure(rc);
     }
     return rc;
 }
@@ -368,7 +377,7 @@ static void do_report(void)
         } else {
             (void)sprintf(s_dbg_buf, "[n1] DHT11 FAIL rc=%d\r\n", (int)rc);
             dbg_puts(s_dbg_buf);
-            note_local_report_failure(-7);
+            note_local_sample_failure(rc);
         }
     }
 #else
@@ -458,7 +467,7 @@ static void on_data_confirm(afDataConfirm_t *cfm)
     } else {
         (void)sprintf(s_dbg_buf, "[cfm] FAIL status=0x%02X\r\n", (unsigned)cfm->hdr.status);
         dbg_puts(s_dbg_buf);
-        note_local_report_failure((int8)cfm->hdr.status);
+        note_transport_failure((int8)cfm->hdr.status);
     }
 }
 

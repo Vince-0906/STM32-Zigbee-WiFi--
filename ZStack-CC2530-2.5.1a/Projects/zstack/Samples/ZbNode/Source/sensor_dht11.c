@@ -1,92 +1,163 @@
 /*
- * DHT11 单总线驱动（P2.0，10k 上拉）。
- * 时序：主机拉低 ≥18ms → 释放总线 20~40us → 读 40-bit 数据。
- * 禁浮点：温度取 i16 *100（°C*100），湿度 u16 *100 (%*100)。
+ * DHT11 single-wire driver on CC2530 P2.0.
+ *
+ * The board provides an external 10k pull-up. Follow the reference start
+ * sequence: drive low >=18 ms, drive high for 20~40 us, then switch to input
+ * to sample the sensor response. Timing assumes the system is already running
+ * on the existing 32 MHz XOSC configuration used by the project.
  */
 
 #include "sensor_dht11.h"
 #include "board_e18ms1.h"
 #include "ioCC2530.h"
-#include "OnBoard.h"
+#include "hal_mcu.h"
 
-#define DHT11_BIT_MASK  (uint8)(1 << NODE_DHT11_PIN)
+#define DHT11_BIT_MASK  ((uint8)(1u << NODE_DHT11_PIN))
 
-static void dht11_pin_out(void)  { P2SEL &= (uint8)~DHT11_BIT_MASK; P2DIR |= DHT11_BIT_MASK; }
-static void dht11_pin_in(void)   { P2SEL &= (uint8)~DHT11_BIT_MASK; P2DIR &= (uint8)~DHT11_BIT_MASK; }
-static void dht11_set(uint8 v)   { if (v) P2 |= DHT11_BIT_MASK; else P2 &= (uint8)~DHT11_BIT_MASK; }
-static uint8 dht11_get(void)     { return (uint8)((P2 & DHT11_BIT_MASK) ? 1 : 0); }
+static void dht11_gpio_mode(void)
+{
+    P2SEL &= (uint8)~DHT11_BIT_MASK;
+}
 
-/* 在 32 MHz 时钟下用简单 for 循环延时（非精确，但 DHT11 容差大）。 */
+static void dht11_drive_low(void)
+{
+    dht11_gpio_mode();
+    P2 &= (uint8)~DHT11_BIT_MASK;
+    P2DIR |= DHT11_BIT_MASK;
+}
+
+static void dht11_drive_high(void)
+{
+    dht11_gpio_mode();
+    P2 |= DHT11_BIT_MASK;
+    P2DIR |= DHT11_BIT_MASK;
+}
+
+static void dht11_input_mode(void)
+{
+    dht11_gpio_mode();
+    P2DIR &= (uint8)~DHT11_BIT_MASK;
+}
+
+static uint8 dht11_get(void)
+{
+    dht11_gpio_mode();
+    return (uint8)((P2 & DHT11_BIT_MASK) ? 1u : 0u);
+}
+
 static void delay_us(uint16 us)
 {
-    /* 经 32MHz + -Ohigh 经验值：每个 for 迭代 ~1us。上电实测再校准。 */
-    volatile uint16 i;
     while (us--) {
-        for (i = 0; i < 8; ++i) { ; }
+        asm("NOP");
+        asm("NOP");
+        asm("NOP");
+        asm("NOP");
+        asm("NOP");
+        asm("NOP");
+        asm("NOP");
+        asm("NOP");
     }
 }
 
 static void delay_ms(uint16 ms)
 {
-    while (ms--) delay_us(1000);
+    while (ms--) {
+        delay_us(1000u);
+    }
 }
 
 void dht11_init(void)
 {
-    dht11_pin_out();
-    dht11_set(1);
+    dht11_drive_high();
 }
 
-/* 等 pin 变为 expect 或超时（us） */
-static int8 wait_level(uint8 expect, uint16 timeout_us)
+static uint8 wait_level(uint8 expect, uint16 timeout_us)
 {
     while (timeout_us--) {
-        if (dht11_get() == expect) return 0;
-        delay_us(1);
+        if (dht11_get() == expect) {
+            return 1u;
+        }
+        delay_us(1u);
     }
-    return -1;
+    return 0u;
 }
 
 int8 dht11_read(int16 *temp_x100, uint16 *hum_x100)
 {
     uint8 data[5];
-    uint8 i, j, b;
-
-    if (temp_x100 == 0 || hum_x100 == 0) return -1;
-
-    /* Start: 主机拉低 20ms → 拉高 30us → 切输入 */
-    dht11_pin_out();
-    dht11_set(0);
-    delay_ms(20);
-    dht11_set(1);
-    delay_us(30);
-    dht11_pin_in();
-
-    /* 等 DHT11 应答：先低 80us 再高 80us */
-    if (wait_level(0, 100) < 0) return -2;
-    if (wait_level(1, 100) < 0) return -3;
-    if (wait_level(0, 100) < 0) return -4;
-
-    /* 40 bits */
-    for (i = 0; i < 5; ++i) {
-        b = 0;
-        for (j = 0; j < 8; ++j) {
-            /* 每位前 50us 低电平 */
-            if (wait_level(1, 100) < 0) return -5;
-            delay_us(30);                         /* 约略采样点 */
-            b <<= 1;
-            if (dht11_get()) b |= 1;
-            if (wait_level(0, 100) < 0) return -6;
-        }
-        data[i] = b;
+    uint8 i;
+    uint8 j;
+    uint8 b;
+    int8 rc;
+    if (temp_x100 == 0 || hum_x100 == 0) {
+        return DHT11_ERR_PARAM;
     }
 
-    /* 校验：data[0..3] 累加 == data[4] */
-    if ((uint8)(data[0] + data[1] + data[2] + data[3]) != data[4]) return -7;
+    rc = DHT11_OK;
 
-    /* DHT11 格式：data[0]=湿度整数，data[1]=湿度小数(通常 0)，data[2]=温度整数，data[3]=温度小数低位=0.1°C */
-    *hum_x100  = (uint16)((uint16)data[0] * 100u + (uint16)data[1]);
-    *temp_x100 = (int16)((int16)data[2] * 100 + (int16)(data[3] & 0x7F) * 10);
-    if (data[3] & 0x80) *temp_x100 = (int16)(-(*temp_x100));
-    return 0;
+    dht11_drive_low();
+    delay_ms(20u);
+    dht11_drive_high();
+    delay_us(30u);
+
+    dht11_input_mode();
+
+    if (!wait_level(0u, 100u)) {
+        dht11_drive_high();
+        return DHT11_ERR_RESP_LOW;
+    }
+    if (!wait_level(1u, 100u)) {
+        dht11_drive_high();
+        return DHT11_ERR_RESP_HIGH;
+    }
+    if (!wait_level(0u, 100u)) {
+        dht11_drive_high();
+        return DHT11_ERR_RESP_END;
+    }
+
+    {
+        halIntState_t int_state;
+
+        HAL_ENTER_CRITICAL_SECTION(int_state);
+        for (i = 0u; i < 5u; ++i) {
+            b = 0u;
+            for (j = 0u; j < 8u; ++j) {
+                if (!wait_level(1u, 100u)) {
+                    HAL_EXIT_CRITICAL_SECTION(int_state);
+                    dht11_drive_high();
+                    return DHT11_ERR_BIT_HIGH;
+                }
+                delay_us(30u);
+                b <<= 1;
+                if (dht11_get()) {
+                    b |= 1u;
+                }
+                if (!wait_level(0u, 100u)) {
+                    HAL_EXIT_CRITICAL_SECTION(int_state);
+                    dht11_drive_high();
+                    return DHT11_ERR_BIT_LOW;
+                }
+            }
+            data[i] = b;
+        }
+        HAL_EXIT_CRITICAL_SECTION(int_state);
+    }
+
+    dht11_drive_high();
+
+    if (rc != DHT11_OK) {
+        return rc;
+    }
+
+    if ((uint8)(data[0] + data[1] + data[2] + data[3]) != data[4]) {
+        return DHT11_ERR_CHECKSUM;
+    }
+
+    *hum_x100 = (uint16)((uint16)data[0] * 100u + (uint16)data[1]);
+    *temp_x100 = (int16)((int16)data[2] * 100 + (int16)(data[3] & 0x7Fu) * 10);
+    if (data[3] & 0x80u) {
+        *temp_x100 = (int16)(-(*temp_x100));
+    }
+
+    return DHT11_OK;
 }
