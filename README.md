@@ -8,6 +8,8 @@
 - `ZStack-CC2530-2.5.1a/Projects/zstack/Samples/GwCoord`：CC2530 ZigBee 协调器，负责组网、节点表维护和 UART 帧协议
 - `ZStack-CC2530-2.5.1a/Projects/zstack/Samples/ZbNode`：CC2530 终端节点，区分温湿度节点和光照节点
 
+除固件外，仓库还内置了一个可直接运行的 `pc_host/` WebUI 上位机，用于浏览器监控、控制下发、阈值配置和无硬件联调演示。
+
 项目当前实现的是一个“小型 ZigBee 采集网络 + WiFi 上位机接入 + 本地自动联动”的完整闭环。
 
 ## 1. 项目概览
@@ -47,7 +49,11 @@
 ## 2. 系统架构
 
 ```text
-PC TCP Server
+Browser WebUI (pc_host/static)
+    ^
+    | HTTP / SSE
+    v
+PC Host Service (pc_host/run_host.py)
     ^
     | JSON lines over TCP
     v
@@ -182,19 +188,33 @@ CC2530 Coordinator
 2. 编译并烧录 `ZbNode` 的 `Node1_EndDeviceEB`
 3. 编译并烧录 `ZbNode` 的 `Node2_EndDeviceEB`
 4. 编译并烧录 `STM32/App/ZNJJ.uvprojx`
-5. 启动 PC 侧 TCP 服务端，等待网关连接
+5. 启动 `pc_host` WebUI 上位机，等待网关连接
 
-### 5.5 PC 上位机平台
+### 5.5 WebUI 上位机（`pc_host`）
 
-仓库已内置一个 Python 标准库实现的 PC 平台，位于 `pc_host/`：
+仓库已内置一个 Python 标准库实现的 WebUI 上位机，位于 `pc_host/`，不依赖第三方包：
 
-- `run_host.py`：启动 TCP 服务端和浏览器仪表盘
+- `run_host.py`：启动网关 TCP 服务端和浏览器仪表盘
 - `run_mock_gateway.py`：无硬件时模拟网关协议链路
+- `start_dashboard.ps1`：Windows 下快速拉起上位机窗口、可选 mock 网关和浏览器
+
+WebUI 当前提供的核心能力：
+
+- 浏览器实时查看 `hello / report / status / alarm / net / ack / pong / node_info`
+- 在页面中控制节点 `LED`、蜂鸣器、阈值和入网窗口
+- 保留联调日志，适合演示和答辩
+- 结合 mock 网关完成无硬件演示
 
 启动方式：
 
 ```powershell
 python .\pc_host\run_host.py --tcp-port 23333 --http-port 8080
+```
+
+或在 Windows PowerShell 中直接执行：
+
+```powershell
+.\pc_host\start_dashboard.ps1
 ```
 
 然后打开：`http://127.0.0.1:8080`
@@ -204,6 +224,8 @@ python .\pc_host\run_host.py --tcp-port 23333 --http-port 8080
 ```powershell
 python .\pc_host\run_mock_gateway.py --host 127.0.0.1 --port 23333
 ```
+
+`pc_host` 的独立说明见 [pc_host/README.md](/D:/ZNJJ/pc_host/README.md)。
 
 ## 6. 运行流程
 
@@ -345,8 +367,3 @@ AA 55 LEN CMD PAYLOAD CRC8 0D
 - 节点侧已实现角色区分、周期采样、执行器控制、首帧确认判定和本地状态显示
 - `pc_host/` 提供了答辩和联调可直接使用的 TCP 服务端、浏览器仪表盘和 mock 网关
 
-## 11. 答辩分工说明
-
-仓库内新增了 5 人答辩型分工落地说明，可直接用于汇报：
-
-- [docs/defense_split_5_people.md](/D:/ZNJJ/docs/defense_split_5_people.md)
