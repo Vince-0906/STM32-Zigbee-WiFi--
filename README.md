@@ -20,7 +20,7 @@
 | ZigBee 协调器 | `Samples/GwCoord/CC2530DB/GwCoord.ewp` | 建立 ZigBee 网络、跟踪节点在线状态、把 AF/ZCL 数据转换成 UART 帧发给 STM32 |
 | 节点 1 | `Samples/ZbNode` 的 `Node1_EndDeviceEB` 目标 | 采集 DHT11 温湿度，接收 LED/蜂鸣器控制命令 |
 | 节点 2 | `Samples/ZbNode` 的 `Node2_EndDeviceEB` 目标 | 采集光敏 ADC，接收 LED/蜂鸣器控制命令 |
-| PC 上位机 | 用户自备 TCP 服务端 | 接收网关上报的 JSON 行数据，并下发控制/配置命令 |
+| PC 上位机 | `pc_host/` 内置 Python 平台，或用户自备 TCP 服务端 | 接收网关上报的 JSON 行数据，并下发控制/配置命令 |
 
 ### 1.2 当前功能
 
@@ -98,7 +98,9 @@ CC2530 Coordinator
 │     ├─ GwCoord/           # 自定义协调器工程
 │     └─ ZbNode/            # 自定义节点工程
 ├─ references/              # 板级映射、设计约束、协议说明、参考资料
-└─ doc/                     # 需求/总体设计等文档模板与资料
+├─ pc_host/                 # Python 上位机平台：TCP 服务端、浏览器仪表盘、mock 网关、测试
+├─ docs/                    # 仓库内可跟踪的补充说明文档
+└─ doc/                     # 需求/总体设计等历史文档模板与资料
 ```
 
 ### 3.1 建议优先阅读的源码
@@ -182,6 +184,27 @@ CC2530 Coordinator
 4. 编译并烧录 `STM32/App/ZNJJ.uvprojx`
 5. 启动 PC 侧 TCP 服务端，等待网关连接
 
+### 5.5 PC 上位机平台
+
+仓库已内置一个 Python 标准库实现的 PC 平台，位于 `pc_host/`：
+
+- `run_host.py`：启动 TCP 服务端和浏览器仪表盘
+- `run_mock_gateway.py`：无硬件时模拟网关协议链路
+
+启动方式：
+
+```powershell
+python .\pc_host\run_host.py --tcp-port 23333 --http-port 8080
+```
+
+然后打开：`http://127.0.0.1:8080`
+
+如果需要无硬件演示，可在另一个终端执行：
+
+```powershell
+python .\pc_host\run_mock_gateway.py --host 127.0.0.1 --port 23333
+```
+
 ## 6. 运行流程
 
 ### 6.1 上电后流程
@@ -221,6 +244,7 @@ CC2530 Coordinator
 {"t":"status","node":257,"led":"off","buzzer":"on","ts":124000}
 {"t":"alarm","type":"temp","level":"on","val":3560,"threshold":3200,"ts":124100}
 {"t":"net","state":9,"channel":15,"panid":4660,"joined":2}
+{"t":"node_info","node":257,"role":"temp_hum","dev":"enddev","rssi":-42,"last_seen_s":0,"online":1}
 {"t":"ack","seq":42,"ok":true}
 {"t":"pong","ts":125000}
 ```
@@ -242,6 +266,7 @@ CC2530 Coordinator
 - 下行消息中的 `node` 可以传业务角色编号 `1/2`，也可以传实际短地址
 - `target` 当前支持 `led` 和 `buzzer`
 - `op` 当前支持 `on`、`off`、`toggle`
+- 当前源码还会额外上报 `node_info`，用于同步节点角色、设备类型、RSSI 和在线状态
 
 ### 7.2 STM32 与协调器
 
@@ -318,4 +343,10 @@ AA 55 LEN CMD PAYLOAD CRC8 0D
 - 网关侧使用静态缓冲和轮询主循环，适合资源受限场景
 - 协调器侧已实现节点表、离线标记、自动开入网窗和 UART 帧错误回传
 - 节点侧已实现角色区分、周期采样、执行器控制、首帧确认判定和本地状态显示
+- `pc_host/` 提供了答辩和联调可直接使用的 TCP 服务端、浏览器仪表盘和 mock 网关
 
+## 11. 答辩分工说明
+
+仓库内新增了 5 人答辩型分工落地说明，可直接用于汇报：
+
+- [docs/defense_split_5_people.md](/D:/ZNJJ/docs/defense_split_5_people.md)
