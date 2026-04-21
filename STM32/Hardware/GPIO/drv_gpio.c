@@ -24,15 +24,16 @@ void drv_gpio_init_board(void)
     GPIO_Init(GPIOB, &gi);
     GPIO_ResetBits(GPIOB, GPIO_Pin_12);
 
-    /* PA15 BUZZER：板上 Q1 (SS8550 PNP) 接法实测为低电平鸣叫、高电平静默。
-     * JTDI 内部上拉把 PA15 钳在高（静默），先 disable JTAG 把 ODR.15 置 1（仍静默），
-     * 再切推挽输出，全过程 PA15 一直为高电平不下探，避免切换瞬间拉低触发鸣叫。 */
+    /* STM32 侧本地蜂鸣器功能已停用。
+     * PA15 不再由本工程初始化，也不再作为板级功能 GPIO 使用。 */
+    /*
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
     GPIO_SetBits(GPIOA, GPIO_Pin_15);
     gi.GPIO_Pin = GPIO_Pin_15;
     gi.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOA, &gi);
     GPIO_SetBits(GPIOA, GPIO_Pin_15);
+    */
 
     /* PB6/PB7 KEY 上拉输入 */
     gi.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
@@ -57,12 +58,14 @@ void wifi_en_set(uint8_t on)
     else    GPIO_ResetBits(GPIOB, GPIO_Pin_12);
 }
 
+/* STM32 侧本地蜂鸣器功能已停用，按要求仅注释保留实现，不删除。 */
+/*
 void buzzer_set(uint8_t on)
 {
-    /* 板上实测：PA15 低电平 = 鸣叫，高电平 = 静默（Q1 SS8550 PNP 低有效）。 */
     if (on) GPIO_ResetBits(GPIOA, GPIO_Pin_15);
     else    GPIO_SetBits(GPIOA, GPIO_Pin_15);
 }
+*/
 
 uint8_t key1_pressed(void) { return (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_6) == 0); }
 uint8_t key2_pressed(void) { return (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_7) == 0); }
