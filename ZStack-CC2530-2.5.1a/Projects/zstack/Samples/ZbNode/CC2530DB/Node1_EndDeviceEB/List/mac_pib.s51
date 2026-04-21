@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  19:39:33 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        21/Apr/2026  20:41:03 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -38,16 +38,17 @@
 //                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
 //                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
 //                          __code" -DGENERIC=__generic                       /
-//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
-//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
-//                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
-//                          1a\Components\mac\high_level\mac_pib.c -D         /
-//                          NWK_AUTO_POLL -D NODE_ROLE=1 -D HAL_UART=TRUE -D  /
-//                          HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Pr /
-//                          ojects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDe /
-//                          viceEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Pro /
-//                          jects\zstack\Samples\ZbNode\CC2530DB\Node1_EndDev /
-//                          iceEB\List\ --diag_suppress Pe001,Pa010 -o        /
+//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=200        /
+//                          -DQUEUED_POLL_RATE=50 -DRESPONSE_POLL_RATE=50     /
+//                          -DREJOIN_POLL_RATE=440)                           /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\mac\high_ /
+//                          level\mac_pib.c -D NWK_AUTO_POLL -D NODE_ROLE=1   /
+//                          -D HAL_UART=TRUE -D HAL_LCD=FALSE -lC             /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA   /
+//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
+//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\       /
+//                          --diag_suppress Pe001,Pa010 -o                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e     /
 //                          --no_code_motion --debug --core=plain             /

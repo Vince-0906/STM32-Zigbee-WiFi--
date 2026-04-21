@@ -216,13 +216,13 @@ void gw_main_run(void)
                 }
             }
             if (n1 && n1->online && s_n1_oled_cache_valid &&
-                (now - n1->last_update_ms) <= NODE1_STALE_MS) {
+                (now - n1->last_update_ms) <= OLED_NODE1_STALE_MS) {
                 om.n1_online = 1u;
                 om.n1_temp_x100 = s_n1_oled_temp_x100;
                 om.n1_hum_x100 = s_n1_oled_hum_x100;
             }
             if (n2 && n2->online && s_n2_oled_cache_valid &&
-                (now - n2->last_update_ms) <= NODE2_STALE_MS) {
+                (now - n2->last_update_ms) <= OLED_NODE2_STALE_MS) {
                 om.n2_online = 1u;
                 om.n2_lux = s_n2_oled_lux;
             }

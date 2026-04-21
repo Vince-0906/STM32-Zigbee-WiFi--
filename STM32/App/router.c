@@ -558,6 +558,12 @@ static void on_set_threshold(const char *line, uint16_t n)
     if (json_get_float(line, n, "hum_low", &vf) == 0) {
         th.hum_low_x100 = (uint16_t)(vf * 100.0f);
     }
+    if (json_get_uint(line, n, "debounce_ms", &vu32) == 0) {
+        if (vu32 > 65535u) {
+            vu32 = 65535u;
+        }
+        th.debounce_ms = (uint16_t)vu32;
+    }
     if (config_save(&th) != 0) {
         send_ack(seq, 0, "nv");
         return;

@@ -7,13 +7,96 @@ const appState = {
   },
 };
 
+let scrollObserver;
+
 document.addEventListener("DOMContentLoaded", () => {
+  initPremiumEffects();
   wireTransportActions();
   wireCommandActions();
   wireThresholdActions();
   loadSnapshot();
   connectEventStream();
 });
+
+function initPremiumEffects() {
+  // 1. Mouse tracking spotlight & Ambient Parallax
+  document.addEventListener("mousemove", (e) => {
+    requestAnimationFrame(() => {
+      const x = e.clientX;
+      const y = e.clientY;
+      const moveX = (x - window.innerWidth / 2) * 0.05;
+      const moveY = (y - window.innerHeight / 2) * 0.05;
+
+      document.documentElement.style.setProperty('--mouse-x', `${x}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${y}px`);
+      document.documentElement.style.setProperty('--parallax-x', `${moveX}px`);
+      document.documentElement.style.setProperty('--parallax-y', `${moveY}px`);
+    });
+  });
+
+  // 2. Intersection Observer for Smooth Scroll Revealing (Repeatable)
+  scrollObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // 进入视图时：触发呈现动画
+        entry.target.classList.add('in-view');
+        
+        // 动画结束清理类名，让原生的 Hover 等交互立刻恢复工作
+        const onAnimEnd = () => {
+          if (entry.target.classList.contains('in-view')) {
+            entry.target.classList.remove(entry.target.dataset.revealType, 'reveal-stagger', 'in-view');
+            entry.target.style.animationDelay = '';
+          }
+          entry.target.removeEventListener('animationend', onAnimEnd);
+        };
+        entry.target.addEventListener('animationend', onAnimEnd);
+      } else {
+        // 完全滑出视图时：复原状态，使得下次滚回来时可以重新触发动画
+        entry.target.classList.remove('in-view');
+        entry.target.classList.add(entry.target.dataset.revealType);
+        
+        if (entry.target.dataset.staggerDelay) {
+          entry.target.classList.add('reveal-stagger');
+          entry.target.style.animationDelay = entry.target.dataset.staggerDelay;
+        }
+      }
+    });
+  }, { rootMargin: '0px 0px 0px 0px', threshold: 0 });
+
+  // Dynamically attach reveal classes to large blocks
+  document.querySelectorAll('.glass-card').forEach(el => {
+    el.dataset.revealType = 'reveal-card';
+    el.classList.add('reveal-card');
+  });
+  
+  // Dynamically attach to intra-card sub-elements
+  const staggerSelectors = [
+    '.detail-grid > div',
+    '.hero-metric',
+    '.metric-tile',
+    '.control-group',
+    '.network-stat'
+  ];
+  
+  document.querySelectorAll(staggerSelectors.join(', ')).forEach(el => {
+    el.dataset.revealType = 'reveal-item';
+    el.classList.add('reveal-item', 'reveal-stagger');
+  });
+
+  // Distribute delays so elements cascade sequentially
+  document.querySelectorAll('.glass-card, .hero-summary').forEach(parent => {
+    const children = parent.querySelectorAll('.reveal-stagger');
+    children.forEach((child, index) => {
+      const delay = `${0.05 + index * 0.08}s`;
+      child.dataset.staggerDelay = delay;
+      child.style.animationDelay = delay;
+    });
+  });
+
+  document.querySelectorAll('.reveal-card, .reveal-item').forEach(el => {
+    scrollObserver.observe(el);
+  });
+}
 
 function wireTransportActions() {
   document.getElementById("transport-form").addEventListener("submit", async (event) => {
@@ -63,7 +146,7 @@ function wireCommandActions() {
         { t: "cmd", node, target, op },
         {
           feedbackKey: "command",
-          successText: `命令已发送: 节点${node} ${target} ${op}`,
+          successText: `命令已下发，等待节点状态回传: 节点${node} ${target} ${op}`,
           failureText: `命令发送失败: 节点${node} ${target} ${op}`,
         },
       );
@@ -135,10 +218,10 @@ function render(snapshot) {
   appState.snapshot = snapshot;
   renderTransport(snapshot.transport);
   renderGateway(snapshot.gateway, snapshot.last_pong);
-  renderNodes(snapshot.nodes, snapshot.aliases);
+  renderNodes(snapshot.nodes, snapshot.aliases, snapshot.thresholds);
   renderThresholds(snapshot.thresholds);
   renderNetwork(snapshot.network);
-  renderAlarms(snapshot.active_alarms);
+  renderAlarmPanels(snapshot.active_alarms, snapshot.alarm_history);
   renderCommandAvailability(snapshot.gateway.connected);
   renderFeedbackDefaults(snapshot);
 }
@@ -192,7 +275,7 @@ function renderGateway(gateway, lastPong) {
   document.getElementById("gateway-id-text").textContent = gateway.gw_id ?? "--";
 }
 
-function renderNodes(nodes, aliases) {
+function renderNodes(nodes, aliases, thresholds) {
   const node1 = resolveNode(nodes, aliases.node1, "temp_hum");
   const node2 = resolveNode(nodes, aliases.node2, "lux");
 
@@ -205,10 +288,11 @@ function renderNodes(nodes, aliases) {
     rssiId: "node1-rssi",
     ledId: "node1-led",
     buzzerId: "node1-buzzer",
-    valueIds: [
-      ["node1-temp-value", formatNumber(node1?.temp, 1)],
-      ["node1-hum-value", formatNumber(node1?.hum, 0)],
+    valueConfigs: [
+      { id: "node1-temp-value", text: formatNumber(node1?.temp, 1), type: "temp" },
+      { id: "node1-hum-value", text: formatNumber(node1?.hum, 0), type: "hum" },
     ],
+    thresholds: thresholds,
     waitingText: "等待温湿度数据",
   });
 
@@ -221,7 +305,10 @@ function renderNodes(nodes, aliases) {
     rssiId: "node2-rssi",
     ledId: "node2-led",
     buzzerId: "node2-buzzer",
-    valueIds: [["node2-lux-value", formatNumber(node2?.lux, 0)]],
+    valueConfigs: [
+      { id: "node2-lux-value", text: formatNumber(node2?.lux, 0), type: "lux" }
+    ],
+    thresholds: thresholds,
     waitingText: "等待光照数据",
   });
 }
@@ -239,8 +326,8 @@ function renderNodeCard(config) {
     document.getElementById(config.rssiId).textContent = "--";
     document.getElementById(config.ledId).textContent = "--";
     document.getElementById(config.buzzerId).textContent = "--";
-    config.valueIds.forEach(([id]) => {
-      document.getElementById(id).textContent = "--";
+    config.valueConfigs.forEach((vc) => {
+      updateMetricTile(vc.id, "--", vc.type, config.thresholds);
     });
     return;
   }
@@ -252,9 +339,66 @@ function renderNodeCard(config) {
   document.getElementById(config.rssiId).textContent = node.rssi ?? "--";
   document.getElementById(config.ledId).textContent = formatState(node.led);
   document.getElementById(config.buzzerId).textContent = formatState(node.buzzer);
-  config.valueIds.forEach(([id, value]) => {
-    document.getElementById(id).textContent = value;
+  config.valueConfigs.forEach((vc) => {
+    updateMetricTile(vc.id, vc.text, vc.type, config.thresholds);
   });
+}
+
+function updateMetricTile(id, text, type, thresholds) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  
+  const tile = el.closest(".metric-tile");
+  if (!tile) return;
+
+  if (text === "--") {
+    tile.style.setProperty("--progress-width", "0%");
+    tile.style.setProperty("--progress-color", "var(--muted)");
+    el.style.setProperty("--value-color", "var(--ink)");
+    tile.classList.remove("alarm-glow");
+    return;
+  }
+
+  const num = Number(text);
+  if (Number.isNaN(num)) return;
+
+  let progress = 0;
+  let color = "var(--ink)";
+  let isAlarm = false;
+
+  if (type === "temp") {
+    progress = Math.min(Math.max((num / 50) * 100, 0), 100);
+    if (num < 15) color = "#007aff"; // Cold (Blue)
+    else if (num <= 28) color = "#34c759"; // Comfortable (Green)
+    else color = "#ff3b30"; // Hot (Red)
+    
+    if (thresholds && thresholds.temp_high !== undefined && num > thresholds.temp_high) isAlarm = true;
+  } else if (type === "hum") {
+    progress = Math.min(Math.max(num, 0), 100);
+    if (num < 30) color = "#ff9500"; // Dry (Orange)
+    else if (num <= 60) color = "#34c759"; // Comfortable (Green)
+    else color = "#007aff"; // Wet (Blue)
+
+    if (thresholds && thresholds.hum_high !== undefined && num > thresholds.hum_high) isAlarm = true;
+  } else if (type === "lux") {
+    progress = Math.min(Math.max((num / 2000) * 100, 0), 100);
+    if (num < 500) color = "#86868b"; // Dark (Gray)
+    else if (num <= 1500) color = "#ff9500"; // Normal (Orange)
+    else color = "#ffcc00"; // Bright (Yellow)
+
+    if (thresholds && thresholds.lux_low !== undefined && num < thresholds.lux_low) isAlarm = true;
+  }
+
+  tile.style.setProperty("--progress-width", `${progress}%`);
+  tile.style.setProperty("--progress-color", color);
+  el.style.setProperty("--value-color", color);
+  
+  if (isAlarm) {
+    tile.classList.add("alarm-glow");
+  } else {
+    tile.classList.remove("alarm-glow");
+  }
 }
 
 function renderThresholds(thresholds) {
@@ -263,6 +407,7 @@ function renderThresholds(thresholds) {
   syncInputValue("threshold-temp-low", thresholds.temp_low);
   syncInputValue("threshold-hum-high", thresholds.hum_high);
   syncInputValue("threshold-hum-low", thresholds.hum_low);
+  syncInputValue("threshold-debounce-ms", thresholds.debounce_ms);
 }
 
 function renderNetwork(network) {
@@ -306,6 +451,74 @@ function renderAlarms(activeAlarms) {
     row.append(copy, meta);
     root.appendChild(row);
   });
+}
+
+function renderAlarmPanels(activeAlarms, alarmHistory) {
+  const root = document.getElementById("alarm-stack");
+  root.replaceChildren();
+
+  if (activeAlarms.length) {
+    root.appendChild(buildAlarmSectionTitle("当前报警"));
+    activeAlarms.forEach((alarm) => {
+      root.appendChild(buildAlarmCard(alarm));
+    });
+    return;
+  }
+
+  if (alarmHistory.length) {
+    root.appendChild(buildAlarmSectionTitle("最近事件"));
+    alarmHistory.slice(0, 4).forEach((alarm) => {
+      root.appendChild(buildAlarmCard(alarm, true));
+    });
+    return;
+  }
+
+  const empty = document.createElement("div");
+  empty.className = "alarm-empty";
+  empty.textContent = "暂无报警。";
+  root.appendChild(empty);
+}
+
+function buildAlarmSectionTitle(text) {
+  const title = document.createElement("p");
+  title.className = "alarm-section-title";
+  title.textContent = text;
+  return title;
+}
+
+function buildAlarmCard(alarm, isHistory = false) {
+  const row = document.createElement("article");
+  row.className = "alarm-item";
+  if (alarm.level !== "on" || isHistory) {
+    row.classList.add("alarm-item-history");
+  }
+
+  const copy = document.createElement("div");
+  copy.className = "alarm-copy";
+
+  const head = document.createElement("div");
+  head.className = "alarm-copy-head";
+
+  const title = document.createElement("strong");
+  title.textContent = alarmLabel(alarm.type);
+
+  const state = document.createElement("span");
+  state.className = `alarm-state ${alarm.level === "on" ? "active" : "recovered"}`;
+  state.textContent = alarm.level === "on" ? "报警中" : "已恢复";
+
+  head.append(title, state);
+
+  const body = document.createElement("span");
+  body.textContent = `异常值 ${formatAlarmValue(alarm.type, alarm.val)} / 阈值 ${formatAlarmValue(alarm.type, alarm.threshold)}`;
+
+  copy.append(head, body);
+
+  const meta = document.createElement("div");
+  meta.className = "alarm-meta";
+  meta.textContent = formatTimestamp(alarm.ts);
+
+  row.append(copy, meta);
+  return row;
 }
 
 function renderCommandAvailability(gatewayConnected) {
@@ -415,6 +628,28 @@ function formatState(value) {
     return "--";
   }
   return String(value).toUpperCase();
+}
+
+function formatAlarmValue(type, value) {
+  if (value == null || value === "") {
+    return "--";
+  }
+
+  const number = Number(value);
+  if (Number.isNaN(number)) {
+    return "--";
+  }
+
+  if (type === "light") {
+    return `${Math.round(number)} lux`;
+  }
+  if (type === "temp") {
+    return `${(number / 100).toFixed(2)} °C`;
+  }
+  if (type === "hum") {
+    return `${(number / 100).toFixed(2)} %`;
+  }
+  return String(value);
 }
 
 function alarmLabel(type) {

@@ -13,7 +13,7 @@
     <div class="page-shell">
       <header class="hero glass-card">
         <div class="hero-copy">
-          <p class="eyebrow">ZNJJ APPLE-LIKE CONSOLE</p>
+          <p class="eyebrow">ZNJJ CONSOLE</p>
           <h1>节点传感器控制台Dev By SZC</h1>
           <p class="hero-text">
             此页面管理本地 TCP 监听服务，接收网关实时上报的数据，并在面板中统一显示温湿度、光照、报警及直接控制功能。
@@ -300,6 +300,10 @@
             <label>
               湿度下限
               <input id="threshold-hum-low" name="hum_low" type="number" step="0.1">
+            </label>
+            <label>
+              Debounce (ms)
+              <input id="threshold-debounce-ms" name="debounce_ms" type="number" min="0" step="1">
             </label>
             <div class="threshold-actions">
               <button class="primary-btn" id="threshold-submit-btn" type="submit">应用阈值</button>

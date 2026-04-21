@@ -9,6 +9,8 @@ from typing import Any
 
 from .protocol import DEFAULT_THRESHOLDS
 
+_EPOCH_MS_THRESHOLD = 946684800000  # 2000-01-01T00:00:00Z
+
 
 @dataclass
 class NodeSnapshot:
@@ -66,12 +68,16 @@ class DashboardState:
         }
         self._last_ack: dict[str, Any] | None = None
         self._last_pong: dict[str, Any] | None = None
+        self._gateway_clock_offset_ms: int | None = None
+        self._last_gateway_uptime_ms: int | None = None
 
     def mark_gateway_connected(self, peer: str) -> None:
         with self._lock:
             self._gateway["connected"] = True
             self._gateway["peer"] = peer
             self._gateway["last_seen_ms"] = _now_ms()
+            self._gateway_clock_offset_ms = None
+            self._last_gateway_uptime_ms = None
             self._log_locked("system", "gateway", f"gateway connected from {peer}", {"peer": peer})
 
     def mark_gateway_disconnected(self, *, reason: str | None = None) -> None:
@@ -80,6 +86,8 @@ class DashboardState:
             self._gateway["connected"] = False
             self._gateway["peer"] = None
             self._gateway["last_seen_ms"] = _now_ms()
+            self._gateway_clock_offset_ms = None
+            self._last_gateway_uptime_ms = None
             summary = f"gateway disconnected from {peer or 'unknown'}"
             if reason:
                 summary = f"{summary} ({reason})"
@@ -151,7 +159,9 @@ class DashboardState:
 
     def apply_gateway_message(self, payload: dict[str, Any]) -> None:
         with self._lock:
-            self._gateway["last_seen_ms"] = _now_ms()
+            recv_ms = _now_ms()
+            self._gateway["last_seen_ms"] = recv_ms
+            payload = self._normalize_gateway_payload(payload, recv_ms=recv_ms)
             message_type = str(payload.get("t", "unknown"))
 
             if message_type == "hello":
@@ -264,7 +274,7 @@ class DashboardState:
         summary: str,
         payload: Any,
     ) -> None:
-        self._logs.appendleft(
+            self._logs.appendleft(
             {
                 "ts": _now_ms(),
                 "direction": direction,
@@ -273,6 +283,36 @@ class DashboardState:
                 "payload": copy.deepcopy(payload),
             }
         )
+
+    def _normalize_gateway_payload(self, payload: dict[str, Any], *, recv_ms: int) -> dict[str, Any]:
+        if "ts" not in payload:
+            return payload
+
+        normalized_ts = self._normalize_gateway_ts(payload.get("ts"), recv_ms=recv_ms)
+        if normalized_ts is None:
+            return payload
+
+        normalized = copy.deepcopy(payload)
+        normalized["ts"] = normalized_ts
+        return normalized
+
+    def _normalize_gateway_ts(self, raw_ts: Any, *, recv_ms: int) -> int | None:
+        try:
+            ts = int(raw_ts)
+        except (TypeError, ValueError):
+            return None
+
+        if ts >= _EPOCH_MS_THRESHOLD:
+            return ts
+
+        if self._gateway_clock_offset_ms is None:
+            self._gateway_clock_offset_ms = recv_ms - ts
+        elif self._last_gateway_uptime_ms is not None and ts < self._last_gateway_uptime_ms:
+            # Gateway uptime restarted after reconnect/reset; rebuild the wall-clock mapping.
+            self._gateway_clock_offset_ms = recv_ms - ts
+
+        self._last_gateway_uptime_ms = ts
+        return ts + self._gateway_clock_offset_ms
 
 
 def _message_summary(payload: dict[str, Any]) -> str:

@@ -10,10 +10,12 @@ DEFAULT_THRESHOLDS = {
     "temp_low": 5.0,
     "hum_high": 85.0,
     "hum_low": 20.0,
+    "debounce_ms": 300,
 }
 
 _CMD_FIELDS = {"node", "target", "op"}
 _THRESHOLD_FIELDS = set(DEFAULT_THRESHOLDS)
+_THRESHOLD_INT_FIELDS = {"lux_low", "debounce_ms"}
 _TARGETS = {"led", "buzzer"}
 _OPS = {"on", "off", "toggle"}
 
@@ -92,10 +94,10 @@ def _populate_thresholds(payload: dict[str, Any], fields: dict[str, Any]) -> Non
         raise ProtocolError("set_threshold requires at least one threshold field")
 
     for key in provided:
-        if key == "lux_low":
+        if key in _THRESHOLD_INT_FIELDS:
             value = _coerce_int(fields[key], key)
             if value < 0:
-                raise ProtocolError("lux_low must be >= 0")
+                raise ProtocolError(f"{key} must be >= 0")
             payload[key] = value
         else:
             payload[key] = round(_coerce_float(fields[key], key), 2)
@@ -135,4 +137,3 @@ def _coerce_float(value: Any, field_name: str) -> float:
         return float(value)
     except (TypeError, ValueError) as exc:
         raise ProtocolError(f"{field_name} must be a number") from exc
-

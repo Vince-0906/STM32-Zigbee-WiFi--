@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                            /
-// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        20/Apr/2026  19:39:35 /
+// IAR C/C++ Compiler V8.10.3.10338/W32 for 8051        21/Apr/2026  20:41:00 /
 // Copyright 2004-2011 IAR Systems AB.                                        /
 //                                                                            /
 //    Core               =  plain                                             /
@@ -38,16 +38,16 @@
 //                          0x0A, 0x0C, 0x0D}" -DMAC_MAX_FRAME_SIZE=116       /
 //                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const    /
 //                          __code" -DGENERIC=__generic                       /
-//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000       /
-//                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)  /
-//                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5. /
-//                          1a\Projects\zstack\Samples\ZbNode\Source\sensor_l /
-//                          dr.c -D NWK_AUTO_POLL -D NODE_ROLE=1 -D           /
-//                          HAL_UART=TRUE -D HAL_LCD=FALSE -lC                /
+//                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=200        /
+//                          -DQUEUED_POLL_RATE=50 -DRESPONSE_POLL_RATE=50     /
+//                          -DREJOIN_POLL_RATE=440)                           /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\ -lA   /
-//                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
-//                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\List\       /
+//                          les\ZbNode\Source\sensor_ldr.c -D NWK_AUTO_POLL   /
+//                          -D NODE_ROLE=1 -D HAL_UART=TRUE -D HAL_LCD=FALSE  /
+//                          -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\ /
+//                          Samples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\   /
+//                          -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\ /
+//                          Samples\ZbNode\CC2530DB\Node1_EndDeviceEB\List\   /
 //                          --diag_suppress Pe001,Pa010 -o                    /
 //                          D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samp /
 //                          les\ZbNode\CC2530DB\Node1_EndDeviceEB\Obj\ -e     /
@@ -138,7 +138,6 @@
         EXTERN ?L_MOV_X
         EXTERN ?L_MUL
         EXTERN ?UL_DIV_MOD
-        EXTERN ?UL_GE_X
         EXTERN ?V0
         EXTERN __INIT_XDATA_I
 
@@ -149,10 +148,8 @@
         PUBWEAK APCFG
         PUBWEAK P0DIR
         PUBWEAK P0SEL
-        PUBWEAK __Constant_10000
         PUBWEAK __Constant_7d0
         PUBWEAK __Constant_7ff
-        PUBWEAK __Constant_ffff
         PUBLIC ldr_init
         FUNCTION ldr_init,0203H
         ARGFRAME XSTACK, 0, STACK
@@ -269,7 +266,7 @@ ldr_read_lux        SYMBOL "ldr_read_lux"
 // D:\ZNJJ\ZStack-CC2530-2.5.1a\Projects\zstack\Samples\ZbNode\Source\sensor_ldr.c
 //    1 /*
 //    2  * 光敏 ADC 采样（AIN7 = P0.7，E18-MS1 板内部分压节点）。
-//    3  * 返回值 uint16 lux 估算：ADC code → 3.3V 参考下的近似换算，非精确。
+//    3  * 返回值为“亮度 lux”估算值，数值越大表示越亮；当前换算仅用于联动和显示，非精确照度计量。
 //    4  */
 //    5 
 //    6 #include "sensor_ldr.h"
@@ -295,38 +292,41 @@ P0DIR:
         DS 1
 //    9 #include "hal_adc.h"
 //   10 
+//   11 #define LDR_ADC_MAX_CODE  2047u
+//   12 #define LDR_LUX_MAX       2000u
+//   13 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   11 void ldr_init(void)
+//   14 void ldr_init(void)
 ldr_init:
         CFI Block cfiBlock0 Using cfiCommon0
         CFI Function ldr_init
         CODE
-//   12 {
+//   15 {
         ; Saved register size: 0
         ; Auto size: 0
-//   13     /* P0.7 设为外设模式（ADC 由 ADCCON 配置通道即可占管） */
-//   14     P0SEL |= (uint8)(1 << NODE_LDR_ADC_CH);
+//   16     /* P0.7 设为外设模式（ADC 由 ADCCON 配置通道即可占管） */
+//   17     P0SEL |= (uint8)(1 << NODE_LDR_ADC_CH);
         ORL     0xf3,#0x80
-//   15     P0DIR &= (uint8)~(1 << NODE_LDR_ADC_CH);
+//   18     P0DIR &= (uint8)~(1 << NODE_LDR_ADC_CH);
         ANL     0xfd,#0x7f
-//   16     APCFG |= (uint8)(1 << NODE_LDR_ADC_CH);
+//   19     APCFG |= (uint8)(1 << NODE_LDR_ADC_CH);
         ORL     0xf2,#0x80
-//   17 }
+//   20 }
         LJMP    ?BRET
         CFI EndBlock cfiBlock0
         REQUIRE P0SEL
         REQUIRE P0DIR
         REQUIRE APCFG
-//   18 
+//   21 
 
         RSEG BANKED_CODE:CODE:NOROOT(0)
-//   19 uint16 ldr_read_lux(void)
+//   22 uint16 ldr_read_lux(void)
 ldr_read_lux:
         CFI Block cfiBlock1 Using cfiCommon0
         CFI Function ldr_read_lux
         CODE
-//   20 {
+//   23 {
         FUNCALL ldr_read_lux, HalAdcRead
         LOCFRAME ISTACK, 0, STACK
         LOCFRAME PSTACK, 0, STACK
@@ -360,20 +360,41 @@ ldr_read_lux:
         CFI CFA_XSP16 add(XSP16, 16)
         ; Saved register size: 16
         ; Auto size: 0
-//   21     uint16 code;
-//   22     uint32 lux;
-//   23 
-//   24     /* HalAdcRead(ch=HAL_ADC_CHN_AIN7, resolution=HAL_ADC_RESOLUTION_12) 返回 int16（有符号） */
-//   25     code = (uint16)HalAdcRead(HAL_ADC_CHN_AIN7, HAL_ADC_RESOLUTION_12);
+//   24     uint16 code;
+//   25     uint32 lux;
 //   26 
-//   27     /* 线性近似：code 0 ≈ 0 lux（全遮光）；code 2047 ≈ 2000 lux（满量程） */
-//   28     lux = ((uint32)code * 2000u) / 2047u;
+//   27     /* HalAdcRead(ch=HAL_ADC_CHN_AIN7, resolution=HAL_ADC_RESOLUTION_12) 返回 int16（有符号） */
+//   28     code = (uint16)HalAdcRead(HAL_ADC_CHN_AIN7, HAL_ADC_RESOLUTION_12);
         ; Setup parameters for call to function HalAdcRead
         MOV     R2,#0x3
         MOV     R1,#0x7
         LCALL   ??HalAdcRead?relay
         MOV     ?V0 + 0,R2
         MOV     ?V0 + 1,R3
+        MOV     R0,?V0 + 0
+        MOV     R1,?V0 + 1
+//   29 
+//   30     if (code > LDR_ADC_MAX_CODE) {
+        CLR     C
+        MOV     A,R1
+        SUBB    A,#0x8
+        JC      ??ldr_read_lux_0
+//   31         code = LDR_ADC_MAX_CODE;
+        MOV     R0,#-0x1
+        MOV     R1,#0x7
+//   32     }
+//   33 
+//   34     /* 该板分压方向实测为“越暗 ADC 码值越大”，因此此处需反向换算成“越亮 lux 越大”。 */
+//   35     lux = ((uint32)(LDR_ADC_MAX_CODE - code) * LDR_LUX_MAX) / LDR_ADC_MAX_CODE;
+//   36     return (uint16)lux;
+??ldr_read_lux_0:
+        MOV     A,#-0x1
+        CLR     C
+        SUBB    A,R0
+        MOV     ?V0 + 0,A
+        MOV     A,#0x7
+        SUBB    A,R1
+        MOV     ?V0 + 1,A
         CLR     A
         MOV     ?V0 + 2,A
         MOV     ?V0 + 3,A
@@ -389,22 +410,12 @@ ldr_read_lux:
         MOV     R0,#?V0 + 0
         MOV     R1,#?V0 + 4
         LCALL   ?UL_DIV_MOD
-//   29     if (lux > 65535u) lux = 65535u;
-        MOV     DPTR,#__Constant_10000
-        MOV     R0,#?V0 + 0
-        LCALL   ?UL_GE_X
-        JNC     ??ldr_read_lux_0
-        MOV     DPTR,#__Constant_ffff
-        MOV     R0,#?V0 + 0
-        LCALL   ?L_MOV_X
-//   30     return (uint16)lux;
-??ldr_read_lux_0:
         MOV     R2,?V0 + 0
         MOV     R3,?V0 + 1
         MOV     R7,#0x8
         LJMP    ?BANKED_LEAVE_XDATA
         CFI EndBlock cfiBlock1
-//   31 }
+//   37 }
 
         RSEG XDATA_I:XDATA:NOROOT(0)
         DATA32
@@ -430,30 +441,6 @@ __Constant_7ff:
         DATA32
         DD 2047
 
-        RSEG XDATA_I:XDATA:NOROOT(0)
-        DATA32
-__Constant_10000:
-        DS 4
-        REQUIRE `?<Initializer for __Constant_10000>`
-        REQUIRE __INIT_XDATA_I
-
-        RSEG XDATA_ID:CODE:NOROOT(0)
-`?<Initializer for __Constant_10000>`:
-        DATA32
-        DD 65536
-
-        RSEG XDATA_I:XDATA:NOROOT(0)
-        DATA32
-__Constant_ffff:
-        DS 4
-        REQUIRE `?<Initializer for __Constant_ffff>`
-        REQUIRE __INIT_XDATA_I
-
-        RSEG XDATA_ID:CODE:NOROOT(0)
-`?<Initializer for __Constant_ffff>`:
-        DATA32
-        DD 65535
-
         RSEG BANK_RELAYS:CODE:REORDER:NOROOT(0)
 ??ldr_init?relay:
         LCALL   ?BDISPATCH
@@ -468,15 +455,15 @@ __Constant_ffff:
 
         END
 // 
-// 90 bytes in segment BANKED_CODE
+// 97 bytes in segment BANKED_CODE
 // 12 bytes in segment BANK_RELAYS
 //  3 bytes in segment SFR_AN
-// 16 bytes in segment XDATA_I
-// 16 bytes in segment XDATA_ID
+//  8 bytes in segment XDATA_I
+//  8 bytes in segment XDATA_ID
 // 
-// 102 bytes of CODE  memory (+ 16 bytes shared)
-//   0 bytes of DATA  memory (+  3 bytes shared)
-//   0 bytes of XDATA memory (+ 16 bytes shared)
+// 109 bytes of CODE  memory (+ 8 bytes shared)
+//   0 bytes of DATA  memory (+ 3 bytes shared)
+//   0 bytes of XDATA memory (+ 8 bytes shared)
 //
 //Errors: none
 //Warnings: 1

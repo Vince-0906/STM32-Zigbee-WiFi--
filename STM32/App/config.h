@@ -78,6 +78,8 @@
 #define ZB_BRINGUP_WINDOW_MS 70000u
 #define NODE1_STALE_MS      4000u
 #define NODE2_STALE_MS      4000u
+#define OLED_NODE1_STALE_MS 6000u
+#define OLED_NODE2_STALE_MS 4000u
 #define OLED_REFRESH_MS     500u
 #define IWDG_TIMEOUT_MS     2000u
 #define JSON_LINE_MAX       512u
@@ -90,7 +92,7 @@
 #define TH_HUM_LOW_X100_DEFAULT     2000u  /* 20.0 % */
 #define TH_HYSTERESIS_LUX_DEFAULT   50u
 #define TH_HYSTERESIS_TEMP_X100_DEF 50     /* 0.5 °C */
-#define TH_DEBOUNCE_MS_DEFAULT      1000u
+#define TH_DEBOUNCE_MS_DEFAULT      300u
 #define AUTO_OVERRIDE_MS            30000u /* 手动优先窗 §8.4 */
 
 /* ---------- 编译期 WiFi 凭据 / 服务器端点 ----------

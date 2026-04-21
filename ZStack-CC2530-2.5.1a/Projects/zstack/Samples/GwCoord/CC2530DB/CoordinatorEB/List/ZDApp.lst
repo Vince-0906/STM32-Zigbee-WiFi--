@@ -1,6 +1,6 @@
 ###############################################################################
 #                                                                             #
-# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         20/Apr/2026  19:41:50 #
+# IAR C/C++ Compiler V8.10.3.10338/W32 for 8051         21/Apr/2026  20:42:51 #
 # Copyright 2004-2011 IAR Systems AB.                                         #
 #                                                                             #
 #    Core               =  plain                                              #
@@ -40,10 +40,10 @@
 #                          -DMAC_MAX_FRAME_SIZE=116                           #
 #                          -DZDNWKMGR_MIN_TRANSMISSIONS=20 "-DCONST=const     #
 #                          __code" -DGENERIC=__generic                        #
-#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=1000        #
-#                          -DQUEUED_POLL_RATE=100 -DRESPONSE_POLL_RATE=100)   #
-#                          -DREJOIN_POLL_RATE=440 D:\ZNJJ\ZStack-CC2530-2.5.1 #
-#                          a\Components\stack\zdo\ZDApp.c -D HAL_UART=TRUE    #
+#                          -DRFD_RCVC_ALWAYS_ON=FALSE -DPOLL_RATE=200         #
+#                          -DQUEUED_POLL_RATE=50 -DRESPONSE_POLL_RATE=50      #
+#                          -DREJOIN_POLL_RATE=440) D:\ZNJJ\ZStack-CC2530-2.5. #
+#                          1a\Components\stack\zdo\ZDApp.c -D HAL_UART=TRUE   #
 #                          -D HAL_LCD=FALSE -lC D:\ZNJJ\ZStack-CC2530-2.5.1a\ #
 #                          Projects\zstack\Samples\GwCoord\CC2530DB\Coordinat #
 #                          orEB\List\ -lA D:\ZNJJ\ZStack-CC2530-2.5.1a\Projec #
@@ -7037,7 +7037,7 @@ D:\ZNJJ\ZStack-CC2530-2.5.1a\Components\stack\zdo\ZDApp.c
 
    \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for ZDApp_SavedPollRate>`:
-   \   000000   E803         DW 1000
+   \   000000   C800         DW 200
 
    \                                 In  segment XDATA_ID, align 1, keep-with-next
    \                     `?<Initializer for __Constant_1>`:

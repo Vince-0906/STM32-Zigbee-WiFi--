@@ -1,7 +1,8 @@
 [DebugChecksum]
-Checksum=-1846669427
+Checksum=1535755563
 [DisAssemblyWindow]
-NumStates=_ 0
+NumStates=_ 1
+State 1=_ 1
 [InstructionProfiling]
 Enabled=_ 0
 [CodeCoverage]
@@ -52,7 +53,7 @@ LogFile=_ ""
 [Breakpoints]
 Count=0
 [ChipconEmu]
-Stop timers on halt=0
+Stop timers on halt=1
 Leave target running=1
 [Aliases]
 Count=0

@@ -81,6 +81,25 @@ class HostApplicationTests(unittest.TestCase):
         data_line = next(line for line in lines if line.startswith("data: "))
         return json.loads(data_line.removeprefix("data: "))
 
+    def open_sse(self, app: HostApplication) -> tuple[http.client.HTTPConnection, http.client.HTTPResponse]:
+        host, port = app.http_address
+        conn = http.client.HTTPConnection(host, port, timeout=2)
+        conn.request("GET", "/api/events")
+        response = conn.getresponse()
+        self.assertEqual(response.status, 200)
+        return conn, response
+
+    def read_sse_event(self, response: http.client.HTTPResponse) -> dict[str, object]:
+        lines: list[str] = []
+        while True:
+            line = response.readline().decode("utf-8")
+            if line in {"\n", "\r\n", ""}:
+                break
+            lines.append(line.strip())
+
+        data_line = next(line for line in lines if line.startswith("data: "))
+        return json.loads(data_line.removeprefix("data: "))
+
     def socket_is_closed(self, sock: socket.socket) -> bool:
         try:
             data = sock.recv(1)
@@ -161,6 +180,50 @@ class HostApplicationTests(unittest.TestCase):
         self.assertEqual(status, 409)
         self.assertIn("already in use", payload["error"])
         self.assertFalse(payload["transport"]["listening"])
+
+    def test_command_endpoint_accepts_threshold_debounce(self) -> None:
+        app = self.start_app(open_default_transport=True)
+        port = self.fetch_state(app)["transport"]["port"]
+
+        gateway_sock = socket.create_connection(("127.0.0.1", int(port)), timeout=1)
+        self.addCleanup(gateway_sock.close)
+        self.wait_until(lambda: bool(self.fetch_state(app)["gateway"]["connected"]))
+
+        status, payload = self.request_json(
+            app,
+            "POST",
+            "/api/command",
+            {"t": "set_threshold", "debounce_ms": 300},
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(payload["payload"]["debounce_ms"], 300)
+
+    def test_alarm_messages_reach_state_and_sse(self) -> None:
+        app = self.start_app(open_default_transport=True)
+        port = self.fetch_state(app)["transport"]["port"]
+
+        gateway_sock = socket.create_connection(("127.0.0.1", int(port)), timeout=1)
+        self.addCleanup(gateway_sock.close)
+        self.wait_until(lambda: bool(self.fetch_state(app)["gateway"]["connected"]))
+
+        conn, response = self.open_sse(app)
+        self.addCleanup(conn.close)
+        initial = self.read_sse_event(response)
+        self.assertEqual(initial["kind"], "snapshot")
+
+        gateway_sock.sendall(
+            b'{"t":"alarm","type":"light","level":"on","val":120,"threshold":500,"ts":3}\n'
+        )
+
+        self.wait_until(lambda: len(self.fetch_state(app)["active_alarms"]) == 1)
+        state = self.fetch_state(app)
+        self.assertEqual(state["active_alarms"][0]["type"], "light")
+        self.assertEqual(state["active_alarms"][0]["level"], "on")
+
+        event = self.read_sse_event(response)
+        self.assertEqual(event["kind"], "incoming")
+        self.assertEqual(event["payload"]["t"], "alarm")
+        self.assertEqual(event["state"]["active_alarms"][0]["type"], "light")
 
     def test_rebind_disconnects_existing_gateway(self) -> None:
         first_port = _free_port()
