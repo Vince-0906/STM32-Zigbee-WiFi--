@@ -25,11 +25,11 @@
 ### 1.2 当前功能
 
 - 温湿度节点周期上报 `temp/hum`
-- 光照节点周期上报 `lux`
+- 光照节点周期上报 `lux`（值越大表示越亮）
 - 网关将 ZigBee 数据转换为 JSON 行协议发给 PC
 - PC 可远程控制节点 LED 和蜂鸣器
 - 网关本地具备自动联动能力
-- 光照过低时自动控制节点灯光
+- 光照过低时自动控制 Node2 的 `LED1`
 - 温度/湿度越界时自动触发蜂鸣器告警
 - 阈值参数支持 Flash 持久化
 - 网关 OLED 显示链路状态、节点数据和告警文本
@@ -219,9 +219,9 @@ python .\pc_host\run_mock_gateway.py --host 127.0.0.1 --port 23333
 
 ### 6.2 本地联动规则
 
-根据 `STM32/App/automation.c` 的当前实现：
+根据 `STM32/App/automation.c` 的当前实现（`lux` 数值越大表示越亮）：
 
-- 当 `Node2.lux < lux_low` 时，网关自动控制 `Node2` 的 `EP1 LED`
+- 当 `Node2.lux < lux_low` 时，网关自动控制 `Node2` 的 `EP1 LED1`
 - 当 `Node1` 的温度或湿度超出阈值时，网关自动控制 `Node1` 的 `EP2 蜂鸣器`
 - 手动远程控制后存在 `AUTO_OVERRIDE_MS` 手动优先窗口，避免自动联动立刻反向覆盖
 
