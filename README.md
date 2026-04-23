@@ -103,10 +103,7 @@ CC2530 Coordinator
 │  └─ Projects/zstack/Samples/
 │     ├─ GwCoord/           # 自定义协调器工程
 │     └─ ZbNode/            # 自定义节点工程
-├─ references/              # 板级映射、设计约束、协议说明、参考资料
-├─ pc_host/                 # Python 上位机平台：TCP 服务端、浏览器仪表盘、mock 网关、测试
-├─ docs/                    # 仓库内可跟踪的补充说明文档
-└─ doc/                     # 需求/总体设计等历史文档模板与资料
+└─ pc_host/                 # Python 上位机平台：TCP 服务端、浏览器仪表盘、mock 网关、测试
 ```
 
 ### 3.1 建议优先阅读的源码
